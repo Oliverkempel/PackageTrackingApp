@@ -8,6 +8,10 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.HttpOverrides;
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.Gmail.v1;
+using Google.Apis.Gmail.v1.Data;
+using Google.Apis.Services;
 using PackageTrackingApp.Services;
 using PackageTrackingApp.Data;
 
@@ -15,6 +19,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+//GmailApiReader.UserAuthorization();
+//Console.WriteLine(GmailApiReader.ListMessages);
 // Add Database 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -57,6 +63,7 @@ builder.Services.AddAuthentication().AddGoogle(googleOptions =>
         googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
         googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
         googleOptions.CallbackPath = new PathString("/signin-google");
+        googleOptions.Scope.Add(GmailService.Scope.GmailReadonly);
         googleOptions.SignInScheme = IdentityConstants.ExternalScheme;
     });
 
@@ -75,6 +82,9 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
+
+builder.Services.AddScoped<IGmailService, GmailApiReader>();
+
 
 var app = builder.Build();
 
