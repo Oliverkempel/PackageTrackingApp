@@ -1,3 +1,9 @@
 ﻿@tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    .btn-primary {
+        @apply py-1 px-3 text-white bg-primaryBlue transition duration-200 ease-in-out hover:-translate-y-1 hover:scale-105 hover:shadow-lg hover:shadow-primaryBlue rounded text-base hover:bg-secondaryBlue items-center inline-flex
+    }
+}

@@ -8,7 +8,45 @@
     <link rel="stylesheet" href="~/PackageTrackingApp.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
+
+    <div class="text-black">
+        <div class="container mx-auto flex flex-wrap p-3 flex-col md:flex-row items-center ">
+            <a asp-controller="Home" asp-action="Index"  class="flex title-font font-medium items-center mb-4 md:mb-0">
+            <div>
+              <img src ="Img/logo.png" class="h-8 w-8">
+            </div>
+              <span class="ml-3 text-xl ">Pakke Portalen</span>
+            </a>
+            <nav class="md:mr-auto md:ml-10 flex flex-wrap items-center text-base justify-center">
+                  <a asp-controller="Home" asp-action="Index" class="mr-5 bg-transparent hover:text-gray-400 transition duration-200 ease-in-out hover:-translate-y-1 hover:scale-105">Forsiden</a>
+                  <a asp-controller="Home" asp-action="Index" class="mr-5 hover:text-gray-400 transition duration-200 ease-in-out hover:-translate-y-1 hover:scale-105 ">Om os</a>
+                  <a asp-controller="Home" asp-action="Index" class="mr-5 hover:text-gray-400 transition duration-200 ease-in-out hover:-translate-y-1 hover:scale-105">Min Side</a>
+            </nav>
+            <partial name="_LoginPartial" />
+@*            <a name="_LoginPartial" class="btn-primary mt-4 md:mt-0">
+              <p>Log Ind</p>
+              <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-1" viewBox="0 0 24 24">
+                  <path d="M5 12h14M12 5l7 7-7 7"></path>
+              </svg>
+            </a>*@
+        </div>
+    </div>
+
+    <div class="container mx-auto">
+         @RenderBody()
+    </div>
+
+    <footer>
+
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+
+
+@*    <header>
 
         <nav class="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-900">
             <div class="container flex flex-wrap items-center justify-between mx-auto">
@@ -28,23 +66,9 @@
                         <li>
                             <a asp-area="" asp-controller="Home" asp-action="Privacy" class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">About</a>
                         </li>
-                            <partial name="_LoginPartial" />
+                        <partial name="_LoginPartial" />
                     </ul>
                 </div>
             </div>
         </nav>
-    </header>
-
-
-    <div class="container mx-auto">
-         @RenderBody()
-    </div>
-
-    <footer>
-
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
-</body>
-</html>
+    </header>*@
