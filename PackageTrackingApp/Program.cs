@@ -1,10 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using PackageTrackingApp.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using System.Threading.Tasks;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.OAuth;
+using Microsoft.AspNetCore.HttpOverrides;
 using PackageTrackingApp.Services;
+using PackageTrackingApp.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -23,6 +28,8 @@ builder.Services.AddDbContext<PackageTrackingAppIdentityDbContext>(options =>
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<PackageTrackingAppIdentityDbContext>();
 
 builder.Services.AddRazorPages();
+
+//builder.Services.AddHttpsRedirection(options => {options.HttpsPort = 7084;});
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
@@ -49,11 +56,15 @@ builder.Services.AddAuthentication().AddGoogle(googleOptions =>
     {
         googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
         googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+        googleOptions.CallbackPath = new PathString("/signin-google");
+        googleOptions.SignInScheme = IdentityConstants.ExternalScheme;
     });
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
     // Cookie settings
+    options.Cookie.SameSite = SameSiteMode.Strict;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     options.Cookie.HttpOnly = true;
     options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
 
@@ -76,6 +87,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 
 app.UseRouting();
