@@ -54,18 +54,10 @@ builder.Services.Configure<IdentityOptions>(options =>
 
 builder.Services.AddAuthentication().AddGoogle(googleOptions =>
     {
-<<<<<<< HEAD
         googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
         googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
         googleOptions.CallbackPath = new PathString("/signin-google");
         googleOptions.SignInScheme = IdentityConstants.ExternalScheme;
-=======
-        //googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
-        //googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
-
-        googleOptions.ClientId = "395816641246-60e0nalb4ruip3ptrvp1a34dg87v9q2a.apps.googleusercontent.com";
-        googleOptions.ClientSecret = "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";
->>>>>>> a0498324788ec687e86418852ef0546be478e350
     });
 
 builder.Services.ConfigureApplicationCookie(options =>
