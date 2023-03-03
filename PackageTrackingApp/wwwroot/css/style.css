@@ -6,4 +6,8 @@
     .btn-primary {
         @apply py-1 px-3 text-white bg-primaryBlue transition duration-200 ease-in-out hover:-translate-y-1 hover:scale-105 hover:shadow-lg hover:shadow-primaryBlue rounded text-base hover:bg-secondaryBlue items-center inline-flex
     }
+
+    .btn-secondary {
+        @apply py-1 px-3 text-gray-500 bg-primaryGray transition duration-200 ease-in-out hover:-translate-y-1 hover:scale-105 hover:shadow-lg hover:shadow-primaryGray rounded text-base hover:bg-gray-700 items-center inline-flex
+    }
 }

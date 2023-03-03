@@ -13,7 +13,7 @@
         <div class="container mx-auto flex flex-wrap p-3 flex-col md:flex-row items-center ">
             <a asp-controller="Home" asp-action="Index"  class="flex title-font font-medium items-center mb-4 md:mb-0">
             <div>
-              <img src ="Img/logo.png" class="h-8 w-8">
+              <img src ="@Url.Content("~/Content/Images/Logo.png")" class="h-8 w-8">
             </div>
               <span class="ml-3 text-xl ">Pakke Portalen</span>
             </a>
@@ -23,12 +23,6 @@
                   <a asp-controller="Home" asp-action="Index" class="mr-5 hover:text-gray-400 transition duration-200 ease-in-out hover:-translate-y-1 hover:scale-105">Min Side</a>
             </nav>
             <partial name="_LoginPartial" />
-@*            <a name="_LoginPartial" class="btn-primary mt-4 md:mt-0">
-              <p>Log Ind</p>
-              <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-1" viewBox="0 0 24 24">
-                  <path d="M5 12h14M12 5l7 7-7 7"></path>
-              </svg>
-            </a>*@
         </div>
     </div>
 
