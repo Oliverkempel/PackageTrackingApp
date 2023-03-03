@@ -10,14 +10,17 @@
     <h1 class="text-gray-600 text-4xl">Log Ind</h1>
     <p class="">Brug din lokale konto her</p>
 
-    <form id="account" method="post" class="flex flex-col text-left px-24 my-8 space-y-6">
+    <form id="account" method="post" class="flex flex-col text-left px-12 my-8 space-y-6">
+        <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
         <div class="flex flex-col">
             <label asp-for="Input.Email" class="form-label">Mail Adresse:</label>
             <input asp-for ="Input.Email" autocomplete="username" aria-required="true" placeholder="name@example.com" class="border-2 border-gray-200 text-sm rounded-lg focus:border-primaryBlue p-2 bg-gray-100 text-gray-800 outline-none shadow-lg focus:shadow-primaryBlue/10">
+            <span asp-validation-for="Input.Email" class="text-danger"></span>
         </div>
         <div class="flex flex-col">
             <label asp-for="Input.Password" class="form-label">Kodeord:</label>
             <input asp-for="Input.Password" autocomplete="current-password" aria-required="true" placeholder="password" class="border-2 border-gray-200 text-sm rounded-lg focus:border-primaryBlue p-2 bg-gray-100 text-gray-800 outline-none shadow-lg focus:shadow-primaryBlue/10">
+            <span asp-validation-for="Input.Password" class="text-danger"></span>
         </div>
         <div>
             <input asp-for="Input.RememberMe" type="checkbox">
@@ -42,7 +45,7 @@
                             @foreach (var provider in Model.ExternalLogins!)
                             {
                                 //<button class="btn-secondary bg-white flex-grow">Log ind med Google</button>
-                                <button type="submit" class="btn-secondary bg-white flex-grow" name="provider"  title="Log ind med @provider.DisplayName">Log ind med @provider.DisplayName</button>
+                                <button type="submit" class="btn-secondary bg-white flex-grow text-center mx-auto" name="provider" value="@provider.Name" title="Log ind med @provider.DisplayName">Log ind med @provider.DisplayName</button>
                             }
                 </form>
             }
