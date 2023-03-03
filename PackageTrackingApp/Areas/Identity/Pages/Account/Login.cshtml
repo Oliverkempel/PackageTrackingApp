@@ -5,64 +5,52 @@
     ViewData["Title"] = "Log in";
 }
 
-<h1>@ViewData["Title"]</h1>
-
-
-
 
 <div class="bg-primaryGray  rounded-xl lg:w-3/6 p-10 mx-auto text-center">
     <h1 class="text-gray-600 text-4xl">Log Ind</h1>
     <p class="">Brug din lokale konto her</p>
 
     <form id="account" method="post" class="flex flex-col text-left px-24 my-8 space-y-6">
+        <div class="flex flex-col">
+            <label asp-for="Input.Email" class="form-label">Mail Adresse:</label>
+            <input asp-for ="Input.Email" autocomplete="username" aria-required="true" placeholder="name@example.com" class="border-2 border-gray-200 text-sm rounded-lg focus:border-primaryBlue p-2 bg-gray-100 text-gray-800 outline-none shadow-lg focus:shadow-primaryBlue/10">
+        </div>
+        <div class="flex flex-col">
+            <label asp-for="Input.Password" class="form-label">Kodeord:</label>
+            <input asp-for="Input.Password" autocomplete="current-password" aria-required="true" placeholder="password" class="border-2 border-gray-200 text-sm rounded-lg focus:border-primaryBlue p-2 bg-gray-100 text-gray-800 outline-none shadow-lg focus:shadow-primaryBlue/10">
+        </div>
         <div>
-            <div class="flex flex-col">
-                <label asp-for="Input.Email" class="form-label">Mail Adresse:</label>
-                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" class="form-input">
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
-            </div>
-            <div class="flex flex-col">
-                <label asp-for="Input.Password" class="form-label">Kodeord:</label>
-                <input asp-for="Input.Password" autocomplete="current-password" aria-required="true" placeholder="password" class="form-input">
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
-            </div>
-            <div>
-                <input asp-for ="Input.RememberMe" type="checkbox">
-                <label asp-for="Input.RememberMe" class="form-label">@Html.DisplayNameFor(m => m.Input.RememberMe)</label>
-            </div>
-            <button id="login-submit" type="submit" class="btn-primary">Log ind</button>
-            <div class="flex flex-row">
-                <a id="forgot-password" asp-page="./ForgotPassword" class="btn-link flex-grow">Nulstil Adgangkode</a>
-                <p class="p-2">Eller</p>
-                <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="btn-link flex-grow">Opret ny bruger</a>
-                @*<a id="resend-confirmation" asp-page="./ResendEmailConfirmation class="btn-link flex-grow">Opret ny bruger</a*@
-            </div>
+            <input asp-for="Input.RememberMe" type="checkbox">
+            <label asp-for="Input.RememberMe" class="form-label">@Html.DisplayNameFor(m => m.Input.RememberMe)</label>
+        </div>
+        <button id="login-submit" type="submit" class="btn-primary">Log ind</button>
+        <div class="flex flex-row">
+            <a id="forgot-password" asp-page="./ForgotPassword" class="btn-link flex-grow">Glemt adgangskode?</a>
+            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="btn-link flex-grow">Opret ny bruger</a>
         </div>
     </form>
     <div class="bg-gray-300  h-1 rounded-lg mx-12"></div>
-    <div class="flex flex-row space-x-12 items-center mx-44 my-8">
+    <div class="my-8">
         @{
             if ((Model.ExternalLogins?.Count ?? 0) == 0)
             {
-                <p>Ingen andre metroder at logge ind på</p>
-            } else
+                <p>Ingen andre login services!</p>
+            }
+            else
             {
-
-                @foreach (var provider in Model.ExternalLogins!)
-                    {
-                    <button type="submit" class="btn-secondary bg-white flex-grow" name="provider" value="@provider.Name" title="Log Ind ved brug af din @provider.DisplayName konto">Log ind med @provider.DisplayName</button>
-                    }
+                <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="flex space-x-12 flex-row items-cener mx-12">
+                            @foreach (var provider in Model.ExternalLogins!)
+                            {
+                                //<button class="btn-secondary bg-white flex-grow">Log ind med Google</button>
+                                <button type="submit" class="btn-secondary bg-white flex-grow" name="provider"  title="Log ind med @provider.DisplayName">Log ind med @provider.DisplayName</button>
+                            }
+                </form>
             }
         }
-
-
     </div>
 
 </div>
 
-<div class="bg-red-900 w-24 h-24">
-
-</div>
 
 
 
