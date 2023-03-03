@@ -11,7 +11,9 @@
     <p class="">Brug din lokale konto her</p>
 
     <form id="account" method="post" class="flex flex-col text-left px-12 my-8 space-y-6">
-        <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+        <div asp-validation-summary="ModelOnly" class="w-full text-center text-white bg-red-500 p-2 rounded-xl" role="alert">
+            
+        </div>
         <div class="flex flex-col">
             <label asp-for="Input.Email" class="form-label">Mail Adresse:</label>
             <input asp-for ="Input.Email" autocomplete="username" aria-required="true" placeholder="name@example.com" class="border-2 border-gray-200 text-sm rounded-lg focus:border-primaryBlue p-2 bg-gray-100 text-gray-800 outline-none shadow-lg focus:shadow-primaryBlue/10">
@@ -26,7 +28,7 @@
             <input asp-for="Input.RememberMe" type="checkbox">
             <label asp-for="Input.RememberMe" class="form-label">@Html.DisplayNameFor(m => m.Input.RememberMe)</label>
         </div>
-        <button id="login-submit" type="submit" class="btn-primary">Log ind</button>
+        <button id="login-submit" type="submit" class="btn-primary"><p class="text-center mx-auto">Log ind</p></button>
         <div class="flex flex-row">
             <a id="forgot-password" asp-page="./ForgotPassword" class="btn-link flex-grow">Glemt adgangskode?</a>
             <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="btn-link flex-grow">Opret ny bruger</a>
