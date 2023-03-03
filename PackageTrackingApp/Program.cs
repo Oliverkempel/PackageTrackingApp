@@ -65,7 +65,12 @@ builder.Services.AddAuthentication().AddGoogle(googleOptions =>
         googleOptions.CallbackPath = new PathString("/signin-google");
         googleOptions.Scope.Add(GmailService.Scope.GmailReadonly);
         googleOptions.SignInScheme = IdentityConstants.ExternalScheme;
+        googleOptions.SaveTokens = true;
     });
+
+string[] scopes = { "https://www.googleapis.com/auth/gmail.readonly" };
+
+
 
 builder.Services.ConfigureApplicationCookie(options =>
 {

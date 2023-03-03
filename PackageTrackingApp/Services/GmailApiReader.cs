@@ -32,7 +32,8 @@ public class GmailApiReader : IGmailService
     public async Task<string> GetLatestEmailAsync()
     {
 
-        var accessToken = await _httpContextAccessor.HttpContext.GetTokenAsync("access_token");
+        //var accessToken = await _httpContextAccessor.HttpContext.GetTokenAsync("access_token");
+        var accessToken = await _httpContextAccessor.HttpContext.GetTokenAsync("");
 
         var credential = GoogleCredential.FromAccessToken(accessToken);
         
@@ -44,7 +45,7 @@ public class GmailApiReader : IGmailService
         var emailListRequest = service.Users.Messages.List("me");
         emailListRequest.LabelIds = "INBOX";
         emailListRequest.IncludeSpamTrash = false;
-        emailListRequest.Q = "is:unread";
+        emailListRequest.Q = "mail:noreply@postnord.dk";
         emailListRequest.MaxResults = 1;
         var emailListResponse = await emailListRequest.ExecuteAsync();
 

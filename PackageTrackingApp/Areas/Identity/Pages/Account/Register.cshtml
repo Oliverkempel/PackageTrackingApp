@@ -4,26 +4,27 @@
     ViewData["Title"] = "Register";
 }
 
-<h1>@ViewData["Title"]</h1>
-
-
-
 <div class="bg-primaryGray  rounded-xl lg:w-3/6 p-10 mx-auto text-center">
     <h1 class="text-gray-600 text-4xl">@ViewData["Title"]</h1>
     <p class="">Opret en ny konto her</p>
 
-    <form class="flex flex-col text-left px-12 my-8 space-y-6">
+    <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="flex flex-col text-left px-12 my-8 space-y-6">
+        <div asp-validation-summary="ModelOnly" class="w-full text-center text-white bg-red-500 p-2 rounded-xl" role="alert">
+        </div>
         <div class="flex flex-col">
             <label asp-for="Input.Email" class="form-label">Mail Adresse:</label>
             <input asp-for="Input.Email" autocomplete="username" aria-required="true" placeholder="name@example.com" class="form-input" />
+            <span asp-validation-for="Input.Email" class="text-danger"></span>
         </div>
         <div class="flex flex-col">
             <label asp-for="Input.Password" class="form-label">Kodeord:</label>
             <input asp-for="Input.Password" autocomplete="new-password" aria-required="true" placeholder="password" class="form-input"/>
+            <span asp-validation-for="Input.Password" class="text-danger"></span>
         </div>
         <div class="flex flex-col">
             <label asp-for="Input.ConfirmPassword" class="form-label">Gentag Kodeord:</label>
             <input asp-for="Input.ConfirmPassword" autocomplete="new-password" aria-required="true" placeholder="password" class="form-input"/>
+            <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
         </div>
         <button id="registerSubmit" type="submit" class="btn-primary"><p class="text-center mx-auto">Registrer</p></button>
     </form>
