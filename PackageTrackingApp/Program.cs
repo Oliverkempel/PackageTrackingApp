@@ -1,15 +1,26 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using PackageTrackingApp.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
 using System.Threading.Tasks;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.OAuth;
+using Microsoft.AspNetCore.HttpOverrides;
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.Gmail.v1;
+using Google.Apis.Gmail.v1.Data;
+using Google.Apis.Services;
 using PackageTrackingApp.Services;
+using PackageTrackingApp.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+//GmailApiReader.UserAuthorization();
+//Console.WriteLine(GmailApiReader.ListMessages);
 // Add Database 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -23,6 +34,8 @@ builder.Services.AddDbContext<PackageTrackingAppIdentityDbContext>(options =>
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<PackageTrackingAppIdentityDbContext>();
 
 builder.Services.AddRazorPages();
+
+//builder.Services.AddHttpsRedirection(options => {options.HttpsPort = 7084;});
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
@@ -47,16 +60,18 @@ builder.Services.Configure<IdentityOptions>(options =>
 
 builder.Services.AddAuthentication().AddGoogle(googleOptions =>
     {
-        //googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
-        //googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
-
-        googleOptions.ClientId = "395816641246-60e0nalb4ruip3ptrvp1a34dg87v9q2a.apps.googleusercontent.com";
-        googleOptions.ClientSecret = "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";
+        googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+        googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+        googleOptions.CallbackPath = new PathString("/signin-google");
+        googleOptions.Scope.Add(GmailService.Scope.GmailReadonly);
+        googleOptions.SignInScheme = IdentityConstants.ExternalScheme;
     });
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
     // Cookie settings
+    options.Cookie.SameSite = SameSiteMode.Strict;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     options.Cookie.HttpOnly = true;
     options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
 
@@ -67,6 +82,9 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
+
+builder.Services.AddScoped<IGmailService, GmailApiReader>();
+
 
 var app = builder.Build();
 
@@ -79,6 +97,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 
 app.UseRouting();

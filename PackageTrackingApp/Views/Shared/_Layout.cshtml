@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<IdentityUser> SignInManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -18,9 +22,13 @@
               <span class="ml-3 text-xl ">Pakke Portalen</span>
             </a>
             <nav class="md:mr-auto md:ml-10 flex flex-wrap items-center text-base justify-center">
-                  <a asp-controller="Home" asp-action="Index" class="mr-5 bg-transparent hover:text-gray-400 transition duration-200 ease-in-out hover:-translate-y-1 hover:scale-105">Forsiden</a>
-                  <a asp-controller="Home" asp-action="Index" class="mr-5 hover:text-gray-400 transition duration-200 ease-in-out hover:-translate-y-1 hover:scale-105 ">Om os</a>
-                  <a asp-controller="Home" asp-action="Index" class="mr-5 hover:text-gray-400 transition duration-200 ease-in-out hover:-translate-y-1 hover:scale-105">Min Side</a>
+                <a asp-controller="Home" asp-action="Index" class="mr-5 bg-transparent hover:text-gray-400 transition duration-200 ease-in-out hover:-translate-y-1 hover:scale-105">Forsiden</a>
+                <a asp-controller="Home" asp-action="Index" class="mr-5 hover:text-gray-400 transition duration-200 ease-in-out hover:-translate-y-1 hover:scale-105 ">Om os</a>
+                <a asp-controller="Home" asp-action="Index" class="mr-5 hover:text-gray-400 transition duration-200 ease-in-out hover:-translate-y-1 hover:scale-105">Min Side</a>
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <a asp-controller="Home" asp-action="Test" class="mr-5 hover:text-gray-400 transition duration-200 ease-in-out hover:-translate-y-1 hover:scale-105">Test Side</a>
+                } 
             </nav>
             <partial name="_LoginPartial" />
         </div>

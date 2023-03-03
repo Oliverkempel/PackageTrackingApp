@@ -12,8 +12,8 @@ using PackageTrackingApp.Data;
 namespace PackageTrackingApp.Migrations
 {
     [DbContext(typeof(PackageTrackingAppIdentityDbContext))]
-    [Migration("20230228160951_CreateIdentitySchema")]
-    partial class CreateIdentitySchema
+    [Migration("20230301123127_IdentityGoogleSchema")]
+    partial class IdentityGoogleSchema
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
