@@ -47,7 +47,7 @@
                             @foreach (var provider in Model.ExternalLogins!)
                             {
                                 //<button class="btn-secondary bg-white flex-grow">Log ind med Google</button>
-                                <button type="submit" class="btn-secondary bg-white flex-grow text-center mx-auto" name="provider" value="@provider.Name" title="Log ind med @provider.DisplayName">Log ind med @provider.DisplayName</button>
+                        <button type="submit" class="btn-secondary bg-white flex-grow text-center mx-auto" name="provider" value="@provider.Name" title="Log ind med @provider.DisplayName"><p class="text-center mx-auto">Log ind med @provider.DisplayName</p></button>
                             }
                 </form>
             }

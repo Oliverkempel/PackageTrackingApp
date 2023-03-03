@@ -40,7 +40,7 @@
                 <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
                             @foreach (var provider in Model.ExternalLogins!)
                             {
-                        <button type="submit" class="btn-secondary bg-white flex-grow text-center mx-auto" name="provider" value="@provider.Name" value="@provider.Name" title="Log in using your @provider.DisplayName account">Registrer med @provider.DisplayName</button>
+                        <button type="submit" class="btn-secondary bg-white flex-grow text-center mx-auto" name="provider" value="@provider.Name" value="@provider.Name" title="Log in using your @provider.DisplayName account"><p class="text-center mx-auto">Registrer med @provider.DisplayName</p></button>
                             }
                 </form>
             }
