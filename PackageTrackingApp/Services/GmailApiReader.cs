@@ -32,8 +32,9 @@ public class GmailApiReader : IGmailService
     public async Task<string> GetLatestEmailAsync()
     {
 
-        //var accessToken = await _httpContextAccessor.HttpContext.GetTokenAsync("access_token");
-        var accessToken = await _httpContextAccessor.HttpContext.GetTokenAsync("");
+        var accessToken = await _httpContextAccessor.HttpContext.GetTokenAsync("access_token");
+
+        
 
         var credential = GoogleCredential.FromAccessToken(accessToken);
         

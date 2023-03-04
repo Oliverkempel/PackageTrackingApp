@@ -12,8 +12,14 @@ using Google.Apis.Auth.OAuth2;
 using Google.Apis.Gmail.v1;
 using Google.Apis.Gmail.v1.Data;
 using Google.Apis.Services;
+using Google.Apis;
 using PackageTrackingApp.Services;
 using PackageTrackingApp.Data;
+using System.Net.Http;
+using Google.Apis.Auth.OAuth2.Requests;
+using NuGet.Protocol.Plugins;
+using Microsoft.Identity.Client.Platforms.Features.DesktopOs.Kerberos;
+using static Google.Apis.Gmail.v1.GmailService;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
@@ -66,11 +72,12 @@ builder.Services.AddAuthentication().AddGoogle(googleOptions =>
         googleOptions.Scope.Add(GmailService.Scope.GmailReadonly);
         googleOptions.SignInScheme = IdentityConstants.ExternalScheme;
         googleOptions.SaveTokens = true;
+        googleOptions.AccessType = "offline";
+        //googleOptions.AuthorizationEndpoint = 
     });
 
-string[] scopes = { "https://www.googleapis.com/auth/gmail.readonly" };
 
-
+    //.HttpContext.GetTokenAsync("access_token");
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
