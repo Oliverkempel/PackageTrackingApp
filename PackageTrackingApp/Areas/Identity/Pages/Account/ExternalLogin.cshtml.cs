@@ -111,11 +111,19 @@ namespace PackageTrackingApp.Areas.Identity.Pages.Account
                 ErrorMessage = "Error loading external login information.";
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
+            var accessToken = info.AuthenticationProperties.GetTokenValue("access_token");
 
             // Sign in the user with this external login provider if the user already has a login.
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+            var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
             if (result.Succeeded)
             {
+                var authProps = new AuthenticationProperties();
+                authProps.StoreTokens(new List<AuthenticationToken> {
+                new AuthenticationToken { Name = "access_token", Value = accessToken }
+                 });
+
+                await _signInManager.SignInAsync(user, authProps);
                 _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
                 return LocalRedirect(returnUrl);
             }
@@ -166,15 +174,16 @@ namespace PackageTrackingApp.Areas.Identity.Pages.Account
                         _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
 
 
-                        // Include the access token in the properties
-                        // using Microsoft.AspNetCore.Authentication;
-                        var props = new AuthenticationProperties();
+
                         foreach(var element in info.AuthenticationTokens.Take(8).ToList())
                         {
                             Console.Write("hello:");
                             Console.WriteLine(element);
                         }
 
+                        // Include the access token in the properties
+                        // using Microsoft.AspNetCore.Authentication;
+                        var props = new AuthenticationProperties();
                         props.StoreTokens(info.AuthenticationTokens);
                         props.IsPersistent = false;
 

@@ -64,17 +64,18 @@ builder.Services.Configure<IdentityOptions>(options =>
     options.User.RequireUniqueEmail = true;
 });
 
-builder.Services.AddAuthentication().AddGoogle(googleOptions =>
-    {
-        googleOptions.ClientId = "395816641246-60e0nalb4ruip3ptrvp1a34dg87v9q2a.apps.googleusercontent.com";
-        googleOptions.ClientSecret = "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";
-        googleOptions.CallbackPath = new PathString("/signin-google");
-        googleOptions.Scope.Add(GmailService.Scope.GmailReadonly);
-        googleOptions.SignInScheme = IdentityConstants.ExternalScheme;
-        googleOptions.SaveTokens = true;
-        googleOptions.AccessType = "offline";
-        //googleOptions.AuthorizationEndpoint = 
-    });
+builder.Services.AddAuthentication()
+.AddCookie()
+.AddGoogle(googleOptions =>
+{
+    googleOptions.ClientId = "395816641246-60e0nalb4ruip3ptrvp1a34dg87v9q2a.apps.googleusercontent.com";
+    googleOptions.ClientSecret = "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";
+    googleOptions.CallbackPath = new PathString("/signin-google");
+    googleOptions.Scope.Add(GmailService.Scope.GmailReadonly);
+    googleOptions.SignInScheme = IdentityConstants.ExternalScheme;
+    googleOptions.SaveTokens = true;
+    googleOptions.AccessType = "offline";
+});
 
 
     //.HttpContext.GetTokenAsync("access_token");
@@ -94,7 +95,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
-
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IGmailService, GmailApiReader>();
 
 

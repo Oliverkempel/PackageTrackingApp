@@ -3,6 +3,15 @@ using Microsoft.AspNetCore.Mvc;
 using PackageTrackingApp.Models;
 using PackageTrackingApp.Services;
 using System.Diagnostics;
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.Gmail.v1;
+using Google.Apis.Gmail.v1.Data;
+using Google.Apis.Services;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace PackageTrackingApp.Controllers
 {
@@ -26,11 +35,16 @@ namespace PackageTrackingApp.Controllers
         {
             return View();
         }
-
+        [HttpGet]
+        [Authorize]
+        [Route("token")]
         public async Task<IActionResult> Test()
         {
             try
             {
+                //var accessToken = await HttpContext.GetTokenAsync("access_token");
+                var accessToken = HttpContext.GetTokenAsync("access_token");
+                Console.WriteLine(accessToken.Result);
                 var latestEmail = await _gmailService.GetLatestEmailAsync();
                 _logger.LogInformation($"Latest email body: {latestEmail}");
                 return View();

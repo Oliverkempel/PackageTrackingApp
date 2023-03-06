@@ -34,12 +34,9 @@ public class GmailApiReader : IGmailService
 
         var authProps = await _httpContextAccessor.HttpContext.AuthenticateAsync();
 
-        var accessToken = authProps.Properties.GetTokenValue("acces_token");
-
+        var accessToken = authProps.Properties.GetTokenValue("access_token");
         Console.WriteLine(accessToken);
-
-        var laccessToken = "dlpl";
-        var credential = GoogleCredential.FromAccessToken(laccessToken);
+        var credential = GoogleCredential.FromAccessToken(accessToken);
         
         var service = new GmailService(new BaseClientService.Initializer()
         {
