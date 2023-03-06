@@ -112,17 +112,21 @@ namespace PackageTrackingApp.Areas.Identity.Pages.Account
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
             var accessToken = info.AuthenticationProperties.GetTokenValue("access_token");
+            var refreshToken = info.AuthenticationProperties.GetTokenValue("refresh_token");
 
             // Sign in the user with this external login provider if the user already has a login.
             var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
             var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
             if (result.Succeeded)
             {
+                // laver et nyt instance af AuthenticationProperties
                 var authProps = new AuthenticationProperties();
+                // laver en ny token der hedder acces_token med værdi af accesToken og det samme sker for refresh token
                 authProps.StoreTokens(new List<AuthenticationToken> {
-                new AuthenticationToken { Name = "access_token", Value = accessToken }
+                new AuthenticationToken { Name = "access_token", Value = accessToken },
+                new AuthenticationToken { Name = "refresh_token", Value = refreshToken }
                  });
-
+                // login en bruger her bliver den brugt til at gemme tokens
                 await _signInManager.SignInAsync(user, authProps);
                 _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
                 return LocalRedirect(returnUrl);
