@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authentication;
 
 namespace PackageTrackingApp.Areas.Identity.Pages.Account
 {
@@ -164,6 +165,19 @@ namespace PackageTrackingApp.Areas.Identity.Pages.Account
                     {
                         _logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
 
+
+                        // Include the access token in the properties
+                        // using Microsoft.AspNetCore.Authentication;
+                        var props = new AuthenticationProperties();
+                        foreach(var element in info.AuthenticationTokens.Take(8).ToList())
+                        {
+                            Console.Write("hello:");
+                            Console.WriteLine(element);
+                        }
+
+                        props.StoreTokens(info.AuthenticationTokens);
+                        props.IsPersistent = false;
+
                         var userId = await _userManager.GetUserIdAsync(user);
                         var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                         code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
@@ -182,7 +196,7 @@ namespace PackageTrackingApp.Areas.Identity.Pages.Account
                             return RedirectToPage("./RegisterConfirmation", new { Email = Input.Email });
                         }
 
-                        await _signInManager.SignInAsync(user, isPersistent: false, info.LoginProvider);
+                        await _signInManager.SignInAsync(user, props, info.LoginProvider);
                         return LocalRedirect(returnUrl);
                     }
                 }
