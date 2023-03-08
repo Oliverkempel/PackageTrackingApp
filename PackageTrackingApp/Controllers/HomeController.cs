@@ -21,12 +21,14 @@ namespace PackageTrackingApp.Controllers
         private readonly IGmailService _gmailService;
         private readonly ILogger<HomeController> _logger;
         private readonly IMailHandler _mailHandler;
+        private readonly ITrackingInfo _trackingInfo;
 
-        public HomeController(IGmailService gmailService, ILogger<HomeController> logger, IMailHandler mailHandler)
+        public HomeController(IGmailService gmailService, ILogger<HomeController> logger, IMailHandler mailHandler, ITrackingInfo trackingInfo)
         {
             _gmailService = gmailService;
             _logger = logger;
             _mailHandler = mailHandler;
+            _trackingInfo = trackingInfo;
         }
 
         public IActionResult Index()
@@ -44,6 +46,9 @@ namespace PackageTrackingApp.Controllers
         public async Task<IActionResult> Test()
         {
             AllMailInfo mailInfos = await _mailHandler.getAllTrackingNumbers();
+
+            var test2 = _trackingInfo.getPostnordTrackingInfo("05308115208628");
+
             //var latestEmail = await _gmailService.GetLatestEmailAsync("noreply@postnord.dk");
             //_logger.LogInformation($"Latest email body: {latestEmail}");
             string test = mailInfos.postNordMailInfos.First().trackingNumber;

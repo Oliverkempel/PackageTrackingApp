@@ -98,6 +98,8 @@ builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IGmailService, GmailApiReader>();
 builder.Services.AddScoped<IMailHandler, MailHandler>();
+builder.Services.AddScoped<ITrackingInfo, TrackingInfo>();
+
 
 
 var app = builder.Build();
