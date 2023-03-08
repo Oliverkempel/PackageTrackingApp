@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
+using PackageTrackingApp.Services;
 
 namespace PackageTrackingApp.Controllers
 {
@@ -19,11 +20,13 @@ namespace PackageTrackingApp.Controllers
     {
         private readonly IGmailService _gmailService;
         private readonly ILogger<HomeController> _logger;
+        private readonly IMailHandler _mailHandler;
 
-        public HomeController(IGmailService gmailService, ILogger<HomeController> logger)
+        public HomeController(IGmailService gmailService, ILogger<HomeController> logger, IMailHandler mailHandler)
         {
             _gmailService = gmailService;
             _logger = logger;
+            _mailHandler = mailHandler;
         }
 
         public IActionResult Index()
@@ -42,6 +45,7 @@ namespace PackageTrackingApp.Controllers
         {
             try
             {
+                _mailHandler.test();
                 var latestEmail = await _gmailService.GetLatestEmailAsync();
                 _logger.LogInformation($"Latest email body: {latestEmail}");
                 return View();

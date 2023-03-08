@@ -97,6 +97,7 @@ builder.Services.AddTransient<IEmailSender, EmailSender>();
 builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IGmailService, GmailApiReader>();
+builder.Services.AddScoped<IMailHandler, MailHandler>();
 
 
 var app = builder.Build();

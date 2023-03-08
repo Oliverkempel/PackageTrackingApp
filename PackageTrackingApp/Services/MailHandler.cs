@@ -5,12 +5,34 @@ using Google.Apis.Gmail.v1.Data;
 using Google.Apis.Services;
 using HtmlAgilityPack;
 using System.Text.RegularExpressions;
+using Microsoft.CodeAnalysis.CSharp;
+using PackageTrackingApp.Services;
+using PackageTrackingApp.Controllers;
 
-namespace PackageTrackingApp.Services
+namespace PackageTrackingApp.Services; 
 
-{
-    public class MailHandler
+    public interface IMailHandler
     {
+        void test();
+    }
+
+    public class MailHandler : IMailHandler
+    {
+
+        private readonly IGmailService _gmailService;
+        
+
+        public MailHandler(IGmailService gmailService, ILogger<HomeController> logger)
+        {
+            _gmailService = gmailService;
+        }
+
+        public async void test()
+        {
+            List<Message> messages = new List<Message>();
+            messages = await _gmailService.GetLatestEmailAsync();
+        Console.WriteLine("CUM");
+        }
 
         public string getTrackingNumberPostnord(Message Mail)
         {
@@ -53,4 +75,3 @@ namespace PackageTrackingApp.Services
         }
 
     }
-}
