@@ -64,8 +64,7 @@ public class GmailApiReader : IGmailService
         }
         else
         {
-            throw new Exception("no emails");
-            return emailListResponse.Messages.ToList();
+            return null;
         }
     }
 }
