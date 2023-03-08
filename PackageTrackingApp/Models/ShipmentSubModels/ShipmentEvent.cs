@@ -6,7 +6,7 @@
 
         public DateTime dateTime { get; set; }
 
-        public Location location { get; set; }
+        public Address location { get; set; }
 
         public string status { get; set; }
     }

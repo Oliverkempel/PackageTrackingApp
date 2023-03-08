@@ -2,7 +2,7 @@
 {
     public class ShipmentInfo
     {
-        public int weight { get; set; }
+        public string weight { get; set; }
 
         public string service { get; set; }
 

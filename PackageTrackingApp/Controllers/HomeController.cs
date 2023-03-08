@@ -47,7 +47,9 @@ namespace PackageTrackingApp.Controllers
         {
             AllMailInfo mailInfos = await _mailHandler.getAllTrackingNumbers();
 
-            var test2 = _trackingInfo.getPostnordTrackingInfo("05308115208628");
+            _trackingInfo.getTrackingInfoAllCourriers(mailInfos);
+
+            //var test2 = _trackingInfo.getPostnordTrackingInfo("05308115208628");
 
             //var latestEmail = await _gmailService.GetLatestEmailAsync("noreply@postnord.dk");
             //_logger.LogInformation($"Latest email body: {latestEmail}");

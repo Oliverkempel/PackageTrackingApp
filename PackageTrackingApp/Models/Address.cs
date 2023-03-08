@@ -6,6 +6,6 @@
 
         public string country { get; set; }
 
-        public int zipCode { get; set; }
+        public string zipCode { get; set; }
     }
 }

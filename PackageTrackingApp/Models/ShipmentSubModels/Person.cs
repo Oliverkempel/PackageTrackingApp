@@ -1,6 +1,6 @@
 ﻿namespace PackageTrackingApp.Models.ShipmentSubModels
 {
-    public class Consignee
+    public class Person
     {
         public Address address { get; set; }
 
