@@ -8,6 +8,8 @@ using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis.CSharp;
 using PackageTrackingApp.Services;
 using PackageTrackingApp.Controllers;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
 
 namespace PackageTrackingApp.Services; 
 
@@ -46,8 +48,8 @@ namespace PackageTrackingApp.Services;
         {
             //Initialisere ny instans af HtmlDocument
             HtmlDocument htmlDoc = new HtmlDocument();
-            //Loader string til Html filen
-            htmlDoc.LoadHtml(Convert.FromBase64String(Mail.Payload.Body.Data).ToString());
+        //Loader string til Html filen
+            htmlDoc.LoadHtml(Base64UrlEncoder.Decode(Mail.Payload.Body.Data));
 
             //vælger tag med klassen "KONSTANT" og vælger teksten deri
             var tagInnerText = htmlDoc.DocumentNode.SelectSingleNode("//*[@class='KONSTANT']").InnerText;
