@@ -29,13 +29,13 @@ public class GmailApiReader : IGmailService
         _configuration = configuration;
         _httpContextAccessor = httpContextAccessor;
     }
-    public async Task<string> GetLatestEmailAsync()
+    public async Task<IList<Message>> GetLatestEmailAsync()
     {
 
         var authProps = await _httpContextAccessor.HttpContext.AuthenticateAsync();
 
         var accessToken = authProps.Properties.GetTokenValue("access_token");
-        Console.WriteLine(accessToken);
+
         var credential = GoogleCredential.FromAccessToken(accessToken);
         
         var service = new GmailService(new BaseClientService.Initializer()
@@ -44,23 +44,25 @@ public class GmailApiReader : IGmailService
             ApplicationName = "Gmail API Sample"
         });
         var emailListRequest = service.Users.Messages.List("me");
-        emailListRequest.LabelIds = "INBOX";
-        emailListRequest.IncludeSpamTrash = false;
-        emailListRequest.Q = "mail:noreply@postnord.dk";
-        emailListRequest.MaxResults = 1;
+        emailListRequest.Q = "from:noreply@postnord.dk";
         var emailListResponse = await emailListRequest.ExecuteAsync();
-
         if (emailListResponse?.Messages != null && emailListResponse.Messages.Any())
         {
-            var email = emailListResponse.Messages.FirstOrDefault();
-        var emailInfoRequest = service.Users.Messages.Get("me", email.Id);
-        var emailInfoResponse = await emailInfoRequest.ExecuteAsync();
-        var body = emailInfoResponse.Payload.Body.Data;
-            return body;
+            foreach (var message in emailListResponse.Messages)
+            {
+                var email = emailListResponse.Messages.FirstOrDefault();
+                var emailInfoRequest = service.Users.Messages.Get("me", email.Id);
+                var emailInfoResponse = await emailInfoRequest.ExecuteAsync();
+                var body = emailInfoResponse.Payload.Body.Data;
+                Console.WriteLine(body);
+            }
+
+            return emailListResponse.Messages;
         }
         else
         {
-            return "No unread emails in the user's inbox.";
+            throw new Exception("no emails");
+            return emailListResponse.Messages;
         }
     }
 }

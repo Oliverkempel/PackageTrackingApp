@@ -42,9 +42,6 @@ namespace PackageTrackingApp.Controllers
         {
             try
             {
-                //var accessToken = await HttpContext.GetTokenAsync("access_token");
-                var accessToken = HttpContext.GetTokenAsync("access_token");
-                Console.WriteLine(accessToken.Result);
                 var latestEmail = await _gmailService.GetLatestEmailAsync();
                 _logger.LogInformation($"Latest email body: {latestEmail}");
                 return View();
