@@ -53,7 +53,14 @@ namespace PackageTrackingApp.Services
             //looper igennem mails hentet fra brugerens gmail, og gemmer dem i mailinfos
             foreach (Message message in postnordMessages)
             {
-                allMailInfos.postNordMailInfos.Add(getTrackingNumberPostnord(message));
+                MailInfo test = new MailInfo();
+                test = getTrackingNumberPostnord(message);
+
+                if(test.trackingNumber != "")
+                {
+                    allMailInfos.postNordMailInfos.Add(test);
+                }
+
             }
 
             List<Message> glsMessages = new List<Message>();

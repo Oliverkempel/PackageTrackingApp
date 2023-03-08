@@ -47,7 +47,7 @@ namespace PackageTrackingApp.Controllers
         {
             AllMailInfo mailInfos = await _mailHandler.getAllTrackingNumbers();
 
-            _trackingInfo.getTrackingInfoAllCourriers(mailInfos);
+            List<Shipment> allShipmentsFromUserInbox = _trackingInfo.getTrackingInfoAllCourriers(mailInfos);
 
             //var test2 = _trackingInfo.getPostnordTrackingInfo("05308115208628");
 

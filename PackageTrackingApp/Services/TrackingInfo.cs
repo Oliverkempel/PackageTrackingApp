@@ -9,13 +9,13 @@ namespace PackageTrackingApp.Services
 
     public interface ITrackingInfo
     {
-        void getTrackingInfoAllCourriers(AllMailInfo allMailInfo);
+        List<Shipment> getTrackingInfoAllCourriers(AllMailInfo allMailInfo);
         PostnordReturnWrapper.PostNordReturn getPostnordTrackingInfo(string trackingNumber);
         GlsReturnContainer.GlsReturn getGlsTrackingInfo(string trackingNumber);
     }
     public class TrackingInfo : ITrackingInfo
     {
-        public void getTrackingInfoAllCourriers(AllMailInfo allMailInfo)
+        public List<Shipment> getTrackingInfoAllCourriers(AllMailInfo allMailInfo)
         {
             List<Shipment> shipmentsList = new List<Shipment>();
 
@@ -25,58 +25,65 @@ namespace PackageTrackingApp.Services
 
                 shipmentData = getPostnordTrackingInfo(postnordMailInfo.trackingNumber);
 
-                List<ShipmentEvent> Events = new List<ShipmentEvent>();
-
-                foreach (var ev in shipmentData.TrackingInformationResponse.Shipments.First().Items.First().Events)
+                if(shipmentData.TrackingInformationResponse.Shipments.Length >= 1)
                 {
-                    Events.Add(new ShipmentEvent{
-                        dateTime = ev.EventTime.UtcDateTime,
-                        description = ev.EventDescription,
-                        location = new Address
+                    List<ShipmentEvent> Events = new List<ShipmentEvent>();
+
+
+                    foreach (var ev in shipmentData.TrackingInformationResponse.Shipments.First().Items.First().Events)
+                    {
+                        Events.Add(new ShipmentEvent
                         {
-                            city = ev.Location.City,
-                            country = ev.Location.Country,
-                            zipCode = ev.Location.Postcode,
-                        },
-                        status = ev.Status,   
+                            dateTime = ev.EventTime.UtcDateTime,
+                            description = ev.EventDescription,
+                            location = new Address
+                            {
+                                city = ev.Location.City,
+                                country = ev.Location.Country,
+                                zipCode = ev.Location.Postcode,
+                            },
+                            status = ev.Status,
+                        });
+                    }
+
+                    shipmentsList.Add(new Shipment
+                    {
+                        currentStatus = shipmentData.TrackingInformationResponse.Shipments.First().Status,
+                        events = Events,
+                        info = new ShipmentInfo
+                        {
+                            weight = shipmentData.TrackingInformationResponse.Shipments.First().TotalWeight.Value,
+                            courrier = postnordMailInfo.Courier,
+                            service = shipmentData.TrackingInformationResponse.Shipments.First().Service.Name,
+                            consignor = new Person
+                            {
+                                name = shipmentData.TrackingInformationResponse.Shipments.First().Consignor.Name,
+                                address = new Address
+                                {
+                                    city = shipmentData.TrackingInformationResponse.Shipments.First().Consignor.Address.City,
+                                    country = shipmentData.TrackingInformationResponse.Shipments.First().Consignor.Address.Country,
+                                    zipCode = shipmentData.TrackingInformationResponse.Shipments.First().Consignor.Address.PostCode.ToString(),
+
+                                },
+                            },
+                            consignee = new Person
+                            {
+                                name = "No name (You)",
+                                address = new Address
+                                {
+                                    city = shipmentData.TrackingInformationResponse.Shipments.First().Consignee.Address.City,
+                                    country = shipmentData.TrackingInformationResponse.Shipments.First().Consignee.Address.Country,
+                                    zipCode = shipmentData.TrackingInformationResponse.Shipments.First().Consignee.Address.PostCode.ToString(),
+
+                                },
+                            }
+
+                        }
+
                     });
                 }
 
-                shipmentsList.Add(new Shipment
-                {
-                    currentStatus = shipmentData.TrackingInformationResponse.Shipments.First().Status,
-                    events = Events,
-                    info = new ShipmentInfo
-                    {
-                        weight = shipmentData.TrackingInformationResponse.Shipments.First().TotalWeight.Value,
-                        courrier = postnordMailInfo.Courier,
-                        service = shipmentData.TrackingInformationResponse.Shipments.First().Service.Name,
-                        consignor = new Person
-                        {
-                            name = shipmentData.TrackingInformationResponse.Shipments.First().Consignor.Name,
-                            address = new Address
-                            {
-                                city = shipmentData.TrackingInformationResponse.Shipments.First().Consignor.Address.City,
-                                country = shipmentData.TrackingInformationResponse.Shipments.First().Consignor.Address.Country,
-                                zipCode = shipmentData.TrackingInformationResponse.Shipments.First().Consignor.Address.PostCode.ToString(),
-
-                            },
-                        },
-                        consignee = new Person
-                        {
-                            name = "No name (You)",
-                            address = new Address
-                            {
-                                city = shipmentData.TrackingInformationResponse.Shipments.First().Consignee.Address.City,
-                                country = shipmentData.TrackingInformationResponse.Shipments.First().Consignee.Address.Country,
-                                zipCode = shipmentData.TrackingInformationResponse.Shipments.First().Consignee.Address.PostCode.ToString(),
-
-                            },
-                        }
-
-                    }
-
-                }); 
+                
             }
 
             foreach(var glsMailInfo in allMailInfo.glsMailInfos)
@@ -85,61 +92,66 @@ namespace PackageTrackingApp.Services
 
                 shipmentData = getGlsTrackingInfo(glsMailInfo.trackingNumber);
 
-                List<ShipmentEvent> Events = new List<ShipmentEvent>();
-
-                foreach (var ev in shipmentData.TuStatus.First().History)
+                if(shipmentData.TuStatus.FirstOrDefault().TuNo != "ERRORNOTFOUND404")
                 {
-                    Events.Add(new ShipmentEvent
+                    List<ShipmentEvent> Events = new List<ShipmentEvent>();
+
+                    foreach (var ev in shipmentData.TuStatus.First().History)
                     {
-                        dateTime = ev.Date.UtcDateTime,
-                        description = ev.EvtDscr,
-                        location = new Address
+                        Events.Add(new ShipmentEvent
                         {
-                            city = ev.Address.City,
-                            country = ev.Address.CountryName,
-                            zipCode = "zip Not provided",
-                        },
-                        status = "status Not Provided",
-                    });
-                }
-
-                shipmentsList.Add(new Shipment
-                {
-                    currentStatus = shipmentData.TuStatus.First().ProgressBar.StatusInfo,
-                    events = Events,
-                    info = new ShipmentInfo
-                    {
-                        weight = shipmentData.TuStatus.First().Infos.Where(x => x.Type == "WEIGHT").First().Value,
-                        courrier = glsMailInfo.Courier,
-                        service = shipmentData.TuStatus.First().Infos.Where(x => x.Type == "SERVICES").First().Value,
-                        consignor = new Person
-                        {
-                            name = "Name Not provided",
-                            address = new Address
+                            dateTime = ev.Date.UtcDateTime,
+                            description = ev.EvtDscr,
+                            location = new Address
                             {
-                                city = "City not provided",
-                                country = "Country not provided",
-                                zipCode = "Zipcode not provided",
-
+                                city = ev.Address.City,
+                                country = ev.Address.CountryName,
+                                zipCode = "zip Not provided",
                             },
-                        },
-                        consignee = new Person
-                        {
-                            name = "No name (You)",
-                            address = new Address
-                            {
-                                city = "City not provided",
-                                country = "Country not provided",
-                                zipCode = "Zipcode not provided",
-
-                            },
-                        }
-
+                            status = "status Not Provided",
+                        });
                     }
 
-                });
+                    shipmentsList.Add(new Shipment
+                    {
+                        currentStatus = shipmentData.TuStatus.First().ProgressBar.StatusInfo,
+                        events = Events,
+                        info = new ShipmentInfo
+                        {
+                            weight = shipmentData.TuStatus.First().Infos.Where(x => x.Type == "WEIGHT").First().Value,
+                            courrier = glsMailInfo.Courier,
+                            service = shipmentData.TuStatus.First().Infos.Where(x => x.Type == "SERVICES").First().Value,
+                            consignor = new Person
+                            {
+                                name = "Name Not provided",
+                                address = new Address
+                                {
+                                    city = "City not provided",
+                                    country = "Country not provided",
+                                    zipCode = "Zipcode not provided",
+
+                                },
+                            },
+                            consignee = new Person
+                            {
+                                name = "No name (You)",
+                                address = new Address
+                                {
+                                    city = "City not provided",
+                                    country = "Country not provided",
+                                    zipCode = "Zipcode not provided",
+
+                                },
+                            }
+
+                        }
+
+                    });
+                } 
 
             }
+
+            return shipmentsList;
         }
 
 
@@ -180,7 +192,22 @@ namespace PackageTrackingApp.Services
             GlsReturnContainer.GlsReturn data = new GlsReturnContainer.GlsReturn();
             data = JsonConvert.DeserializeObject<GlsReturnContainer.GlsReturn>(response.Content);
 
-            return data;
+            if(response.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                GlsReturnContainer.TuStatus[] test = new GlsReturnContainer.TuStatus[1];
+                test[0] = new GlsReturnContainer.TuStatus 
+                { 
+                    TuNo = "ERRORNOTFOUND404"
+                };
+
+                return new GlsReturnContainer.GlsReturn
+                {
+                    TuStatus = test,
+                };
+            } else
+            {
+                return data;
+            }
         }
 
     }
