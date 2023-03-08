@@ -32,7 +32,7 @@ namespace PackageTrackingApp.Services;
         public async void test()
         {
             List<Message> messages = new List<Message>();
-            messages = await _gmailService.GetLatestEmailAsync();
+            messages = await _gmailService.GetLatestEmailAsync("noreply@postnord.dk");
         foreach (Message message in messages)
         {
             string trackingnum = getTrackingNumberPostnord(message);

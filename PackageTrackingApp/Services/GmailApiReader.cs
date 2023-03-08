@@ -15,7 +15,7 @@ namespace PackageTrackingApp.Services;
 
 public interface IGmailService
 {
-    Task<List<Message>> GetLatestEmailAsync();
+    Task<List<Message>> GetLatestEmailAsync(string fromEmail);
 }
 
 public class GmailApiReader : IGmailService
@@ -29,7 +29,7 @@ public class GmailApiReader : IGmailService
         _configuration = configuration;
         _httpContextAccessor = httpContextAccessor;
     }
-    public async Task<List<Message>> GetLatestEmailAsync()
+    public async Task<List<Message>> GetLatestEmailAsync(string fromEmail)
     {
 
         var authProps = await _httpContextAccessor.HttpContext.AuthenticateAsync();
@@ -44,7 +44,7 @@ public class GmailApiReader : IGmailService
             ApplicationName = "Gmail API Sample"
         });
         var emailListRequest = service.Users.Messages.List("me");
-        emailListRequest.Q = "from:noreply@postnord.dk";
+        emailListRequest.Q = $"from:{fromEmail}";
         var emailListResponse = await emailListRequest.ExecuteAsync();
         if (emailListResponse?.Messages != null && emailListResponse.Messages.Any())
         {
