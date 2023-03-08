@@ -1,6 +1,6 @@
 ﻿namespace PackageTrackingApp.Models
 {
-    public class Location
+    public class Address
     {
         public string city { get; set; }
 
