@@ -46,7 +46,7 @@ namespace PackageTrackingApp.Controllers
             try
             {
                 _mailHandler.test();
-                var latestEmail = await _gmailService.GetLatestEmailAsync();
+                var latestEmail = await _gmailService.GetLatestEmailAsync("noreply@postnord.dk");
                 _logger.LogInformation($"Latest email body: {latestEmail}");
                 return View();
             }
