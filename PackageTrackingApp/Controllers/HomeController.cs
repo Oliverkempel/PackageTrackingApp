@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using PackageTrackingApp.Services;
+using PackageTrackingApp.Viewmodels;
 
 namespace PackageTrackingApp.Controllers
 {
@@ -49,12 +50,15 @@ namespace PackageTrackingApp.Controllers
 
             List<Shipment> allShipmentsFromUserInbox = _trackingInfo.getTrackingInfoAllCourriers(mailInfos);
 
+            MyPageVM vm = new MyPageVM();
+
+            vm.shipments = allShipmentsFromUserInbox;
             //var test2 = _trackingInfo.getPostnordTrackingInfo("05308115208628");
 
             //var latestEmail = await _gmailService.GetLatestEmailAsync("noreply@postnord.dk");
             //_logger.LogInformation($"Latest email body: {latestEmail}");
             string test = mailInfos.postNordMailInfos.First().trackingNumber;
-            return StatusCode(500, test);
+            return View(vm);
             //try
             //{
                 

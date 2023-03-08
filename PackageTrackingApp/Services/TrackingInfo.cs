@@ -53,6 +53,7 @@ namespace PackageTrackingApp.Services
                         info = new ShipmentInfo
                         {
                             weight = shipmentData.TrackingInformationResponse.Shipments.First().TotalWeight.Value,
+                            trackingNumber = shipmentData.TrackingInformationResponse.Shipments.First().ShipmentId,
                             courrier = postnordMailInfo.Courier,
                             service = shipmentData.TrackingInformationResponse.Shipments.First().Service.Name,
                             consignor = new Person
@@ -119,6 +120,7 @@ namespace PackageTrackingApp.Services
                         info = new ShipmentInfo
                         {
                             weight = shipmentData.TuStatus.First().Infos.Where(x => x.Type == "WEIGHT").First().Value,
+                            trackingNumber = shipmentData.TuStatus.First().TuNo,
                             courrier = glsMailInfo.Courier,
                             service = shipmentData.TuStatus.First().Infos.Where(x => x.Type == "SERVICES").First().Value,
                             consignor = new Person
