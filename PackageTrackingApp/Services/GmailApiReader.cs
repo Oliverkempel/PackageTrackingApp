@@ -48,16 +48,19 @@ public class GmailApiReader : IGmailService
         var emailListResponse = await emailListRequest.ExecuteAsync();
         if (emailListResponse?.Messages != null && emailListResponse.Messages.Any())
         {
+            List<Message> messagesWithData = new List<Message>();
+
             foreach (var message in emailListResponse.Messages)
             {
                 var email = emailListResponse.Messages.FirstOrDefault();
                 var emailInfoRequest = service.Users.Messages.Get("me", email.Id);
                 var emailInfoResponse = await emailInfoRequest.ExecuteAsync();
-                var body = emailInfoResponse.Payload.Body.Data;
-                Console.WriteLine(body);
+                messagesWithData.Add(emailInfoResponse);
+                //var body = emailInfoResponse.Payload.Body.Data;
+                //Console.WriteLine(body);
             }
 
-            return emailListResponse.Messages.ToList();
+            return messagesWithData;
         }
         else
         {
