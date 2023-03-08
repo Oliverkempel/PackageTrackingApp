@@ -31,7 +31,15 @@ namespace PackageTrackingApp.Services;
         {
             List<Message> messages = new List<Message>();
             messages = await _gmailService.GetLatestEmailAsync();
-        Console.WriteLine("CUM");
+        foreach (Message message in messages)
+        {
+            string trackingnum = getTrackingNumberPostnord(message);
+        }
+            
+        
+
+
+            Console.WriteLine("CUM");
         }
 
         public string getTrackingNumberPostnord(Message Mail)
