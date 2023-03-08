@@ -43,18 +43,20 @@ namespace PackageTrackingApp.Controllers
         [Route("token")]
         public async Task<IActionResult> Test()
         {
-            try
-            {
-                _mailHandler.test();
-                var latestEmail = await _gmailService.GetLatestEmailAsync("noreply@postnord.dk");
-                _logger.LogInformation($"Latest email body: {latestEmail}");
-                return View();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while retrieving the latest email.");
-                return StatusCode(500, "An error occurred while retrieving the latest email.");
-            }
+            AllMailInfo mailInfos = await _mailHandler.getAllTrackingNumbers();
+            //var latestEmail = await _gmailService.GetLatestEmailAsync("noreply@postnord.dk");
+            //_logger.LogInformation($"Latest email body: {latestEmail}");
+            string test = mailInfos.postNordMailInfos.First().trackingNumber;
+            return StatusCode(500, test);
+            //try
+            //{
+                
+            //}
+            //catch (Exception ex)
+            //{
+            //    _logger.LogError(ex, "An error occurred while retrieving the latest email.");
+            //    return StatusCode(500, "An error occurred while retrieving the latest email.");
+            //}
         }
 
 

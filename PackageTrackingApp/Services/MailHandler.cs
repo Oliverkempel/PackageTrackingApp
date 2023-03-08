@@ -10,47 +10,72 @@ using PackageTrackingApp.Services;
 using PackageTrackingApp.Controllers;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using System.ComponentModel;
+using System.Collections.Specialized;
+using System.Globalization;
+using static System.Net.Mime.MediaTypeNames;
 
-namespace PackageTrackingApp.Services; 
+namespace PackageTrackingApp.Services
+{
+
 
     public interface IMailHandler
     {
-        void test();
+        Task<AllMailInfo> getAllTrackingNumbers();
     }
 
     public class MailHandler : IMailHandler
     {
 
         private readonly IGmailService _gmailService;
-        
+
 
         public MailHandler(IGmailService gmailService, ILogger<HomeController> logger)
         {
             _gmailService = gmailService;
         }
 
-        public async void test()
+        public async Task<AllMailInfo> getAllTrackingNumbers()
         {
-            List<Message> messages = new List<Message>();
-            messages = await _gmailService.GetLatestEmailAsync("noreply@postnord.dk");
-        foreach (Message message in messages)
-        {
-            string trackingnum = getTrackingNumberPostnord(message);
-        }
+            //initialisere ny liste af allMailinfos
+            var allMailInfos = new AllMailInfo
+            {
+                postNordMailInfos = new List<MailInfo>(),
+                glsMailInfos = new List<MailInfo>(),
+            };
             
-        
 
+            
+            //initialisere ny liste af Message til opbevaring af postnord mails
+            List<Message> postnordMessages = new List<Message>();
+            //Henter postnord messages via GmailApiReader servicen
+            postnordMessages = await _gmailService.GetLatestEmailAsync("noreply@postnord.dk");
+            //looper igennem mails hentet fra brugerens gmail, og gemmer dem i mailinfos
+            foreach (Message message in postnordMessages)
+            {
+                allMailInfos.postNordMailInfos.Add(getTrackingNumberPostnord(message));
+            }
 
-            Console.WriteLine("CUM");
+            List<Message> glsMessages = new List<Message>();
+            glsMessages = await _gmailService.GetLatestEmailAsync("noreply@glsdanmark.dk");
+
+            foreach(Message message in glsMessages)
+            {
+                allMailInfos.glsMailInfos.Add(getTrackingNumberGls(message));
+            }
+
+            return allMailInfos;
+
         }
 
-        public string getTrackingNumberPostnord(Message Mail)
+        public MailInfo getTrackingNumberPostnord(Message Mail)
         {
             //Initialisere ny instans af HtmlDocument
             HtmlDocument htmlDoc = new HtmlDocument();
-        //Loader string til Html filen
+            //Loader string til Html filen, som bliver decoded fra Base64Url
             htmlDoc.LoadHtml(Base64UrlEncoder.Decode(Mail.Payload.Body.Data));
 
+            DateTime dateRecieved = DateTime.Parse(Mail.Payload.Headers.Where(x => x.Name == "Date").First().Value);
             //vælger tag med klassen "KONSTANT" og vælger teksten deri
             var tagInnerText = htmlDoc.DocumentNode.SelectSingleNode("//*[@class='KONSTANT']").InnerText;
 
@@ -59,29 +84,42 @@ namespace PackageTrackingApp.Services;
             Regex reg = new Regex(regExPattern);
 
             string trackingNumber = reg.Match(tagInnerText).ToString();
-            // vælger trackingnummer
-            //string trackingNumber = tagInnerText.Split(" ").ElementAt(3).Split(".").First();
+
+            MailInfo mailInfo = new MailInfo();
+
+            mailInfo.Courier = "postnord";
+            mailInfo.trackingNumber = trackingNumber;
+            mailInfo.mailRecieveDate = dateRecieved;
 
 
-            return trackingNumber;
+            return mailInfo;
 
         }
 
-        public string getTrackingNumberGls(Message Mail)
+        public MailInfo getTrackingNumberGls(Message Mail)
         {
-            //string glsMail = "Tak fordi du handlede hos MaPerle. Din pakke er afsendt med GLS.\r\n\r\nNår du kan hente pakken, modtager du besked på mail/sms fra GLS.\r\n\r\nDu kan følge pakken frem til dig via GLS Track\r\n& Trace: http://www.gls-group.eu/276-I-PORTAL-WEB/content/GLS/DK01/DA/5004.htm?txtRefNo=YO4T9ISL&txtAction=71000.\r\n\r\nVenlig hilsen\r\n\r\nGLS\r\n\r\nwww.gls-group.eu\r\n\r\n\r\nØnsker du fremover ikke at modtage denne type advisering, kan du  afmelde dig her: http://gls.dk/unsubscribe/unsubscribe.aspx?key=5d89c1e8-91f1-4ba8-9ca7-cb677d5caa58&mail=oliversbutik@gmail.com.";
-            //string glsMail2 = "Tak fordi du handlede hos Autofix.Nu ApS. Din pakke er afsendt med GLS.\r\n\r\nNår du kan hente pakken, modtager du besked på mail/sms fra GLS.\r\n\r\nDu kan følge pakken frem til dig via GLS Track\r\n& Trace: http://www.gls-group.eu/276-I-PORTAL-WEB/content/GLS/DK01/DA/5004.htm?txtRefNo=YORVF8L5&txtAction=71000.\r\n\r\nVenlig hilsen\r\n\r\nGLS\r\n\r\nwww.gls-group.eu\r\n\r\n\r\nØnsker du fremover ikke at modtage denne type advisering, kan du  afmelde dig her: http://gls.dk/unsubscribe/unsubscribe.aspx?key=f6db6ad6-7d3e-49d5-bd78-b3ea79fb9ef1&mail=Oliversbutik@gmail.com.";
+           
+            string message = Base64UrlEncoder.Decode(Mail.Payload.Parts.First().Body.Data);
 
             string regExPattern = @"(?<=txtRefNo=)\w*";
 
             Regex reg = new Regex(regExPattern);
 
-            string trackingNumber = reg.Match(Mail.Payload.Body.Data).ToString();
+            string trackingNumber = reg.Match(message).ToString();
+
+            MailInfo mailInfo = new MailInfo();
 
 
-            //string trackingNumber = Mail.Split("\t\n ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Where(s => s.StartsWith("http://")).First().Split("/").ElementAt(8).Split("=").ElementAt(1).Split("&").First();
+            string dateString = Mail.Payload.Headers.Where(x => x.Name == "Date").First().Value;
+            DateTime dateRecieved = DateTime.Parse(dateString.Substring(0, dateString.Length - 6));
 
-            return trackingNumber;
+            mailInfo.Courier = "gls";
+            mailInfo.trackingNumber = trackingNumber;
+            mailInfo.mailRecieveDate = dateRecieved; 
+
+            return mailInfo;
         }
 
     }
+
+}
