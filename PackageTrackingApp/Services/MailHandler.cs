@@ -51,25 +51,34 @@ namespace PackageTrackingApp.Services
             //Henter postnord messages via GmailApiReader servicen
             postnordMessages = await _gmailService.GetLatestEmailAsync("noreply@postnord.dk");
             //looper igennem mails hentet fra brugerens gmail, og gemmer dem i mailinfos
-            foreach (Message message in postnordMessages)
+
+            if (postnordMessages.Count() > 0)
             {
-                MailInfo test = new MailInfo();
-                test = getTrackingNumberPostnord(message);
-
-                if(test.trackingNumber != "")
+                foreach (Message message in postnordMessages)
                 {
-                    allMailInfos.postNordMailInfos.Add(test);
-                }
+                    MailInfo test = new MailInfo();
+                    test = getTrackingNumberPostnord(message);
 
+                    if (test.trackingNumber != "")
+                    {
+                        allMailInfos.postNordMailInfos.Add(test);
+                    }
+
+                }
             }
+            
 
             List<Message> glsMessages = new List<Message>();
             glsMessages = await _gmailService.GetLatestEmailAsync("noreply@glsdanmark.dk");
 
-            foreach(Message message in glsMessages)
+            if(glsMessages.Count() > 0)
             {
-                allMailInfos.glsMailInfos.Add(getTrackingNumberGls(message));
+                foreach (Message message in glsMessages)
+                {
+                    allMailInfos.glsMailInfos.Add(getTrackingNumberGls(message));
+                }
             }
+
 
             return allMailInfos;
 
