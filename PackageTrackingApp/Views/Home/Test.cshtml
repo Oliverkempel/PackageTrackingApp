@@ -2,13 +2,10 @@
 @{
     ViewData["Title"] = "Test page";
 }
-<h1>@ViewData["Title"]</h1>
-
-
 
 <section class="bg-primaryGray p-6 rounded-xl text-center">
     <h1 class="text-lg text-gray-500 font-thin">Velkommen tilbage</h1>
-    <h1 class="text-2xl text-gray-900 font-semibold" onclick="test()"> Mads!</h1>
+    <h1 class="text-2xl text-gray-900 font-semibold"> Mads!</h1>
 </section>
 
 <section class="mt-6">
@@ -16,8 +13,15 @@
     <div class="bg-primaryGray rounded-xl flex flex-col p-6 space-y-4">
 
         @{
+            int iteration = 0;
+
             foreach(var package in Model.shipments) {
-        <div class="bg-white rounded-lg flex flex-row" style="visibility: block;" id="@package.info.trackingNumber @@box">
+
+                iteration++;
+
+                string boksId = $"box{iteration}";
+
+        <div class="bg-white rounded-lg flex flex-row" style="visibility: flex;" id="@boksId">
             <div class="bg-primaryBlue rounded-l-lg h-auto p-4 flex flex-col md:flex-row items-center mx-auto">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 pr-4 mx-auto" viewBox="0 0 43.636 48.39">
                     <g id="Icon_feather-package" data-name="Icon feather-package" transform="translate(-3 -1.44)">
@@ -32,7 +36,7 @@
             <div class="w-full p-4 rounded-r-lg flex flex-row space-x-4">
                 <div class="flex flex-col my-auto">
                     <h1 class="text-xl font-semibold">@package.currentStatus</h1>
-                            <h1 class="text-sm">@package.events.Last().location.city @@, @package.events.Last().location.zipCode @@ - @package.events.Last().location.country</h1>
+                            <h1 class="text-sm">@package.events.Last().location.city + ", " + @package.events.Last().location.zipCode + " - " + @package.events.Last().location.country</h1>
                 </div>
                 <div class="h-full bg-none md:bg-primaryBlue rounded-full w-1 flex-grow md:flex-initial"></div>
                 <div class="flex-grow hidden md:block">
@@ -47,12 +51,12 @@
                         </tr>
                         <tr class="">
                             <td class="font-semibold">Vægt:</td>
-                            <td>@package.info.weight @@ kg</td>
+                            <td>@package.info.weight + "kg"</td>
                         </tr>
                     </table>
                 </div>
-                <div class="my-auto items-center float-right">
-                            <a class="btn-primary" onlick="test()">
+                <div class="my-auto items-center float-right" >
+                            <a class="btn-primary" onclick="moreInfo(@iteration)">
                             @* onclick="moreInfo(@package.info.trackingNumber)*@
                         <p>Mere info</p>
                         <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-1" viewBox="0 0 24 24">
@@ -62,8 +66,10 @@
                 </div>
             </div>
         </div>
-
-        <div class="bg-white rounded-lg" style="display: none;" id="@package.info.trackingNumber @@boxbig">
+        
+                string bigboksId = $"boxbig{iteration}";
+        
+        <div class="bg-white rounded-lg" style="display: none;" id="@bigboksId">
             <div class=" bg-primaryBlue rounded-t-lg p-4 flex flex-row">
                 <div class="text-center flex-1 items-center">
                     <h1 class="text-2xl text-white text-center">Postnord</h1>
@@ -80,7 +86,7 @@
                                 <div class="flex flex-row items-center">
                                     <div class="h-12 w-12 rounded-full bg-primaryBlue mr-4"></div>
                                     <div class="flex-1">
-                                            <h1 class="text-lg font-semibold">@evt.location.city @@, @evt.location.zipCode @@ - @evt.location.country</h1>
+                                            <h1 class="text-lg font-semibold">@evt.location.city + ", " + @evt.location.zipCode + " - " + @evt.location.country</h1>
                                         <p class="text-base font-light">@evt.description</p>
                                     </div>
                                     <p class="">@evt.dateTime</p>
@@ -98,7 +104,7 @@
                         </tr>
                         <tr class="mx-4">
                             <td class="font-semibold">Afsender Adresse:</td>
-                                    <td>@package.info.consignor.address.city @@, @package.info.consignor.address.zipCode @@ - @package.info.consignor.address.country</td>
+                                    <td>@package.info.consignor.address.city + "," + @package.info.consignor.address.zipCode + " - " +  @package.info.consignor.address.country</td>
                         </tr>
                         <tr>
                             <td class="font-semibold">Service:</td>
@@ -106,13 +112,13 @@
                         </tr>
                         <tr class="">
                             <td class="font-semibold">Vægt:</td>
-                                    <td>@package.info.weight @@ kg</td>
+                                    <td>@package.info.weight + " kg"</td>
                         </tr>
                     </table>
                 </div>
             </div>
             <div class=" w-full">
-                <a class="btn-secondary float-right m-4" onclick="lessInfo(@package.info.trackingNumber);">
+                <a class="btn-secondary float-right m-4" onclick="lessInfo(@iteration);">
                     <p>Vis Mindre</p>
                 </a>
             </div>
@@ -125,23 +131,44 @@
 
             <script type="text/javascript">
 
-                function test {
-                        alert("testing");
-                    }
+                //$('#btn_click').click(function () {
+                //    alert('You Clicked Button');
+                //});
+
+                //function test(elementIndex) {
+                //    alert("box" + elementIndex);
+
+                //    var test = "box" + elementIndex;
+                //    alert(test);
+                //    var element = document.getElementById("boxbig" + elementIndex);
+                //    alert(element.id);
+
+                //    var element1 = document.getElementById("box" + elementIndex);
+                //    element.style.marginTop = 0;
+                //    element1.style.display = "none";
+                //    element.style.display = "block";
+
+                //}
+
+
+                //function test {
+                //        alert("testing");
+                //    }
 
 
                 function moreInfo(elementIndex) {
-                    var element = document.getElementById(elementIndex + "boxbig");
-                    var element1 = document.getElementById(elementIndex + "box");
-                    element.style.marginTop = 0;
+                    var element = document.getElementById("boxbig" + elementIndex);
+                    var element1 = document.getElementById("box" + elementIndex);
+                    if(elementIndex == 1) {
+                        element.style.marginTop = 0;
+                    }
                     element1.style.display = "none";
                     element.style.display = "block";
 
-                    alert("hello");
                 }
                 function lessInfo(elementIndex) {
-                    var element = document.getElementById(elementIndex + "boxbig");
-                    var element1 = document.getElementById(elementIndex + "box");
+                    var element = document.getElementById("boxbig" + elementIndex);
+                    var element1 = document.getElementById("box" + elementIndex);
                     element1.style.display = "flex";
                     element.style.display = "none";
                 }
