@@ -52,7 +52,7 @@ namespace PackageTrackingApp.Services
             postnordMessages = await _gmailService.GetLatestEmailAsync("noreply@postnord.dk");
             //looper igennem mails hentet fra brugerens gmail, og gemmer dem i mailinfos
 
-            if (postnordMessages.Count() != null)
+            if (postnordMessages != null)
             {
                 foreach (Message message in postnordMessages)
                 {
@@ -71,7 +71,7 @@ namespace PackageTrackingApp.Services
             List<Message> glsMessages = new List<Message>();
             glsMessages = await _gmailService.GetLatestEmailAsync("noreply@glsdanmark.dk");
 
-            if(glsMessages.Count() != null)
+            if(glsMessages != null)
             {
                 foreach (Message message in glsMessages)
                 {
