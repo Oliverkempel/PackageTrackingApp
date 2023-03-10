@@ -105,8 +105,7 @@ namespace PackageTrackingApp.Models.ApiReturnModels
             public string Country { get; set; }
 
             [JsonProperty("postCode")]
-            [JsonConverter(typeof(ParseStringConverter))]
-            public long PostCode { get; set; }
+            public string PostCode { get; set; }
         }
 
         public partial class Consignor
@@ -238,8 +237,7 @@ namespace PackageTrackingApp.Models.ApiReturnModels
         public partial class Service
         {
             [JsonProperty("code")]
-            [JsonConverter(typeof(ParseStringConverter))]
-            public long Code { get; set; }
+            public string Code { get; set; }
 
             [JsonProperty("name")]
             public string Name { get; set; }
