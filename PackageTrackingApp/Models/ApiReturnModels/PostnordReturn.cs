@@ -69,8 +69,7 @@ namespace PackageTrackingApp.Models.ApiReturnModels
         public partial class AdditionalService
         {
             [JsonProperty("code")]
-            [JsonConverter(typeof(ParseStringConverter))]
-            public long Code { get; set; }
+            public string Code { get; set; }
 
             [JsonProperty("groupCode")]
             public string GroupCode { get; set; }
