@@ -57,7 +57,6 @@ namespace PackageTrackingApp.Controllers
 
             //var latestEmail = await _gmailService.GetLatestEmailAsync("noreply@postnord.dk");
             //_logger.LogInformation($"Latest email body: {latestEmail}");
-            string test = mailInfos.postNordMailInfos.First().trackingNumber;
             return View(vm);
             //try
             //{
