@@ -36,7 +36,10 @@
             <div class="w-full p-4 rounded-r-lg flex flex-row space-x-4">
                 <div class="flex flex-col my-auto">
                     <h1 class="text-xl font-semibold">@package.currentStatus</h1>
-                            <h1 class="text-sm">@package.events.Last().location.city + ", " + @package.events.Last().location.zipCode + " - " + @package.events.Last().location.country</h1>
+                            @{
+                                string currntEventLocationtxt = package.events.Last().location.city + ", " + @package.events.Last().location.zipCode + " - " + @package.events.Last().location.country;
+                            }
+                            <h1 class="text-sm">@currntEventLocationtxt</h1>
                 </div>
                 <div class="h-full bg-none md:bg-primaryBlue rounded-full w-1 flex-grow md:flex-initial"></div>
                 <div class="flex-grow hidden md:block">
@@ -51,7 +54,10 @@
                         </tr>
                         <tr class="">
                             <td class="font-semibold">Vægt:</td>
-                            <td>@package.info.weight + "kg"</td>
+                                    @{
+                                        string weight = package.info.weight + "kg";
+                                    }
+                            <td>@weight</td>
                         </tr>
                     </table>
                 </div>
@@ -86,7 +92,11 @@
                                 <div class="flex flex-row items-center">
                                     <div class="h-12 w-12 rounded-full bg-primaryBlue mr-4"></div>
                                     <div class="flex-1">
-                                            <h1 class="text-lg font-semibold">@evt.location.city + ", " + @evt.location.zipCode + " - " + @evt.location.country</h1>
+
+                                            @{
+                                                string eventLocationtxt = evt.location.city + " " + @evt.location.zipCode + " " + @evt.location.country;
+                                            }
+                                            <h1 class="text-lg font-semibold">@eventLocationtxt</h1>
                                         <p class="text-base font-light">@evt.description</p>
                                     </div>
                                     <p class="">@evt.dateTime</p>
@@ -104,7 +114,10 @@
                         </tr>
                         <tr class="mx-4">
                             <td class="font-semibold">Afsender Adresse:</td>
-                                    <td>@package.info.consignor.address.city + "," + @package.info.consignor.address.zipCode + " - " +  @package.info.consignor.address.country</td>
+                                    @{
+                                        string consingorAdressTxt = package.info.consignor.address.city + " " + @package.info.consignor.address.zipCode + " " + @package.info.consignor.address.country;
+                                    }
+                                    <td>@consingorAdressTxt</td>
                         </tr>
                         <tr>
                             <td class="font-semibold">Service:</td>
@@ -112,6 +125,9 @@
                         </tr>
                         <tr class="">
                             <td class="font-semibold">Vægt:</td>
+                            @{
+                                string packageWeightTxt = package.info.weight + " kg";
+                            }
                                     <td>@package.info.weight + " kg"</td>
                         </tr>
                     </table>
