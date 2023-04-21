@@ -46,42 +46,84 @@ namespace PackageTrackingApp.Services
                         });
                     }
 
-                    shipmentsList.Add(new Shipment
+                    if (shipmentData.TrackingInformationResponse.Shipments.First().TotalWeight == null)
                     {
-                        currentStatus = shipmentData.TrackingInformationResponse.Shipments.First().Status,
-                        events = Events,
-                        info = new ShipmentInfo
+                        shipmentsList.Add(new Shipment
                         {
-                            weight = shipmentData.TrackingInformationResponse.Shipments.First().TotalWeight.Value,
-                            trackingNumber = shipmentData.TrackingInformationResponse.Shipments.First().ShipmentId,
-                            courrier = postnordMailInfo.Courier,
-                            service = shipmentData.TrackingInformationResponse.Shipments.First().Service.Name,
-                            consignor = new Person
+                            currentStatus = shipmentData.TrackingInformationResponse.Shipments.First().Status,
+                            events = Events,
+                            info = new ShipmentInfo
                             {
-                                name = shipmentData.TrackingInformationResponse.Shipments.First().Consignor.Name,
-                                address = new Address
+                                weight = "none",
+                                trackingNumber = shipmentData.TrackingInformationResponse.Shipments.First().ShipmentId,
+                                courrier = postnordMailInfo.Courier,
+                                service = shipmentData.TrackingInformationResponse.Shipments.First().Service.Name,
+                                consignor = new Person
                                 {
-                                    city = shipmentData.TrackingInformationResponse.Shipments.First().Consignor.Address.City,
-                                    country = shipmentData.TrackingInformationResponse.Shipments.First().Consignor.Address.Country,
-                                    zipCode = shipmentData.TrackingInformationResponse.Shipments.First().Consignor.Address.PostCode.ToString(),
+                                    name = shipmentData.TrackingInformationResponse.Shipments.First().Consignor.Name,
+                                    address = new Address
+                                    {
+                                        city = shipmentData.TrackingInformationResponse.Shipments.First().Consignor.Address.City,
+                                        country = shipmentData.TrackingInformationResponse.Shipments.First().Consignor.Address.Country,
+                                        zipCode = shipmentData.TrackingInformationResponse.Shipments.First().Consignor.Address.PostCode.ToString(),
 
+                                    },
                                 },
-                            },
-                            consignee = new Person
-                            {
-                                name = "No name (You)",
-                                address = new Address
+                                consignee = new Person
                                 {
-                                    city = shipmentData.TrackingInformationResponse.Shipments.First().Consignee.Address.City,
-                                    country = shipmentData.TrackingInformationResponse.Shipments.First().Consignee.Address.Country,
-                                    zipCode = shipmentData.TrackingInformationResponse.Shipments.First().Consignee.Address.PostCode.ToString(),
+                                    name = "No name (You)",
+                                    address = new Address
+                                    {
+                                        city = shipmentData.TrackingInformationResponse.Shipments.First().Consignee.Address.City,
+                                        country = shipmentData.TrackingInformationResponse.Shipments.First().Consignee.Address.Country,
+                                        zipCode = shipmentData.TrackingInformationResponse.Shipments.First().Consignee.Address.PostCode.ToString(),
 
-                                },
+                                    },
+                                }
+
                             }
 
-                        }
+                        });
+                    }
+                    else
+                    {
+                        shipmentsList.Add(new Shipment
+                        {
+                            currentStatus = shipmentData.TrackingInformationResponse.Shipments.First().Status,
+                            events = Events,
+                            info = new ShipmentInfo
+                            {
+                                weight = shipmentData.TrackingInformationResponse.Shipments.First().TotalWeight.Value,
+                                trackingNumber = shipmentData.TrackingInformationResponse.Shipments.First().ShipmentId,
+                                courrier = postnordMailInfo.Courier,
+                                service = shipmentData.TrackingInformationResponse.Shipments.First().Service.Name,
+                                consignor = new Person
+                                {
+                                    name = shipmentData.TrackingInformationResponse.Shipments.First().Consignor.Name,
+                                    address = new Address
+                                    {
+                                        city = shipmentData.TrackingInformationResponse.Shipments.First().Consignor.Address.City,
+                                        country = shipmentData.TrackingInformationResponse.Shipments.First().Consignor.Address.Country,
+                                        zipCode = shipmentData.TrackingInformationResponse.Shipments.First().Consignor.Address.PostCode.ToString(),
 
-                    });
+                                    },
+                                },
+                                consignee = new Person
+                                {
+                                    name = "No name (You)",
+                                    address = new Address
+                                    {
+                                        city = shipmentData.TrackingInformationResponse.Shipments.First().Consignee.Address.City,
+                                        country = shipmentData.TrackingInformationResponse.Shipments.First().Consignee.Address.Country,
+                                        zipCode = shipmentData.TrackingInformationResponse.Shipments.First().Consignee.Address.PostCode.ToString(),
+
+                                    },
+                                }
+
+                            }
+
+                        });
+                    }
                 }
 
                 

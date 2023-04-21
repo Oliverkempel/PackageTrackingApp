@@ -8,7 +8,7 @@ namespace PackageTrackingApp.Models
 
         public List<ShipmentEvent> events { get; set; }
 
-        public ShipmentInfo info { get; set; }
+        public ShipmentInfo? info { get; set; }
 
 
     }

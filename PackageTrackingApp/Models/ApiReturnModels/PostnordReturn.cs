@@ -81,10 +81,10 @@ namespace PackageTrackingApp.Models.ApiReturnModels
         public partial class AssessedWeight
         {
             [JsonProperty("value")]
-            public string Value { get; set; }
+            public string? Value { get; set; }
 
             [JsonProperty("unit")]
-            public string Unit { get; set; }
+            public string? Unit { get; set; }
         }
 
         public partial class Consignee
@@ -150,7 +150,7 @@ namespace PackageTrackingApp.Models.ApiReturnModels
         public partial class AssessedMeasurement
         {
             [JsonProperty("weight")]
-            public AssessedWeight Weight { get; set; }
+            public AssessedWeight? Weight { get; set; }
         }
 
         public partial class Event
@@ -213,7 +213,7 @@ namespace PackageTrackingApp.Models.ApiReturnModels
         public partial class StatedMeasurement
         {
             [JsonProperty("weight")]
-            public AssessedWeight Weight { get; set; }
+            public AssessedWeight? Weight { get; set; }
 
             [JsonProperty("length")]
             public AssessedWeight Length { get; set; }
