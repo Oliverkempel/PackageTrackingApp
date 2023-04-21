@@ -1,0 +1,36 @@
+\documentclass[a4paper,onepage,11pt]{report} %openright
+\input{Setup/Statics.tex}
+\input{Setup/Preamble.tex}
+\input{Setup/Settings.tex}
+%\graphicspath{{Pictures/}}
+\begin{document}
+\pagestyle{plain}
+\pagenumbering{arabic}
+\input{Frontmatter/Frontpage.tex}
+\pagecolor{white}
+%\newgeometry{top=2.81cm, bottom=2.75cm, outer=2.5cm, inner=3.5cm}
+\clearpage 
+\input{Frontmatter/Abstract.tex}
+\cleardoublepage 
+\tableofcontents
+\cleardoublepage 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{Chapters/01_Indledning.tex}
+\cleardoublepage
+\input{Chapters/02_Problemanalyse.tex}
+\cleardoublepage
+\input{Chapters/03_Fremgangsmåde.tex}
+\cleardoublepage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\printbibliography
+\cleardoublepage
+
+\appendix
+\addtocontents{toc}{\protect\setcounter{tocdepth}{-1}}
+\input{Backmatter/Appendix.tex}
+
+\end{document}
