@@ -51,7 +51,7 @@ namespace PackageTrackingApp.Models.ApiReturnModels
             public AssessedWeight? TotalWeight { get; set; }
 
             [JsonProperty("assessedWeight")]
-            public AssessedWeight AssessedWeight { get; set; }
+            public AssessedWeight? AssessedWeight { get; set; }
 
             [JsonProperty("items")]
             public Item[] Items { get; set; }
