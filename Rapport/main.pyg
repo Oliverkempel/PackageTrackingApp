@@ -1,16 +1,10 @@
-\chapter{Gennemgang af kode}
-\section{Frontend}
-\section{Backend}
-\subsection{Oprettelse af Konto}
-\begin{figure}[h]
-    \begin{minted}[frame=lines,framesep=2mm,baselinestretch=1.2,linenos]{cs}
         // denne funktion sender en Email med sendgrid ved at bruge sendgrids smtp server.
         public async Task SendEmailAsync(string toEmail, string subject, string message)
         {
             var apiKey = "----------------------------------"; // sendgrid api key
             await Execute(apiKey, subject, message, toEmail);
         }
-    
+
         public async Task Execute(string apiKey, string subject, string message, string toEmail)
         {
             _logger.LogInformation(apiKey);
@@ -23,7 +17,7 @@
                 HtmlContent = message
             };
             msg.AddTo(new EmailAddress(toEmail));
-            // fjerner klik tracking fra koden 
+            // fjerner klik tracking fra koden
             msg.SetClickTracking(false, false);
             var response = await client.SendEmailAsync(msg);
             // sennder en besked til konsollen til at debug evtuelle fejl
@@ -31,16 +25,3 @@
                                    ? $"Email to {toEmail} queued successfully!"
                                    : $"Failure Email to {toEmail}");
         }
-    \end{minted}
-\caption{EmailSender.cs}\label{code:EmailSender.cs}
-\end{figure}
-Dette er koden der sender en email når man eksempelvis registere sig på siden og skal 
-konfirmitere ens email. når man vil sende en email i programmet kalder man metoden SendEmailAsync.
-Denne metode har signature af at være public hvilket betyder at andre metoder kan kalde den. Så har
-den også signaturene "async Task" som gør at metoden gøre parrelet med andre opgaver så når man venter på
-en Api response så stopper programmet ikke. Denne metode tager tre paramatere som er strege af tekst.
-Det første der sker i metoden er at vi laver en variabel der indeholder vores Sendgrid api key.
-herefter laves der et kaldt til metoden Execute som bliver kaldt asynkront ved hjælp af "await" operatøren.
-
-I Execute metoden bliver der først oprettet et instans af SendGridClient som indeholder api nøglen.
-
