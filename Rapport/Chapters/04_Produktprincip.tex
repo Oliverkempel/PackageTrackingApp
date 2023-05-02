@@ -33,16 +33,39 @@ Der er her opstillet en række hårde og bløde krav som det udviklede web app s
 \end{itemize}
 
 \section{Database}
+Til Databasen bruges MS SQL som er en relations database(RDBMS) udviklet af Microsoft. Hvilket
+giver mest mening når man laver Asp.net core mvc webapps da mange dele af dette bygger på at man bruger
+MS SQL. Til kommunikation mellem MS SQL og Asp.net core 7 mvc projektet. Bruges Nuget Pakken 
+Microsoft.EntityFrameworkCore.SqlServer der giver nogle terminal værktøjer.
 
-På figur 4.2 kan man se den overordnet database struktur. Denne database er lavet med
-Asp.net core Identity som er en API som giver nogle login funktionaliteter til ens program
-og kan findes som en nuget package. Til at opdatere databasen bruges Entity Framework Core. 
+Til at lave migrations til databasen bruges Entity Framework Core .NET Command-line tools. 
+Hvorman s ̊a kan skrive Models i projektet og putte dem ind i vore Application database 
+context. Her brugesto kommando’er første kommando laver en migration fra ApplicationDbContext.cs 
+som er den databasecontext til vores database hvor der opbevares data om brugeren der skal gemmes. 
+Den næste kommando opdateres ̊sa databasen med migration som vi lavede før. Af sikkerheds grunde er der 
+valgt at databasen er delt i to en hvor alt login data blivver gemt og en hvor data om bruger bliver gemt.
+Det gør at hvis der bliver udført et sql angreb er det kun den en af databaserne der bliver ramt.
+
+\begin{figure}[!h]
+    \begin{lstlisting}[language=bash]
+        > dotnet ef migrations add IntialUserData --context ApplicationDbContext
+        > dotnet ef migrations add IntialUserLogin --context IdentityDbContext
+        > dotnet database update --context ApplicationDbContext
+        > dotnet database update --context IdentityDbContext
+    \end{lstlisting}
+\end{figure}
 
 \begin{wrapfigure}{r}{0.5\textwidth} 
     \includegraphics[width=0.4\textwidth]{./Pictures/database-diagram.png}
     \caption{Uklip af User tablen i Databasen}
     \label{fig:databaseUserTable}
 \end{wrapfigure}
+På figur 4.2 kan man se den overordnet database struktur. Denne database er lavet med
+Asp.net core Identity som er en API som giver nogle login funktionaliteter til ens program
+og kan findes som en nuget package. Denne Api genere selv modellerene til systemet.  
+
+
+
 
 \section{Asp.net Identity}
 Asp.net core er det som bliver brugt til håndtere autentificering og autorisation i webapplikationen.
@@ -54,7 +77,7 @@ Google OAuth bruger OAuth som er en åben protokol som alle kan bruge. Denne pro
 HTTP protokolen. Ved hjælp at OAuth kan man som tredjepartsapplikation få adgang til brugers data.
 Det er det vi skal brgue den data vi godt vil have fandt i fra brugeren er at læse brugers emails. 
 Til at få emails fra Google bruges Googles gmail API. som gør det muligt at læse alle brugers emails når de
-er logget ind med OAuth
+er logget ind med OAuth.
 \section{Wireframes}
 
 \begin{figure}[h]
