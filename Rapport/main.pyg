@@ -1,0 +1,27 @@
+        // denne funktion sender en Email med sendgrid ved at bruge sendgrids smtp server.
+        public async Task SendEmailAsync(string toEmail, string subject, string message)
+        {
+            var apiKey = "----------------------------------"; // sendgrid api key
+            await Execute(apiKey, subject, message, toEmail);
+        }
+
+        public async Task Execute(string apiKey, string subject, string message, string toEmail)
+        {
+            _logger.LogInformation(apiKey);
+            var client = new SendGridClient(apiKey);
+            var msg = new SendGridMessage()
+            {
+                From = new EmailAddress("mads.gjellerod@gmail.com", "Password Recovery"),
+                Subject = subject,
+                PlainTextContent = message,
+                HtmlContent = message
+            };
+            msg.AddTo(new EmailAddress(toEmail));
+            // fjerner klik tracking fra koden
+            msg.SetClickTracking(false, false);
+            var response = await client.SendEmailAsync(msg);
+            // sennder en besked til konsollen til at debug evtuelle fejl
+            _logger.LogInformation(response.IsSuccessStatusCode
+                                   ? $"Email to {toEmail} queued successfully!"
+                                   : $"Failure Email to {toEmail}");
+        }

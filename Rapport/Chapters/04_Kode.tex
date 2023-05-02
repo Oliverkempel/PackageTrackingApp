@@ -43,4 +43,10 @@ Det første der sker i metoden er at vi laver en variabel der indeholder vores S
 herefter laves der et kaldt til metoden Execute som bliver kaldt asynkront ved hjælp af "await" operatøren.
 
 I Execute metoden bliver der først oprettet et instans af SendGridClient som indeholder api nøglen.
-
+Derefter bliver der lavet et instans af Klassen SendGridMessage som kaldes msg som bruges til at opbygge. 
+Beskenden som skal sendes. Her bliver der sat nogle variabler som hvem den er fra og beksendens indhold. 
+den næste er at metoden AddTo bliver brugt til at sætte emailen som beskenden skal sendes til. Herefter bruges metoden 
+SetClickTracking som der gives to false værdier til at deaktivere Click tracking. først defineres der en implicit variabel 
+som kaldes "response" som vil være den type som der returneres fra SendEmailAsync metoden. Der bruges "await" operatøren som venter
+på at metoden fuldfører udførelsen, før koden fortsætter med at køre. client er et obejkt af typen SendGridClient som har metoden
+SendEmailAsync som er en asynkron metode.
