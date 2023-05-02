@@ -6,8 +6,14 @@
 \contentsline {chapter}{\numberline {4}Produktprincip}{6}{chapter.0.4}%
 \contentsline {section}{\numberline {4.1}Flowchart over programmet}{6}{section.0.4.1}%
 \contentsline {section}{\numberline {4.2}Produktkrav}{6}{section.0.4.2}%
-\contentsline {chapter}{\numberline {5}Test af produkt}{7}{chapter.0.5}%
-\contentsline {chapter}{\numberline {6}Gennemgang af kode}{8}{chapter.0.6}%
-\contentsline {section}{\numberline {6.1}Frontend}{8}{section.0.6.1}%
-\contentsline {section}{\numberline {6.2}Backend}{8}{section.0.6.2}%
-\contentsline {subsection}{\numberline {6.2.1}Oprettelse af Konto}{8}{subsection.0.6.2.1}%
+\contentsline {subsubsection}{Hårde krav}{6}{subsubsection*.3}%
+\contentsline {subsubsection}{Bløde krav}{6}{subsubsection*.4}%
+\contentsline {section}{\numberline {4.3}Database}{7}{section.0.4.3}%
+\contentsline {section}{\numberline {4.4}Asp.net Identity}{7}{section.0.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Google OAuth}{7}{subsection.0.4.4.1}%
+\contentsline {section}{\numberline {4.5}Wireframes}{7}{section.0.4.5}%
+\contentsline {chapter}{\numberline {5}Test af produkt}{9}{chapter.0.5}%
+\contentsline {chapter}{\numberline {6}Gennemgang af kode}{10}{chapter.0.6}%
+\contentsline {section}{\numberline {6.1}Frontend}{10}{section.0.6.1}%
+\contentsline {section}{\numberline {6.2}Backend}{10}{section.0.6.2}%
+\contentsline {subsection}{\numberline {6.2.1}Oprettelse af Konto}{10}{subsection.0.6.2.1}%

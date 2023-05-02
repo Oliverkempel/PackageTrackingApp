@@ -9,21 +9,64 @@ informationen fra alle brugerens pakker samles.
     \includegraphics[width=0.5\linewidth]{Pictures/flowchat-main.png}
     \centering
     \caption{General funktion af programmet.}
-     \label{fig:drill-backplate}
+     \label{fig:Flowchat}
   \end{figure}
   
 
 \section{Produktkrav}
 Der er her opstillet en række hårde og bløde krav som det udviklede web app skal opnå. de er som følger:
 
-Hårde krav:
-Skal kunne tracke pakker fra mindst 2 forskellige fragtfirmaer
-Skal kunne fremvise pakke tracking fra mindst 2 forskellige fragtfirmaer det samme sted
-Oprette bruger
-siden skal have en lav kompleksitet (tilgå tracking på 2 klik)
+\subsubsection{Hårde krav}
+\begin{itemize}
+    \item Skal kunne tracke pakker fra mindst 2 forskellige fragtfirmaer
+    \item Skal kunne fremvise pakke tracking fra mindst 2 forskellige fragtfirmaer det samme sted
+    Oprette bruger
+    \item siden skal have en lav kompleksitet (tilgå tracking på 2 klik)
+\end{itemize}
 
-Bløde Krav:
-Skal have et moderne stilrent design
-Oprette bruger med Google
-Skal fungere upåklageligt på mobile enheder (være responsivt)
-Skal selv kunne hente mails fra brugerens google konto
+\subsubsection{Bløde krav}
+\begin{itemize}
+    \item Skal have et moderne stilrent design
+    \item Oprette bruger med Google
+    \item Skal fungere upåklageligt på mobile enheder (være responsivt)
+    \item Skal selv kunne hente mails fra brugerens google konto
+\end{itemize}
+
+\section{Database}
+
+På figur 4.2 kan man se den overordnet database struktur. Denne database er lavet med
+Asp.net core Identity som er en API som giver nogle login funktionaliteter til ens program
+og kan findes som en nuget package. Til at opdatere databasen bruges Entity Framework Core. 
+
+\begin{wrapfigure}{r}{0.5\textwidth} 
+    \includegraphics[width=0.4\textwidth]{./Pictures/database-diagram.png}
+    \caption{Uklip af User tablen i Databasen}
+    \label{fig:databaseUserTable}
+\end{wrapfigure}
+
+\section{Asp.net Identity}
+Asp.net core er det som bliver brugt til håndtere autentificering og autorisation i webapplikationen.
+Denne måde at gører det på giver en standardiseret måde at håndtere dette på. Identity giver også indbygget
+funktionaliteter til at håndtere brugerregistrering, login, håndtering af adgangskoder og meget mere.
+
+\subsection{Google OAuth}
+Google OAuth bruger OAuth som er en åben protokol som alle kan bruge. Denne protokol bygger på
+HTTP protokolen. Ved hjælp at OAuth kan man som tredjepartsapplikation få adgang til brugers data.
+Det er det vi skal brgue den data vi godt vil have fandt i fra brugeren er at læse brugers emails. 
+Til at få emails fra Google bruges Googles gmail API. som gør det muligt at læse alle brugers emails når de
+er logget ind med OAuth
+\section{Wireframes}
+
+\begin{figure}[h]
+    \includegraphics[width=0.5\linewidth]{Pictures/Wireframe1.png}
+    \centering
+    \caption{G}
+     \label{fig:Wireframe1}
+  \end{figure}
+  
+  \begin{figure}[h]
+    \includegraphics[width=0.5\linewidth]{Pictures/Wireframe2.png}
+    \centering
+    \caption{D}
+     \label{fig:Wireframe2}
+  \end{figure}
