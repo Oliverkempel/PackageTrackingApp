@@ -1,0 +1,16 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{+w}{        }\PYG{n}{@model}\PYG{+w}{ }\PYG{n}{PackageTrackingApp}\PYG{p}{.}\PYG{n}{Viewmodels}\PYG{p}{.}\PYG{n}{MyPageVM}\PYG{p}{;}
+\PYG{+w}{        }\PYG{err}{@}\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{iteration}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{0}\PYG{p}{;}
+
+\PYG{+w}{            }\PYG{k}{foreach}\PYG{p}{(}\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{package}\PYG{+w}{ }\PYG{k}{in}\PYG{+w}{ }\PYG{n}{Model}\PYG{p}{.}\PYG{n}{shipments}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+
+\PYG{+w}{                }\PYG{n}{iteration}\PYG{o}{++}\PYG{p}{;}
+
+\PYG{+w}{                }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{boksId}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdl{}\PYGZdq{}box\PYGZob{}iteration\PYGZcb{}\PYGZdq{}}\PYG{p}{;}
+
+\PYG{+w}{            }\PYG{c+c1}{// Her ligger alt koden til at fremstille Pakke visning}
+
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

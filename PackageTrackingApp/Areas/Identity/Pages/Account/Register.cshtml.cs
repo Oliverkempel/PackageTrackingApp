@@ -105,42 +105,54 @@ namespace PackageTrackingApp.Areas.Identity.Pages.Account
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
-
+        // Denne funktion kaldes nå man registere sig. 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+            // her sættes hvilke url der skal bruges når registeringen er færdig
             returnUrl ??= Url.Content("~/");
+            // her henter den en liste af andre logins
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            // hvis dette er okay går den videre
             if (ModelState.IsValid)
             {
+                // bruger metoden RegisterModel.CreateUser til at lave en model for registeringen
                 var user = CreateUser();
-
+                // her gemmer vi data brugeren har sat i felterne i databasen
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+                
                 var result = await _userManager.CreateAsync(user, Input.Password);
-
+                // hvis bruger kunne laves kører koden videre 
                 if (result.Succeeded)
                 {
+                    // dette er til at debug problemer i koden
                     _logger.LogInformation("User created a new account with password.");
-
+                    // her laver vi en variabel med bruges id som vi lavet før.
                     var userId = await _userManager.GetUserIdAsync(user);
+                    // her generere vi en token som bruges når brugeren skal konfimere sin email
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    // vi kryptere så denne token med Base64 encoding.
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                    // her efter laves en ny midlertidig side hvor konfimationen af emailen ventes på
                     var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
                         pageHandler: null,
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
-
+                    // her bliver emailen sendt med linkent til den nye midlertidig side.
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
+                    // her tjekkes om brugeren har accepteret sin email.
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
+                        // her bliver brugeren diageret til forsiden
                         return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
                     }
                     else
                     {
+                        // hvis ikke emailen bliver konfirmation vil den ikke virke
                         await _signInManager.SignInAsync(user, isPersistent: false);
+                        // her bliver brugeren diageret til forsiden
                         return LocalRedirect(returnUrl);
                     }
                 }
