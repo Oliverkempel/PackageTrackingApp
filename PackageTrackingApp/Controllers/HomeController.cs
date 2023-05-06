@@ -24,6 +24,7 @@ namespace PackageTrackingApp.Controllers
         private readonly IMailHandler _mailHandler;
         private readonly ITrackingInfo _trackingInfo;
 
+        // constructor som gør tilgang til services muligt
         public HomeController(IGmailService gmailService, ILogger<HomeController> logger, IMailHandler mailHandler, ITrackingInfo trackingInfo)
         {
             _gmailService = gmailService;
@@ -32,43 +33,40 @@ namespace PackageTrackingApp.Controllers
             _trackingInfo = trackingInfo;
         }
 
+        //Returnere forsiden (Index siden)
         public IActionResult Index()
         {
             return View();
         }
 
+        //Returnere Privacy siden
         public IActionResult Privacy()
         {
             return View();
         }
+
+
         [HttpGet]
         [Authorize]
         [Route("token")]
-        public async Task<IActionResult> Test()
+        public async Task<IActionResult> myPage()
         {
+            //opretter en instans af klassen mailInfos og venter svar fra mailHandler services funktionen getAllTrackingNumbers() og sætter det derefter til instansen
             AllMailInfo mailInfos = await _mailHandler.getAllTrackingNumbers();
 
+            //Initializere en liste af Shipments og tildeler den det der returneres fra funktionen getTrackingInfoAllCourriers, med parametren mailInfos.
             List<Shipment> allShipmentsFromUserInbox = _trackingInfo.getTrackingInfoAllCourriers(mailInfos);
 
+            //En ny viewmodel initializeres, denne viewmodel er forventet af myPage viewet
             MyPageVM vm = new MyPageVM();
 
+            //Shipments i viewmodel bliver derefter sat til de hentede shipment information hentet fra trackingInfo servicet.
             vm.shipments = allShipmentsFromUserInbox;
-            //var test2 = _trackingInfo.getPostnordTrackingInfo("05308115208628");
 
-            //var latestEmail = await _gmailService.GetLatestEmailAsync("noreply@postnord.dk");
-            //_logger.LogInformation($"Latest email body: {latestEmail}");
+            //Der returneres til myPage viewet med viewdataen sendt med.
             return View(vm);
-            //try
-            //{
-                
-            //}
-            //catch (Exception ex)
-            //{
-            //    _logger.LogError(ex, "An error occurred while retrieving the latest email.");
-            //    return StatusCode(500, "An error occurred while retrieving the latest email.");
-            //}
-        }
 
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
