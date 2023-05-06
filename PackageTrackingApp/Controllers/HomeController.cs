@@ -24,7 +24,7 @@ namespace PackageTrackingApp.Controllers
         private readonly IMailHandler _mailHandler;
         private readonly ITrackingInfo _trackingInfo;
 
-        // constructor som gør tilgang til services muligt
+        // Konstruktor som gør tilgang til services muligt
         public HomeController(IGmailService gmailService, ILogger<HomeController> logger, IMailHandler mailHandler, ITrackingInfo trackingInfo)
         {
             _gmailService = gmailService;
@@ -45,7 +45,7 @@ namespace PackageTrackingApp.Controllers
             return View();
         }
 
-
+        //returnere viewet myPage hvis bruger er authurized (logget ind)
         [HttpGet]
         [Authorize]
         [Route("token")]
