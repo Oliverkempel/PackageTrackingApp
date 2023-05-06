@@ -1,0 +1,133 @@
+\chapter{Gennemgang af kode}
+\section{Frontend}
+\subsection{Pakke visning}
+\begin{figure}[!h]
+    \begin{minted}[frame=lines,framesep=2mm,baselinestretch=1.2,linenos]{cs}
+        @model PackageTrackingApp.Viewmodels.MyPageVM;
+        @{
+            int iteration = 0;
+
+            foreach(var package in Model.shipments) {
+
+                iteration++;
+
+                string boksId = $"box{iteration}";
+             
+            // Her ligger alt koden til at fremstille Pakke visning
+                
+            }
+        }
+    \end{minted}
+\caption{Shipments.cshtml}
+
+\label{code:Shipments.cs}
+\end{figure}
+
+Dette er koden der genere hver boks som viser hvilke pakker man har i ens email. Vi starter med at 
+definere modellen MyPageVM som indeholder data om ens pakker, som bliver generet i HomeControlleren.
+Herefter laver vi en variabel der indeholder tal som skal indexe hvilke pakke den er nået til. Der er så 
+et foreach løkke som for hvert element i Modellen shipments er en variabel "package" som indeholder information
+om pakken. Så bliver iteration plusset en til. der bliver så deklareret "boksId" streng som er ligmed en streng interpolation
+hvor "box" sættes sammen med "iteration" nummeret. under dette ligger der så en masse kode der ikke var plads til i opgaven.
+\newpage
+\begin{figure}[!h]
+    \begin{minted}[frame=lines,framesep=1.8mm,baselinestretch=1,linenos]{cs}
+<div class="bg-white rounded-lg flex flex-row" style="visibility: flex;" id="@boksId">
+<div class="bg-primaryBlue rounded-l-lg h-auto p-4 flex flex-col md:flex-row items-center mx-auto">
+    <h1 class="text-sm md:text-lg text-white">@package.info.courrier</h1>
+</div>
+<div class="w-full p-4 rounded-r-lg flex flex-row space-x-4">
+    <div class="flex flex-col my-auto">
+        <h1 class="text-xl font-semibold">@package.currentStatus</h1>
+                @{
+                    string currntEventLocationtxt = package.events.Last().location.city + ", " + @package.events.Last().location.zipCode + " - " + @package.events.Last().location.country;
+                }
+                <h1 class="text-sm">@currntEventLocationtxt</h1>
+    </div>
+    <div class="h-full bg-none md:bg-primaryBlue rounded-full w-1 flex-grow md:flex-initial"></div>
+    <div class="flex-grow hidden md:block">
+        <table class="table-auto border-separate border-spacing-x-4 text-sm text-gray-900">
+            <tr class="mx-4">
+                <td class="font-semibold">Afsender:</td>
+                <td>@package.info.consignor.name</td>
+            </tr>
+            <tr>
+                <td class="font-semibold">Service:</td>
+                <td>@package.info.service</td>
+            </tr>
+            <tr class="">
+                <td class="font-semibold">Vægt:</td>
+                        @{string weight = package.info.weight + "kg";}
+                <td>@weight</td>
+            </tr>
+        </table>
+    </div>
+    <div class="my-auto items-center float-right" >
+                <a class="btn-primary" onclick="moreInfo(@iteration)">
+            <p>Mere info</p>
+        </a>
+    </div></div></div>
+\end{minted}
+\caption{Shipments.cshtml}
+\label{code:Shipments.cs}
+\end{figure}
+
+Dette kode er inde i foreach løkken. på linje 2 har vi et div html tag som definere en division af koden
+her  som indpakker h1 tagget på linje 3 hvor teksten er sat til at være variabellen "package.info.courrier" som er 
+inde i h1 tagget. div rundt om bruger klasserne "bg-primaryBlue", "rounded-l-lg", og "h-auto" Dette gør at baggrundsfarven er blå
+og har afrundet hjørner til venstre.
+
+
+\section{Backend}
+\subsection{Oprettelse af Konto}
+\newpage
+\begin{figure}[!ht]
+    \begin{minted}[frame=lines,framesep=2mm,baselinestretch=1.2,linenos]{cs}
+        // denne funktion sender en Email med sendgrid ved at bruge sendgrids smtp server.
+        public async Task SendEmailAsync(string toEmail, string subject, string message)
+        {
+            var apiKey = "----------------------------------"; // sendgrid api key
+            await Execute(apiKey, subject, message, toEmail);
+        }
+    
+        public async Task Execute(string apiKey, string subject, string message, string toEmail)
+        {
+            _logger.LogInformation(apiKey);
+            var client = new SendGridClient(apiKey);
+            var msg = new SendGridMessage()
+            {
+                From = new EmailAddress("mads.gjellerod@gmail.com", "Password Recovery"),
+                Subject = subject,
+                PlainTextContent = message,
+                HtmlContent = message
+            };
+            msg.AddTo(new EmailAddress(toEmail));
+            // fjerner klik tracking fra koden 
+            msg.SetClickTracking(false, false);
+            var response = await client.SendEmailAsync(msg);
+            // sennder en besked til konsollen til at debug evtuelle fejl
+            _logger.LogInformation(response.IsSuccessStatusCode
+                                   ? $"Email to {toEmail} queued successfully!"
+                                   : $"Failure Email to {toEmail}");
+        }
+    \end{minted}
+\caption{EmailSender.cs}\label{code:EmailSender.cs}
+\end{figure}
+
+Dette er koden der sender en email når man eksempelvis registere sig på siden og skal 
+konfirmitere ens email. når man vil sende en email i programmet kalder man metoden SendEmailAsync.
+Denne metode har signature af at være public hvilket betyder at andre metoder kan kalde den. Så har
+den også signaturene "async Task" som gør at metoden gøre parrelet med andre opgaver så når man venter på
+en Api response så stopper programmet ikke. Denne metode tager tre paramatere som er strege af tekst.
+Det første der sker i metoden er at vi laver en variabel der indeholder vores Sendgrid api key.
+herefter laves der et kaldt til metoden Execute som bliver kaldt asynkront ved hjælp af "await" operatøren.
+
+I Execute metoden bliver der først oprettet et instans af SendGridClient som indeholder api nøglen.
+Derefter bliver der lavet et instans af Klassen SendGridMessage som kaldes msg som bruges til at opbygge. 
+Beskenden som skal sendes. Her bliver der sat nogle variabler som hvem den er fra og beksendens indhold. 
+den næste er at metoden AddTo bliver brugt til at sætte emailen som beskenden skal sendes til. Herefter bruges metoden 
+SetClickTracking som der gives to false værdier til at deaktivere Click tracking. først defineres der en implicit variabel 
+som kaldes "response" som vil være den type som der returneres fra SendEmailAsync metoden. Der bruges "await" operatøren som venter
+på at metoden fuldfører udførelsen, før koden fortsætter med at køre. client er et obejkt af typen SendGridClient som har metoden
+SendEmailAsync som er en asynkron metode.
+

@@ -22,7 +22,6 @@ public class EmailSender : IEmailSender
     
     public async Task SendEmailAsync(string toEmail, string subject, string message)
     {
-        
         var apiKey = "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";
         if (string.IsNullOrEmpty(apiKey))
         {

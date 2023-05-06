@@ -1,0 +1,29 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{+w}{        }\PYG{c+c1}{// denne funktion sender en Email med sendgrid ved at bruge sendgrids smtp server.}
+\PYG{+w}{        }\PYG{k}{public}\PYG{+w}{ }\PYG{k}{async}\PYG{+w}{ }\PYG{n}{Task}\PYG{+w}{ }\PYG{n+nf}{SendEmailAsync}\PYG{p}{(}\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{toEmail}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{subject}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{message}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{apiKey}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZdq{}}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// sendgrid api key}
+\PYG{+w}{            }\PYG{k}{await}\PYG{+w}{ }\PYG{n+nf}{Execute}\PYG{p}{(}\PYG{n}{apiKey}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{subject}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{message}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{toEmail}\PYG{p}{);}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{k}{public}\PYG{+w}{ }\PYG{k}{async}\PYG{+w}{ }\PYG{n}{Task}\PYG{+w}{ }\PYG{n+nf}{Execute}\PYG{p}{(}\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{apiKey}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{subject}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{message}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{toEmail}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{\PYGZus{}logger}\PYG{p}{.}\PYG{n}{LogInformation}\PYG{p}{(}\PYG{n}{apiKey}\PYG{p}{);}
+\PYG{+w}{            }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{client}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{SendGridClient}\PYG{p}{(}\PYG{n}{apiKey}\PYG{p}{);}
+\PYG{+w}{            }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{msg}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{SendGridMessage}\PYG{p}{()}
+\PYG{+w}{            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{n}{From}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{EmailAddress}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}mads.gjellerod@gmail.com\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Password Recovery\PYGZdq{}}\PYG{p}{),}
+\PYG{+w}{                }\PYG{n}{Subject}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{subject}\PYG{p}{,}
+\PYG{+w}{                }\PYG{n}{PlainTextContent}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{message}\PYG{p}{,}
+\PYG{+w}{                }\PYG{n}{HtmlContent}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{message}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{};}
+\PYG{+w}{            }\PYG{n}{msg}\PYG{p}{.}\PYG{n}{AddTo}\PYG{p}{(}\PYG{k}{new}\PYG{+w}{ }\PYG{n}{EmailAddress}\PYG{p}{(}\PYG{n}{toEmail}\PYG{p}{));}
+\PYG{+w}{            }\PYG{c+c1}{// fjerner klik tracking fra koden}
+\PYG{+w}{            }\PYG{n}{msg}\PYG{p}{.}\PYG{n}{SetClickTracking}\PYG{p}{(}\PYG{k}{false}\PYG{p}{,}\PYG{+w}{ }\PYG{k}{false}\PYG{p}{);}
+\PYG{+w}{            }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{response}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{await}\PYG{+w}{ }\PYG{n}{client}\PYG{p}{.}\PYG{n}{SendEmailAsync}\PYG{p}{(}\PYG{n}{msg}\PYG{p}{);}
+\PYG{+w}{            }\PYG{c+c1}{// sennder en besked til konsollen til at debug evtuelle fejl}
+\PYG{+w}{            }\PYG{n}{\PYGZus{}logger}\PYG{p}{.}\PYG{n}{LogInformation}\PYG{p}{(}\PYG{n}{response}\PYG{p}{.}\PYG{n}{IsSuccessStatusCode}
+\PYG{+w}{                                   }\PYG{o}{?}\PYG{+w}{ }\PYG{l+s}{\PYGZdl{}\PYGZdq{}Email to \PYGZob{}toEmail\PYGZcb{} queued successfully!\PYGZdq{}}
+\PYG{+w}{                                   }\PYG{p}{:}\PYG{+w}{ }\PYG{l+s}{\PYGZdl{}\PYGZdq{}Failure Email to \PYGZob{}toEmail\PYGZcb{}\PYGZdq{}}\PYG{p}{);}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\end{Verbatim}
