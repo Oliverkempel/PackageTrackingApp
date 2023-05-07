@@ -32,9 +32,11 @@ Der er her opstillet en række hårde og bløde krav som det udviklede web app s
     \item Skal selv kunne hente mails fra brugerens google konto
 \end{itemize}
 \section{Tech-stack}
-Webapplikationens tech stack består af Html hvor vi bruger razorpages og til styling bruges css her bruger vi Tailwind som er et
-css framework. Der bruges også javascript og her bruger vi også javascript biblotekket jQuery som har til formål
-at programmere webapplikationer. Til backend bruges Csharp og som database bruges mssql.
+Webapplikationen er bygget som en Asp.Net Core 7.0 MVC webapplication, som er et webframework. Tech stacken består af Html hvor vi bruger razorpages og til styling bruges css her bruger vi Tailwind som er et
+css framework. TailwindCSSer et framework som gør det nemt at have et uniformt design system på en website / webapplication, 
+det gør det muligt at style dine HTML tags direkte i HTML koden ved at bruge Tailwinds klasser. Der bruges også javascript 
+og her bruger vi også javascript biblotekket jQuery som har til formål
+at programmere webapplikationer. Til backend bruges Csharp og som database bruges mssql. 
 \section{Database}
 Til Databasen bruges MS SQL som er en relations database(RDBMS) udviklet af Microsoft. Hvilket
 giver mest mening når man laver Asp.net core mvc webapps da mange dele af dette bygger på at man bruger
@@ -48,6 +50,13 @@ Den næste kommando opdateres så databasen med migration som vi lavede før. Af
 valgt at databasen er delt i to en hvor alt login data bliver gemt og en hvor data om bruger bliver gemt.
 Det gør at hvis der bliver udført et sql angreb er det kun den en af databaserne der bliver ramt.
 
+\begin{wrapfigure}{r}{0.4\textwidth} 
+    \centering
+    \includegraphics[width=0.4\textwidth]{./Pictures/database-diagram.png}
+    \caption{Uklip af User tablen i Databasen}
+    \label{fig:databaseUserTable}
+\end{wrapfigure}
+
 \begin{figure}[!h]
     \begin{lstlisting}[language=bash]
         > dotnet ef migrations add IntialUserData --context ApplicationDbContext
@@ -57,22 +66,24 @@ Det gør at hvis der bliver udført et sql angreb er det kun den en af databaser
     \end{lstlisting}
 \end{figure}
 
-fem forskellige tabeller: AspNetRoles, AspNetUsers, AspNetRoleClaims og AspNetUserClaims. 
-Disse tabeller er til at opbevare data relateret til brugerautorisation i vores webapplikation, Dette kan ses på figur 4.2. På denne figur 
-kan vi se at AspNetUsers har en til en relation med tabellerne AspNetUserLogins og AspNetUserClaims. 
-
-
-\begin{wrapfigure}{r}{0.5\textwidth} 
-    \includegraphics[width=0.4\textwidth]{./Pictures/database-diagram.png}
-    \caption{Uklip af User tablen i Databasen}
-    \label{fig:databaseUserTable}
-\end{wrapfigure}
-
 På figur 4.2 kan man se den overordnet database struktur. Denne database er lavet med
 Asp.net core Identity som er en API som giver nogle login funktionaliteter til ens program
-og kan findes som en nuget package. Denne Api genere selv modellerene til systemet.  
+og kan findes som en nuget package. Denne pakke har allerede en måde databasen skal se ud på og 
+den kan generes med en simpel command som genere de forskellige modeller og dette kan så migrares til databasen.  
 
 
+der er fem tabeller AspNetRoles, AspNetUsers, AspNetRoleClaims og AspNetUserClaims. 
+Disse tabeller er til at opbevare data relateret til brugerautorisation i vores webapplikation, Dette kan ses på figur 4.2. På denne figur 
+kan vi se at AspNetUsers har en til en relation med tabellerne AspNetUserLogins og AspNetUserClaims. Dette er fordi at der kun kan være en bruger
+med det navn og login. AspNetUsers har også en til mange realtion til AspNetUserTokens og AspNetUserRoles. AspNetUserRoles har så en mange til en relation med
+AspNetRoles som  har en til en relation med AspNetRoleClaims.
+
+
+
+
+
+
+\bigbreak
 
 
 \section{Asp.net Identity}
@@ -81,9 +92,9 @@ Denne måde at gører det på giver en standardiseret måde at håndtere dette p
 funktionaliteter til at håndtere brugerregistrering, login, håndtering af adgangskoder og meget mere.
 
 \subsection{Google OAuth}
-Google OAuth bruger OAuth som er en åben protokol som alle kan bruge. Denne protokol bygger på
+Google OAuth bruger OAuth2 som er en åben protokol som alle kan bruge. Denne protokol bygger på
 HTTP protokolen. Ved hjælp at OAuth kan man som tredjepartsapplikation få adgang til brugers data.
-Det er det vi skal brgue den data vi godt vil have fandt i fra brugeren er at læse brugers emails. 
+Det er det vi skal bruge den data vi godt vil have fat i fra brugeren er at læse brugers emails. 
 Til at få emails fra Google bruges Googles gmail API. som gør det muligt at læse alle brugers emails når de
 er logget ind med OAuth.
 \newpage
@@ -98,18 +109,20 @@ er logget ind med OAuth.
 som man kan se på figur 4.3 har vi forsiden. Her er der en navbar. Hvor man kan vælge nogle muligheder. man
 kan gå til om os som er en side der fortæller noget om virksomheden. så kan gå til login hvor man også kan registere sig.
 hvis man også trykker på start vil man blive ført til registering. Farve valget er ikke tilfældeligt vi bruger den samme farve
-palette igenmen hele webapplikationen. 
+palette igenmen hele webapplikationen. Dette er gjort for at give et stilrent design gennem hele hjemmesiden. Det også valgt at hvert
+fragtfirma har hver sin farve som man kan se på figur 3.5. dette gør det let for brugeren hurtigt at se hvilket fragtfirma pakken er fra.
+Disse wireframe viser hvordan det endelige design helst skal se ud.
 
-\begin{wrapfigure}{r}{0.5\textwidth} 
-    \includegraphics[width=0.5\textwidth]{Pictures/Wireframe1.png}
+\begin{figure}[!htbp]
+    \includegraphics[width=0.7\linewidth]{Pictures/Wireframe1.png}
     \caption{Wireframe af førsiden af webapplikationen}
      \label{fig:Wireframe1}
-  \end{wrapfigure}
+  \end{figure}
 
-  
 
-  \begin{wrapfigure}{r}{0.5\textwidth} 
-    \includegraphics[width=0.5\textwidth]{Pictures/Wireframe2.png}
+  \begin{figure}[!h]
+    \centering
+    \includegraphics[width=0.7\linewidth]{Pictures/Wireframe2.png}
     \caption{Wireframe af hvor man kan se sin}
      \label{fig:Wireframe2}
-  \end{wrapfigure}
+  \end{figure}

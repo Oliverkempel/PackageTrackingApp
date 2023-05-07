@@ -1,0 +1,80 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{Microsoft.AspNetCore.Authorization}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{Microsoft.AspNetCore.Mvc}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{PackageTrackingApp.Models}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{PackageTrackingApp.Services}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{System.Diagnostics}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{Google.Apis.Auth.OAuth2}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{Google.Apis.Gmail.v1}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{Google.Apis.Gmail.v1.Data}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{Google.Apis.Services}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{Microsoft.AspNetCore.Authentication}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{Microsoft.AspNetCore.Http}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{Microsoft.Extensions.Configuration}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{System.Linq}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{System.Threading.Tasks}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{PackageTrackingApp.Services}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{PackageTrackingApp.Viewmodels}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k}{namespace}\PYG{+w}{ }\PYG{n+nn}{PackageTrackingApp.Controllers}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{k}{public}\PYG{+w}{ }\PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{HomeController}\PYG{+w}{ }\PYG{p}{:}\PYG{+w}{ }\PYG{n}{Controller}
+\PYG{+w}{            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{readonly}\PYG{+w}{ }\PYG{n}{IGmailService}\PYG{+w}{ }\PYG{n}{\PYGZus{}gmailService}\PYG{p}{;}
+\PYG{+w}{                }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{readonly}\PYG{+w}{ }\PYG{n}{ILogger}\PYG{o}{\PYGZlt{}}\PYG{n}{HomeController}\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{\PYGZus{}logger}\PYG{p}{;}
+\PYG{+w}{                }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{readonly}\PYG{+w}{ }\PYG{n}{IMailHandler}\PYG{+w}{ }\PYG{n}{\PYGZus{}mailHandler}\PYG{p}{;}
+\PYG{+w}{                }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{readonly}\PYG{+w}{ }\PYG{n}{ITrackingInfo}\PYG{+w}{ }\PYG{n}{\PYGZus{}trackingInfo}\PYG{p}{;}
+
+\PYG{+w}{                }\PYG{c+c1}{// Konstruktor som gør tilgang til services muligt}
+\PYG{+w}{                }\PYG{k}{public}\PYG{+w}{ }\PYG{n+nf}{HomeController}\PYG{p}{(}\PYG{n}{IGmailService}\PYG{+w}{ }\PYG{n}{gmailService}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{ILogger}\PYG{o}{\PYGZlt{}}\PYG{n}{HomeController}\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{logger}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{IMailHandler}\PYG{+w}{ }\PYG{n}{mailHandler}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{ITrackingInfo}\PYG{+w}{ }\PYG{n}{trackingInfo}\PYG{p}{)}
+\PYG{+w}{                }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                    }\PYG{n}{\PYGZus{}gmailService}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{gmailService}\PYG{p}{;}
+\PYG{+w}{                    }\PYG{n}{\PYGZus{}logger}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{logger}\PYG{p}{;}
+\PYG{+w}{                    }\PYG{n}{\PYGZus{}mailHandler}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{mailHandler}\PYG{p}{;}
+\PYG{+w}{                    }\PYG{n}{\PYGZus{}trackingInfo}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{trackingInfo}\PYG{p}{;}
+\PYG{+w}{                }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{                }\PYG{c+c1}{//Returnere forsiden (Index siden)}
+\PYG{+w}{                }\PYG{k}{public}\PYG{+w}{ }\PYG{n}{IActionResult}\PYG{+w}{ }\PYG{n+nf}{Index}\PYG{p}{()}
+\PYG{+w}{                }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                    }\PYG{k}{return}\PYG{+w}{ }\PYG{n+nf}{View}\PYG{p}{();}
+\PYG{+w}{                }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{                }\PYG{c+c1}{//Returnere Privacy siden}
+\PYG{+w}{                }\PYG{k}{public}\PYG{+w}{ }\PYG{n}{IActionResult}\PYG{+w}{ }\PYG{n+nf}{Privacy}\PYG{p}{()}
+\PYG{+w}{                }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                    }\PYG{k}{return}\PYG{+w}{ }\PYG{n+nf}{View}\PYG{p}{();}
+\PYG{+w}{                }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{                }\PYG{c+c1}{//returnere viewet myPage hvis bruger er authurized (logget ind)}
+\PYG{+w}{                }\PYG{n+na}{[HttpGet]}
+\PYG{+w}{                }\PYG{n+na}{[Authorize]}
+\PYG{+w}{                }\PYG{n+na}{[Route(\PYGZdq{}token\PYGZdq{})]}
+\PYG{+w}{                }\PYG{k}{public}\PYG{+w}{ }\PYG{k}{async}\PYG{+w}{ }\PYG{n}{Task}\PYG{o}{\PYGZlt{}}\PYG{n}{IActionResult}\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{myPage}\PYG{p}{()}
+\PYG{+w}{                }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                    }\PYG{c+c1}{//opretter en instans af klassen mailInfos og venter svar fra mailHandler services metoden getAllTrackingNumbers() og sætter det derefter til instansen}
+\PYG{+w}{                    }\PYG{n}{AllMailInfo}\PYG{+w}{ }\PYG{n}{mailInfos}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{await}\PYG{+w}{ }\PYG{n}{\PYGZus{}mailHandler}\PYG{p}{.}\PYG{n}{getAllTrackingNumbers}\PYG{p}{();}
+
+\PYG{+w}{                    }\PYG{c+c1}{//Initializere en liste af Shipments og tildeler den det der returneres fra metoden getTrackingInfoAllCourriers, med parametren mailInfos.}
+\PYG{+w}{                    }\PYG{n}{List}\PYG{o}{\PYGZlt{}}\PYG{n}{Shipment}\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{allShipmentsFromUserInbox}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{\PYGZus{}trackingInfo}\PYG{p}{.}\PYG{n}{getTrackingInfoAllCourriers}\PYG{p}{(}\PYG{n}{mailInfos}\PYG{p}{);}
+
+\PYG{+w}{                    }\PYG{c+c1}{//En ny viewmodel initializeres, denne viewmodel er forventet af myPage viewet}
+\PYG{+w}{                    }\PYG{n}{MyPageVM}\PYG{+w}{ }\PYG{n}{vm}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{MyPageVM}\PYG{p}{();}
+
+\PYG{+w}{                    }\PYG{c+c1}{//Shipments i viewmodel bliver derefter sat til de hentede shipment information hentet fra trackingInfo servicet.}
+\PYG{+w}{                    }\PYG{n}{vm}\PYG{p}{.}\PYG{n}{shipments}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{allShipmentsFromUserInbox}\PYG{p}{;}
+
+\PYG{+w}{                    }\PYG{c+c1}{//Der returneres til myPage viewet med viewdataen sendt med.}
+\PYG{+w}{                    }\PYG{k}{return}\PYG{+w}{ }\PYG{n+nf}{View}\PYG{p}{(}\PYG{n}{vm}\PYG{p}{);}
+
+\PYG{+w}{                }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{                }\PYG{n+na}{[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]}
+\PYG{+w}{                }\PYG{k}{public}\PYG{+w}{ }\PYG{n}{IActionResult}\PYG{+w}{ }\PYG{n+nf}{Error}\PYG{p}{()}
+\PYG{+w}{                }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                    }\PYG{k}{return}\PYG{+w}{ }\PYG{n+nf}{View}\PYG{p}{(}\PYG{k}{new}\PYG{+w}{ }\PYG{n}{ErrorViewModel}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{+w}{ }\PYG{n}{RequestId}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{Activity}\PYG{p}{.}\PYG{n}{Current}\PYG{o}{?.}\PYG{n}{Id}\PYG{+w}{ }\PYG{o}{??}\PYG{+w}{ }\PYG{n}{HttpContext}\PYG{p}{.}\PYG{n}{TraceIdentifier}\PYG{+w}{ }\PYG{p}{\PYGZcb{});}
+\PYG{+w}{                }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\end{Verbatim}

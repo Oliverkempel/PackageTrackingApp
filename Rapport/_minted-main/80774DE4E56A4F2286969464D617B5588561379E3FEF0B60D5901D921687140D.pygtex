@@ -1,0 +1,170 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{+w}{        }\PYG{n}{@model}\PYG{+w}{ }\PYG{n}{PackageTrackingApp}\PYG{p}{.}\PYG{n}{Viewmodels}\PYG{p}{.}\PYG{n}{MyPageVM}\PYG{p}{;}
+\PYG{err}{@}\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{n}{ViewData}\PYG{p}{[}\PYG{l+s}{\PYGZdq{}Title\PYGZdq{}}\PYG{p}{]}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Test page\PYGZdq{}}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{o}{\PYGZlt{}}\PYG{n}{section}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}bg\PYGZhy{}primaryGray p\PYGZhy{}6 rounded\PYGZhy{}xl text\PYGZhy{}center\PYGZdq{}}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{    }\PYG{o}{\PYGZlt{}}\PYG{n}{h1}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}text\PYGZhy{}lg text\PYGZhy{}gray\PYGZhy{}500 font\PYGZhy{}thin\PYGZdq{}}\PYG{o}{\PYGZgt{}}\PYG{n}{Velkommen}\PYG{+w}{ }\PYG{n}{tilbage}\PYG{o}{\PYGZlt{}/}\PYG{n}{h1}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{    }\PYG{o}{\PYGZlt{}}\PYG{n}{h1}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}text\PYGZhy{}2xl text\PYGZhy{}gray\PYGZhy{}900 font\PYGZhy{}semibold\PYGZdq{}}\PYG{o}{\PYGZgt{}}\PYG{n}{@User}\PYG{p}{.}\PYG{n}{Identity}\PYG{p}{.}\PYG{n}{Name}\PYG{o}{\PYGZlt{}/}\PYG{n}{h1}\PYG{o}{\PYGZgt{}}
+\PYG{o}{\PYGZlt{}/}\PYG{n}{section}\PYG{o}{\PYGZgt{}}
+
+\PYG{o}{\PYGZlt{}}\PYG{n}{section}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}mt\PYGZhy{}6\PYGZdq{}}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{    }\PYG{o}{\PYGZlt{}}\PYG{n}{h1}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}text\PYGZhy{}lg text\PYGZhy{}primaryBlue font\PYGZhy{}semibold text\PYGZhy{}center md:text\PYGZhy{}left\PYGZdq{}}\PYG{o}{\PYGZgt{}}\PYG{n}{Dine}\PYG{+w}{ }\PYG{n}{leveringer}\PYG{o}{\PYGZlt{}/}\PYG{n}{h1}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{    }\PYG{o}{\PYGZlt{}}\PYG{n}{div}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}bg\PYGZhy{}primaryGray rounded\PYGZhy{}xl flex flex\PYGZhy{}col p\PYGZhy{}6 space\PYGZhy{}y\PYGZhy{}4\PYGZdq{}}\PYG{o}{\PYGZgt{}}
+
+\PYG{+w}{        }\PYG{err}{@}\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{iteration}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{0}\PYG{p}{;}
+
+\PYG{+w}{            }\PYG{k}{foreach}\PYG{p}{(}\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{package}\PYG{+w}{ }\PYG{k}{in}\PYG{+w}{ }\PYG{n}{Model}\PYG{p}{.}\PYG{n}{shipments}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+
+\PYG{+w}{                }\PYG{n}{iteration}\PYG{o}{++}\PYG{p}{;}
+
+\PYG{+w}{                }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{boksId}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdl{}\PYGZdq{}box\PYGZob{}iteration\PYGZcb{}\PYGZdq{}}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{o}{\PYGZlt{}}\PYG{n}{div}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}bg\PYGZhy{}white rounded\PYGZhy{}lg flex flex\PYGZhy{}row\PYGZdq{}}\PYG{+w}{ }\PYG{n}{style}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}visibility: flex;\PYGZdq{}}\PYG{+w}{ }\PYG{n}{id}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}@boksId\PYGZdq{}}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{            }\PYG{o}{\PYGZlt{}}\PYG{n}{div}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}bg\PYGZhy{}primaryBlue rounded\PYGZhy{}l\PYGZhy{}lg h\PYGZhy{}auto p\PYGZhy{}4 flex flex\PYGZhy{}col md:flex\PYGZhy{}row items\PYGZhy{}center mx\PYGZhy{}auto\PYGZdq{}}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                }\PYG{o}{\PYGZlt{}}\PYG{n}{svg}\PYG{+w}{ }\PYG{n}{xmlns}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}http://www.w3.org/2000/svg\PYGZdq{}}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}h\PYGZhy{}8 pr\PYGZhy{}4 mx\PYGZhy{}auto\PYGZdq{}}\PYG{+w}{ }\PYG{n}{viewBox}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}0 0 43.636 48.39\PYGZdq{}}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                    }\PYG{o}{\PYGZlt{}}\PYG{n}{g}\PYG{+w}{ }\PYG{n}{id}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}Icon\PYGZus{}feather\PYGZhy{}package\PYGZdq{}}\PYG{+w}{ }\PYG{n}{data}\PYG{o}{\PYGZhy{}}\PYG{n}{name}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}Icon feather\PYGZhy{}package\PYGZdq{}}\PYG{+w}{ }\PYG{n}{transform}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}translate(\PYGZhy{}3 \PYGZhy{}1.44)\PYGZdq{}}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                        }\PYG{o}{\PYGZlt{}}\PYG{n}{path}\PYG{+w}{ }\PYG{n}{id}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}Path\PYGZus{}87\PYGZdq{}}\PYG{+w}{ }\PYG{n}{data}\PYG{o}{\PYGZhy{}}\PYG{n}{name}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}Path 87\PYGZdq{}}\PYG{+w}{ }\PYG{n}{d}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}M31.568,18.032,11.25,6.315\PYGZdq{}}\PYG{+w}{ }\PYG{n}{transform}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}translate(3.409 1.673)\PYGZdq{}}\PYG{+w}{ }\PYG{n}{fill}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}none\PYGZdq{}}\PYG{+w}{ }\PYG{n}{stroke}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}\PYGZsh{}eee\PYGZdq{}}\PYG{+w}{ }\PYG{n}{stroke}\PYG{o}{\PYGZhy{}}\PYG{n}{linecap}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}round\PYGZdq{}}\PYG{+w}{ }\PYG{n}{stroke}\PYG{o}{\PYGZhy{}}\PYG{n}{linejoin}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}round\PYGZdq{}}\PYG{+w}{ }\PYG{n}{stroke}\PYG{o}{\PYGZhy{}}\PYG{n}{width}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}3\PYGZdq{}}\PYG{+w}{ }\PYG{o}{/\PYGZgt{}}
+\PYG{+w}{                        }\PYG{o}{\PYGZlt{}}\PYG{n}{path}\PYG{+w}{ }\PYG{n}{id}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}Path\PYGZus{}88\PYGZdq{}}\PYG{+w}{ }\PYG{n}{data}\PYG{o}{\PYGZhy{}}\PYG{n}{name}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}Path 88\PYGZdq{}}\PYG{+w}{ }\PYG{n}{d}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}M45.136,34.6V16.544a4.515,4.515,0,0,0\PYGZhy{}2.258\PYGZhy{}3.906l\PYGZhy{}15.8\PYGZhy{}9.03a4.515,4.515,0,0,0\PYGZhy{}4.515,0l\PYGZhy{}15.8,9.03A4.515,4.515,0,0,0,4.5,16.544V34.6A4.515,4.515,0,0,0,6.758,38.51l15.8,9.03a4.515,4.515,0,0,0,4.515,0l15.8\PYGZhy{}9.03A4.515,4.515,0,0,0,45.136,34.6Z\PYGZdq{}}\PYG{+w}{ }\PYG{n}{fill}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}none\PYGZdq{}}\PYG{+w}{ }\PYG{n}{stroke}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}\PYGZsh{}eee\PYGZdq{}}\PYG{+w}{ }\PYG{n}{stroke}\PYG{o}{\PYGZhy{}}\PYG{n}{linecap}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}round\PYGZdq{}}\PYG{+w}{ }\PYG{n}{stroke}\PYG{o}{\PYGZhy{}}\PYG{n}{linejoin}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}round\PYGZdq{}}\PYG{+w}{ }\PYG{n}{stroke}\PYG{o}{\PYGZhy{}}\PYG{n}{width}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}3\PYGZdq{}}\PYG{+w}{ }\PYG{o}{/\PYGZgt{}}
+\PYG{+w}{                        }\PYG{o}{\PYGZlt{}}\PYG{n}{path}\PYG{+w}{ }\PYG{n}{id}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}Path\PYGZus{}89\PYGZdq{}}\PYG{+w}{ }\PYG{n}{data}\PYG{o}{\PYGZhy{}}\PYG{n}{name}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}Path 89\PYGZdq{}}\PYG{+w}{ }\PYG{n}{d}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}M4.905,10.44l19.708,11.4,19.708\PYGZhy{}11.4\PYGZdq{}}\PYG{+w}{ }\PYG{n}{transform}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}translate(0.205 3.756)\PYGZdq{}}\PYG{+w}{ }\PYG{n}{fill}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}none\PYGZdq{}}\PYG{+w}{ }\PYG{n}{stroke}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}\PYGZsh{}eee\PYGZdq{}}\PYG{+w}{ }\PYG{n}{stroke}\PYG{o}{\PYGZhy{}}\PYG{n}{linecap}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}round\PYGZdq{}}\PYG{+w}{ }\PYG{n}{stroke}\PYG{o}{\PYGZhy{}}\PYG{n}{linejoin}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}round\PYGZdq{}}\PYG{+w}{ }\PYG{n}{stroke}\PYG{o}{\PYGZhy{}}\PYG{n}{width}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}3\PYGZdq{}}\PYG{+w}{ }\PYG{o}{/\PYGZgt{}}
+\PYG{+w}{                        }\PYG{o}{\PYGZlt{}}\PYG{n}{path}\PYG{+w}{ }\PYG{n}{id}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}Path\PYGZus{}90\PYGZdq{}}\PYG{+w}{ }\PYG{n}{data}\PYG{o}{\PYGZhy{}}\PYG{n}{name}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}Path 90\PYGZdq{}}\PYG{+w}{ }\PYG{n}{d}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}M18,40.756V18\PYGZdq{}}\PYG{+w}{ }\PYG{n}{transform}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}translate(6.818 7.574)\PYGZdq{}}\PYG{+w}{ }\PYG{n}{fill}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}none\PYGZdq{}}\PYG{+w}{ }\PYG{n}{stroke}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}\PYGZsh{}eee\PYGZdq{}}\PYG{+w}{ }\PYG{n}{stroke}\PYG{o}{\PYGZhy{}}\PYG{n}{linecap}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}round\PYGZdq{}}\PYG{+w}{ }\PYG{n}{stroke}\PYG{o}{\PYGZhy{}}\PYG{n}{linejoin}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}round\PYGZdq{}}\PYG{+w}{ }\PYG{n}{stroke}\PYG{o}{\PYGZhy{}}\PYG{n}{width}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}3\PYGZdq{}}\PYG{+w}{ }\PYG{o}{/\PYGZgt{}}
+\PYG{+w}{                    }\PYG{o}{\PYGZlt{}/}\PYG{n}{g}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                }\PYG{o}{\PYGZlt{}/}\PYG{n}{svg}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                }\PYG{o}{\PYGZlt{}}\PYG{n}{h1}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}text\PYGZhy{}sm md:text\PYGZhy{}lg text\PYGZhy{}white\PYGZdq{}}\PYG{o}{\PYGZgt{}}\PYG{n}{@package}\PYG{p}{.}\PYG{n}{info}\PYG{p}{.}\PYG{n}{courrier}\PYG{o}{\PYGZlt{}/}\PYG{n}{h1}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{            }\PYG{o}{\PYGZlt{}/}\PYG{n}{div}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{            }\PYG{o}{\PYGZlt{}}\PYG{n}{div}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}w\PYGZhy{}full p\PYGZhy{}4 rounded\PYGZhy{}r\PYGZhy{}lg flex flex\PYGZhy{}row space\PYGZhy{}x\PYGZhy{}4\PYGZdq{}}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                }\PYG{o}{\PYGZlt{}}\PYG{n}{div}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}flex flex\PYGZhy{}col my\PYGZhy{}auto\PYGZdq{}}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                    }\PYG{o}{\PYGZlt{}}\PYG{n}{h1}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}text\PYGZhy{}xl font\PYGZhy{}semibold\PYGZdq{}}\PYG{o}{\PYGZgt{}}\PYG{n}{@package}\PYG{p}{.}\PYG{n}{currentStatus}\PYG{o}{\PYGZlt{}/}\PYG{n}{h1}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                            }\PYG{err}{@}\PYG{p}{\PYGZob{}}
+\PYG{+w}{                                }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{currntEventLocationtxt}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{package}\PYG{p}{.}\PYG{n}{events}\PYG{p}{.}\PYG{n}{Last}\PYG{p}{().}\PYG{n}{location}\PYG{p}{.}\PYG{n}{city}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}, \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{@package}\PYG{p}{.}\PYG{n}{events}\PYG{p}{.}\PYG{n}{Last}\PYG{p}{().}\PYG{n}{location}\PYG{p}{.}\PYG{n}{zipCode}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{} \PYGZhy{} \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{@package}\PYG{p}{.}\PYG{n}{events}\PYG{p}{.}\PYG{n}{Last}\PYG{p}{().}\PYG{n}{location}\PYG{p}{.}\PYG{n}{country}\PYG{p}{;}
+\PYG{+w}{                            }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{                            }\PYG{o}{\PYGZlt{}}\PYG{n}{h1}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}text\PYGZhy{}sm\PYGZdq{}}\PYG{o}{\PYGZgt{}}\PYG{n}{@currntEventLocationtxt}\PYG{o}{\PYGZlt{}/}\PYG{n}{h1}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                }\PYG{o}{\PYGZlt{}/}\PYG{n}{div}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                }\PYG{o}{\PYGZlt{}}\PYG{n}{div}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}h\PYGZhy{}full bg\PYGZhy{}none md:bg\PYGZhy{}primaryBlue rounded\PYGZhy{}full w\PYGZhy{}1 flex\PYGZhy{}grow md:flex\PYGZhy{}initial\PYGZdq{}}\PYG{o}{\PYGZgt{}\PYGZlt{}/}\PYG{n}{div}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                }\PYG{o}{\PYGZlt{}}\PYG{n}{div}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}flex\PYGZhy{}grow hidden md:block\PYGZdq{}}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                    }\PYG{o}{\PYGZlt{}}\PYG{n}{table}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}table\PYGZhy{}auto border\PYGZhy{}separate border\PYGZhy{}spacing\PYGZhy{}x\PYGZhy{}4 text\PYGZhy{}sm text\PYGZhy{}gray\PYGZhy{}900\PYGZdq{}}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                        }\PYG{o}{\PYGZlt{}}\PYG{n}{tr}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}mx\PYGZhy{}4\PYGZdq{}}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                            }\PYG{o}{\PYGZlt{}}\PYG{n}{td}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}font\PYGZhy{}semibold\PYGZdq{}}\PYG{o}{\PYGZgt{}}\PYG{n}{Afsender}\PYG{p}{:}\PYG{o}{\PYGZlt{}/}\PYG{n}{td}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                            }\PYG{o}{\PYGZlt{}}\PYG{n}{td}\PYG{o}{\PYGZgt{}}\PYG{n}{@package}\PYG{p}{.}\PYG{n}{info}\PYG{p}{.}\PYG{n}{consignor}\PYG{p}{.}\PYG{n}{name}\PYG{o}{\PYGZlt{}/}\PYG{n}{td}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                        }\PYG{o}{\PYGZlt{}/}\PYG{n}{tr}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                        }\PYG{o}{\PYGZlt{}}\PYG{n}{tr}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                            }\PYG{o}{\PYGZlt{}}\PYG{n}{td}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}font\PYGZhy{}semibold\PYGZdq{}}\PYG{o}{\PYGZgt{}}\PYG{n}{Service}\PYG{p}{:}\PYG{o}{\PYGZlt{}/}\PYG{n}{td}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                            }\PYG{o}{\PYGZlt{}}\PYG{n}{td}\PYG{o}{\PYGZgt{}}\PYG{n}{@package}\PYG{p}{.}\PYG{n}{info}\PYG{p}{.}\PYG{n}{service}\PYG{o}{\PYGZlt{}/}\PYG{n}{td}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                        }\PYG{o}{\PYGZlt{}/}\PYG{n}{tr}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                        }\PYG{o}{\PYGZlt{}}\PYG{n}{tr}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}\PYGZdq{}}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                            }\PYG{o}{\PYGZlt{}}\PYG{n}{td}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}font\PYGZhy{}semibold\PYGZdq{}}\PYG{o}{\PYGZgt{}}\PYG{n}{V}\PYG{err}{�}\PYG{n}{gt}\PYG{p}{:}\PYG{o}{\PYGZlt{}/}\PYG{n}{td}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                                    }\PYG{err}{@}\PYG{p}{\PYGZob{}}
+\PYG{+w}{                                        }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{weight}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{package}\PYG{p}{.}\PYG{n}{info}\PYG{p}{.}\PYG{n}{weight}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}kg\PYGZdq{}}\PYG{p}{;}
+\PYG{+w}{                                    }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{                            }\PYG{o}{\PYGZlt{}}\PYG{n}{td}\PYG{o}{\PYGZgt{}}\PYG{n}{@weight}\PYG{o}{\PYGZlt{}/}\PYG{n}{td}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                        }\PYG{o}{\PYGZlt{}/}\PYG{n}{tr}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                    }\PYG{o}{\PYGZlt{}/}\PYG{n}{table}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                }\PYG{o}{\PYGZlt{}/}\PYG{n}{div}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                }\PYG{o}{\PYGZlt{}}\PYG{n}{div}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}my\PYGZhy{}auto items\PYGZhy{}center float\PYGZhy{}right\PYGZdq{}}\PYG{+w}{ }\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                            }\PYG{o}{\PYGZlt{}}\PYG{n}{a}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}btn\PYGZhy{}primary\PYGZdq{}}\PYG{+w}{ }\PYG{n}{onclick}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}moreInfo(@iteration)\PYGZdq{}}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                            }\PYG{err}{@}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{onclick}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}moreInfo(@package.info.trackingNumber)*@}
+\PYG{+w}{                        }\PYG{o}{\PYGZlt{}}\PYG{n}{p}\PYG{o}{\PYGZgt{}}\PYG{n}{Mere}\PYG{+w}{ }\PYG{n}{info}\PYG{o}{\PYGZlt{}/}\PYG{n}{p}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                        }\PYG{o}{\PYGZlt{}}\PYG{n}{svg}\PYG{+w}{ }\PYG{n}{fill}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}none\PYGZdq{}}\PYG{+w}{ }\PYG{n}{stroke}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}currentColor\PYGZdq{}}\PYG{+w}{ }\PYG{n}{stroke}\PYG{o}{\PYGZhy{}}\PYG{n}{linecap}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}round\PYGZdq{}}\PYG{+w}{ }\PYG{n}{stroke}\PYG{o}{\PYGZhy{}}\PYG{n}{linejoin}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}round\PYGZdq{}}\PYG{+w}{ }\PYG{n}{stroke}\PYG{o}{\PYGZhy{}}\PYG{n}{width}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}2\PYGZdq{}}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}w\PYGZhy{}4 h\PYGZhy{}4 ml\PYGZhy{}1\PYGZdq{}}\PYG{+w}{ }\PYG{n}{viewBox}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}0 0 24 24\PYGZdq{}}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                            }\PYG{o}{\PYGZlt{}}\PYG{n}{path}\PYG{+w}{ }\PYG{n}{d}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}M5 12h14M12 5l7 7\PYGZhy{}7 7\PYGZdq{}}\PYG{o}{\PYGZgt{}\PYGZlt{}/}\PYG{n}{path}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                        }\PYG{o}{\PYGZlt{}/}\PYG{n}{svg}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                    }\PYG{o}{\PYGZlt{}/}\PYG{n}{a}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                }\PYG{o}{\PYGZlt{}/}\PYG{n}{div}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{            }\PYG{o}{\PYGZlt{}/}\PYG{n}{div}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{        }\PYG{o}{\PYGZlt{}/}\PYG{n}{div}\PYG{o}{\PYGZgt{}}
+
+\PYG{+w}{                }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{bigboksId}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdl{}\PYGZdq{}boxbig\PYGZob{}iteration\PYGZcb{}\PYGZdq{}}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{o}{\PYGZlt{}}\PYG{n}{div}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}bg\PYGZhy{}white rounded\PYGZhy{}lg\PYGZdq{}}\PYG{+w}{ }\PYG{n}{style}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}display: none;\PYGZdq{}}\PYG{+w}{ }\PYG{n}{id}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}@bigboksId\PYGZdq{}}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{            }\PYG{o}{\PYGZlt{}}\PYG{n}{div}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{} bg\PYGZhy{}primaryBlue rounded\PYGZhy{}t\PYGZhy{}lg p\PYGZhy{}4 flex flex\PYGZhy{}row\PYGZdq{}}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                }\PYG{o}{\PYGZlt{}}\PYG{n}{div}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}text\PYGZhy{}center flex\PYGZhy{}1 items\PYGZhy{}center\PYGZdq{}}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                    }\PYG{o}{\PYGZlt{}}\PYG{n}{h1}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}text\PYGZhy{}2xl text\PYGZhy{}white text\PYGZhy{}center\PYGZdq{}}\PYG{o}{\PYGZgt{}}\PYG{n}{Postnord}\PYG{o}{\PYGZlt{}/}\PYG{n}{h1}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                }\PYG{o}{\PYGZlt{}/}\PYG{n}{div}\PYG{o}{\PYGZgt{}}
+
+\PYG{+w}{            }\PYG{o}{\PYGZlt{}/}\PYG{n}{div}\PYG{o}{\PYGZgt{}}
+
+\PYG{+w}{            }\PYG{o}{\PYGZlt{}}\PYG{n}{div}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}grid grid\PYGZhy{}cols\PYGZhy{}1 lg:grid\PYGZhy{}cols\PYGZhy{}2\PYGZdq{}}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                }\PYG{o}{\PYGZlt{}}\PYG{n}{div}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}border\PYGZhy{}none lg:border\PYGZhy{}2 lg:border\PYGZhy{}r\PYGZhy{}primaryBlue flex flex\PYGZhy{}col p\PYGZhy{}6 space\PYGZhy{}y\PYGZhy{}6\PYGZdq{}}\PYG{o}{\PYGZgt{}}
+
+\PYG{+w}{                            }\PYG{err}{@}\PYG{p}{\PYGZob{}}
+\PYG{+w}{                                }\PYG{k}{foreach}\PYG{p}{(}\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{evt}\PYG{+w}{ }\PYG{k}{in}\PYG{+w}{ }\PYG{n}{package}\PYG{p}{.}\PYG{n}{events}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+
+\PYG{+w}{                                }\PYG{o}{\PYGZlt{}}\PYG{n}{div}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}flex flex\PYGZhy{}row items\PYGZhy{}center\PYGZdq{}}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                                    }\PYG{o}{\PYGZlt{}}\PYG{n}{div}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}h\PYGZhy{}12 w\PYGZhy{}12 rounded\PYGZhy{}full bg\PYGZhy{}primaryBlue mr\PYGZhy{}4\PYGZdq{}}\PYG{o}{\PYGZgt{}\PYGZlt{}/}\PYG{n}{div}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                                    }\PYG{o}{\PYGZlt{}}\PYG{n}{div}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}flex\PYGZhy{}1\PYGZdq{}}\PYG{o}{\PYGZgt{}}
+
+\PYG{+w}{                                            }\PYG{err}{@}\PYG{p}{\PYGZob{}}
+\PYG{+w}{                                                }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{eventLocationtxt}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{evt}\PYG{p}{.}\PYG{n}{location}\PYG{p}{.}\PYG{n}{city}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{} \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{@evt}\PYG{p}{.}\PYG{n}{location}\PYG{p}{.}\PYG{n}{zipCode}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{} \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{@evt}\PYG{p}{.}\PYG{n}{location}\PYG{p}{.}\PYG{n}{country}\PYG{p}{;}
+\PYG{+w}{                                            }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{                                            }\PYG{o}{\PYGZlt{}}\PYG{n}{h1}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}text\PYGZhy{}lg font\PYGZhy{}semibold\PYGZdq{}}\PYG{o}{\PYGZgt{}}\PYG{n}{@eventLocationtxt}\PYG{o}{\PYGZlt{}/}\PYG{n}{h1}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                                        }\PYG{o}{\PYGZlt{}}\PYG{n}{p}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}text\PYGZhy{}base font\PYGZhy{}light\PYGZdq{}}\PYG{o}{\PYGZgt{}}\PYG{n}{@evt}\PYG{p}{.}\PYG{n}{description}\PYG{o}{\PYGZlt{}/}\PYG{n}{p}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                                    }\PYG{o}{\PYGZlt{}/}\PYG{n}{div}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                                    }\PYG{o}{\PYGZlt{}}\PYG{n}{p}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}\PYGZdq{}}\PYG{o}{\PYGZgt{}}\PYG{n}{@evt}\PYG{p}{.}\PYG{n}{dateTime}\PYG{o}{\PYGZlt{}/}\PYG{n}{p}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                                }\PYG{o}{\PYGZlt{}/}\PYG{n}{div}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                                }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{                            }\PYG{p}{\PYGZcb{}}
+
+
+\PYG{+w}{                }\PYG{o}{\PYGZlt{}/}\PYG{n}{div}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                }\PYG{o}{\PYGZlt{}}\PYG{n}{div}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}border\PYGZhy{}none lg:border\PYGZhy{}2 lg:border\PYGZhy{}l\PYGZhy{}primaryBlue p\PYGZhy{}6\PYGZdq{}}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                    }\PYG{o}{\PYGZlt{}}\PYG{n}{table}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}table\PYGZhy{}auto border\PYGZhy{}separate border\PYGZhy{}spacing\PYGZhy{}x\PYGZhy{}5 border\PYGZhy{}spacing\PYGZhy{}y\PYGZhy{}6 text\PYGZhy{}base text\PYGZhy{}gray\PYGZhy{}900\PYGZdq{}}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                        }\PYG{o}{\PYGZlt{}}\PYG{n}{tr}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}mx\PYGZhy{}4\PYGZdq{}}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                            }\PYG{o}{\PYGZlt{}}\PYG{n}{td}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}font\PYGZhy{}semibold\PYGZdq{}}\PYG{o}{\PYGZgt{}}\PYG{n}{Afsender}\PYG{p}{:}\PYG{o}{\PYGZlt{}/}\PYG{n}{td}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                                    }\PYG{o}{\PYGZlt{}}\PYG{n}{td}\PYG{o}{\PYGZgt{}}\PYG{n}{@package}\PYG{p}{.}\PYG{n}{info}\PYG{p}{.}\PYG{n}{consignor}\PYG{p}{.}\PYG{n}{name}\PYG{o}{\PYGZlt{}/}\PYG{n}{td}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                        }\PYG{o}{\PYGZlt{}/}\PYG{n}{tr}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                        }\PYG{o}{\PYGZlt{}}\PYG{n}{tr}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}mx\PYGZhy{}4\PYGZdq{}}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                            }\PYG{o}{\PYGZlt{}}\PYG{n}{td}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}font\PYGZhy{}semibold\PYGZdq{}}\PYG{o}{\PYGZgt{}}\PYG{n}{Afsender}\PYG{+w}{ }\PYG{n}{Adresse}\PYG{p}{:}\PYG{o}{\PYGZlt{}/}\PYG{n}{td}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                                    }\PYG{err}{@}\PYG{p}{\PYGZob{}}
+\PYG{+w}{                                        }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{consingorAdressTxt}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{package}\PYG{p}{.}\PYG{n}{info}\PYG{p}{.}\PYG{n}{consignor}\PYG{p}{.}\PYG{n}{address}\PYG{p}{.}\PYG{n}{city}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{} \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{@package}\PYG{p}{.}\PYG{n}{info}\PYG{p}{.}\PYG{n}{consignor}\PYG{p}{.}\PYG{n}{address}\PYG{p}{.}\PYG{n}{zipCode}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{} \PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{@package}\PYG{p}{.}\PYG{n}{info}\PYG{p}{.}\PYG{n}{consignor}\PYG{p}{.}\PYG{n}{address}\PYG{p}{.}\PYG{n}{country}\PYG{p}{;}
+\PYG{+w}{                                    }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{                                    }\PYG{o}{\PYGZlt{}}\PYG{n}{td}\PYG{o}{\PYGZgt{}}\PYG{n}{@consingorAdressTxt}\PYG{o}{\PYGZlt{}/}\PYG{n}{td}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                        }\PYG{o}{\PYGZlt{}/}\PYG{n}{tr}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                        }\PYG{o}{\PYGZlt{}}\PYG{n}{tr}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                            }\PYG{o}{\PYGZlt{}}\PYG{n}{td}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}font\PYGZhy{}semibold\PYGZdq{}}\PYG{o}{\PYGZgt{}}\PYG{n}{Service}\PYG{p}{:}\PYG{o}{\PYGZlt{}/}\PYG{n}{td}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                                    }\PYG{o}{\PYGZlt{}}\PYG{n}{td}\PYG{o}{\PYGZgt{}}\PYG{n}{@package}\PYG{p}{.}\PYG{n}{info}\PYG{p}{.}\PYG{n}{service}\PYG{o}{\PYGZlt{}/}\PYG{n}{td}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                        }\PYG{o}{\PYGZlt{}/}\PYG{n}{tr}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                        }\PYG{o}{\PYGZlt{}}\PYG{n}{tr}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}\PYGZdq{}}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                            }\PYG{o}{\PYGZlt{}}\PYG{n}{td}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}font\PYGZhy{}semibold\PYGZdq{}}\PYG{o}{\PYGZgt{}}\PYG{n}{V}\PYG{err}{�}\PYG{n}{gt}\PYG{p}{:}\PYG{o}{\PYGZlt{}/}\PYG{n}{td}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                            }\PYG{err}{@}\PYG{p}{\PYGZob{}}
+\PYG{+w}{                                }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{packageWeightTxt}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{package}\PYG{p}{.}\PYG{n}{info}\PYG{p}{.}\PYG{n}{weight}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{} kg\PYGZdq{}}\PYG{p}{;}
+\PYG{+w}{                            }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{                                    }\PYG{o}{\PYGZlt{}}\PYG{n}{td}\PYG{o}{\PYGZgt{}}\PYG{n}{@package}\PYG{p}{.}\PYG{n}{info}\PYG{p}{.}\PYG{n}{weight}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{} kg\PYGZdq{}}\PYG{o}{\PYGZlt{}/}\PYG{n}{td}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                        }\PYG{o}{\PYGZlt{}/}\PYG{n}{tr}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                    }\PYG{o}{\PYGZlt{}/}\PYG{n}{table}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                }\PYG{o}{\PYGZlt{}/}\PYG{n}{div}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{            }\PYG{o}{\PYGZlt{}/}\PYG{n}{div}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{            }\PYG{o}{\PYGZlt{}}\PYG{n}{div}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{} w\PYGZhy{}full\PYGZdq{}}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                }\PYG{o}{\PYGZlt{}}\PYG{n}{a}\PYG{+w}{ }\PYG{n}{class}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}btn\PYGZhy{}secondary float\PYGZhy{}right m\PYGZhy{}4\PYGZdq{}}\PYG{+w}{ }\PYG{n}{onclick}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}lessInfo(@iteration);\PYGZdq{}}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                    }\PYG{o}{\PYGZlt{}}\PYG{n}{p}\PYG{o}{\PYGZgt{}}\PYG{n}{Vis}\PYG{+w}{ }\PYG{n}{Mindre}\PYG{o}{\PYGZlt{}/}\PYG{n}{p}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                }\PYG{o}{\PYGZlt{}/}\PYG{n}{a}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{            }\PYG{o}{\PYGZlt{}/}\PYG{n}{div}\PYG{o}{\PYGZgt{}}
+
+\PYG{+w}{        }\PYG{o}{\PYGZlt{}/}\PYG{n}{div}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{n}{@section}\PYG{+w}{ }\PYG{n}{scripts}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+
+\PYG{+w}{            }\PYG{o}{\PYGZlt{}}\PYG{n}{script}\PYG{+w}{ }\PYG{n}{type}\PYG{o}{=}\PYG{l+s}{\PYGZdq{}text/javascript\PYGZdq{}}\PYG{o}{\PYGZgt{}}
+\PYG{+w}{                }\PYG{n}{function}\PYG{+w}{ }\PYG{n+nf}{moreInfo}\PYG{p}{(}\PYG{n}{elementIndex}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                    }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{element}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{document}\PYG{p}{.}\PYG{n}{getElementById}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}boxbig\PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{elementIndex}\PYG{p}{);}
+\PYG{+w}{                    }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{element1}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{document}\PYG{p}{.}\PYG{n}{getElementById}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}box\PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{elementIndex}\PYG{p}{);}
+\PYG{+w}{                    }\PYG{k}{if}\PYG{p}{(}\PYG{n}{elementIndex}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{l+m}{1}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                        }\PYG{n}{element}\PYG{p}{.}\PYG{n}{style}\PYG{p}{.}\PYG{n}{marginTop}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{0}\PYG{p}{;}
+\PYG{+w}{                    }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{                    }\PYG{n}{element1}\PYG{p}{.}\PYG{n}{style}\PYG{p}{.}\PYG{n}{display}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}none\PYGZdq{}}\PYG{p}{;}
+\PYG{+w}{                    }\PYG{n}{element}\PYG{p}{.}\PYG{n}{style}\PYG{p}{.}\PYG{n}{display}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}block\PYGZdq{}}\PYG{p}{;}
+
+\PYG{+w}{                }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{                }\PYG{n}{function}\PYG{+w}{ }\PYG{n+nf}{lessInfo}\PYG{p}{(}\PYG{n}{elementIndex}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                    }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{element}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{document}\PYG{p}{.}\PYG{n}{getElementById}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}boxbig\PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{elementIndex}\PYG{p}{);}
+\PYG{+w}{                    }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{element1}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{document}\PYG{p}{.}\PYG{n}{getElementById}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}box\PYGZdq{}}\PYG{+w}{ }\PYG{o}{+}\PYG{+w}{ }\PYG{n}{elementIndex}\PYG{p}{);}
+\PYG{+w}{                    }\PYG{n}{element1}\PYG{p}{.}\PYG{n}{style}\PYG{p}{.}\PYG{n}{display}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}flex\PYGZdq{}}\PYG{p}{;}
+\PYG{+w}{                    }\PYG{n}{element}\PYG{p}{.}\PYG{n}{style}\PYG{p}{.}\PYG{n}{display}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}none\PYGZdq{}}\PYG{p}{;}
+\PYG{+w}{                }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{            }\PYG{o}{\PYGZlt{}/}\PYG{n}{script}\PYG{o}{\PYGZgt{}}
+
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\end{Verbatim}

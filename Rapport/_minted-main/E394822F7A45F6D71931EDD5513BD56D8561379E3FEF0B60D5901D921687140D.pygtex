@@ -1,0 +1,328 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{PackageTrackingApp.Models}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{Newtonsoft.Json}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{RestSharp}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{PackageTrackingApp.Models.ApiReturnModels}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{PackageTrackingApp.Models.ShipmentSubModels}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k}{namespace}\PYG{+w}{ }\PYG{n+nn}{PackageTrackingApp.Services}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{c+c1}{//interface til alle metoderne i klassen.}
+\PYG{+w}{            }\PYG{k}{public}\PYG{+w}{ }\PYG{k}{interface}\PYG{+w}{ }\PYG{n}{ITrackingInfo}
+\PYG{+w}{            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{n}{List}\PYG{o}{\PYGZlt{}}\PYG{n}{Shipment}\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{getTrackingInfoAllCourriers}\PYG{p}{(}\PYG{n}{AllMailInfo}\PYG{+w}{ }\PYG{n}{allMailInfo}\PYG{p}{);}
+\PYG{+w}{                }\PYG{n}{PostnordReturnWrapper}\PYG{p}{.}\PYG{n}{PostNordReturn}\PYG{+w}{ }\PYG{n}{getPostnordTrackingInfo}\PYG{p}{(}\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{trackingNumber}\PYG{p}{);}
+\PYG{+w}{                }\PYG{n}{GlsReturnContainer}\PYG{p}{.}\PYG{n}{GlsReturn}\PYG{+w}{ }\PYG{n}{getGlsTrackingInfo}\PYG{p}{(}\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{trackingNumber}\PYG{p}{);}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{            }\PYG{k}{public}\PYG{+w}{ }\PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{TrackingInfo}\PYG{+w}{ }\PYG{p}{:}\PYG{+w}{ }\PYG{n}{ITrackingInfo}
+\PYG{+w}{            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{k}{public}\PYG{+w}{ }\PYG{n}{List}\PYG{o}{\PYGZlt{}}\PYG{n}{Shipment}\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{getTrackingInfoAllCourriers}\PYG{p}{(}\PYG{n}{AllMailInfo}\PYG{+w}{ }\PYG{n}{allMailInfo}\PYG{p}{)}
+\PYG{+w}{                }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                    }\PYG{c+c1}{//initialisere liste af Shipments}
+\PYG{+w}{                    }\PYG{n}{List}\PYG{o}{\PYGZlt{}}\PYG{n}{Shipment}\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{shipmentsList}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{List}\PYG{o}{\PYGZlt{}}\PYG{n}{Shipment}\PYG{o}{\PYGZgt{}}\PYG{p}{();}
+
+\PYG{+w}{                    }\PYG{c+c1}{//looper igennem alle postnordMailInfos i allMailinfos fra parametrerne i metoden}
+\PYG{+w}{                    }\PYG{k}{foreach}\PYG{p}{(}\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{postnordMailInfo}\PYG{+w}{ }\PYG{k}{in}\PYG{+w}{ }\PYG{n}{allMailInfo}\PYG{p}{.}\PYG{n}{postNordMailInfos}\PYG{p}{)}
+\PYG{+w}{                    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                        }\PYG{c+c1}{//initialisere ny postnordreturn til opbevaring af datga fra api kald.}
+\PYG{+w}{                        }\PYG{n}{PostnordReturnWrapper}\PYG{p}{.}\PYG{n}{PostNordReturn}\PYG{+w}{ }\PYG{n}{shipmentData}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{PostnordReturnWrapper}\PYG{p}{.}\PYG{n}{PostNordReturn}\PYG{p}{();}
+
+\PYG{+w}{                        }\PYG{c+c1}{// henter postnord tracking info via metoden med den nuværende iteration i loopets trackingnummer}
+\PYG{+w}{                        }\PYG{n}{shipmentData}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{getPostnordTrackingInfo}\PYG{p}{(}\PYG{n}{postnordMailInfo}\PYG{p}{.}\PYG{n}{trackingNumber}\PYG{p}{);}
+
+\PYG{+w}{                        }\PYG{c+c1}{// tjekker om lengden ad shipments er større end eller lig en}
+\PYG{+w}{                        }\PYG{k}{if}\PYG{p}{(}\PYG{n}{shipmentData}\PYG{p}{.}\PYG{n}{TrackingInformationResponse}\PYG{p}{.}\PYG{n}{Shipments}\PYG{p}{.}\PYG{n}{Length}\PYG{+w}{ }\PYG{o}{\PYGZgt{}=}\PYG{+w}{ }\PYG{l+m}{1}\PYG{p}{)}
+\PYG{+w}{                        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                            }\PYG{c+c1}{// initialisere ny liste af SmipmentEvents}
+\PYG{+w}{                            }\PYG{n}{List}\PYG{o}{\PYGZlt{}}\PYG{n}{ShipmentEvent}\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{Events}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{List}\PYG{o}{\PYGZlt{}}\PYG{n}{ShipmentEvent}\PYG{o}{\PYGZgt{}}\PYG{p}{();}
+
+\PYG{+w}{                            }\PYG{c+c1}{// Looper igennem events i sporingsinformationerne}
+\PYG{+w}{                            }\PYG{k}{foreach}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{ev}\PYG{+w}{ }\PYG{k}{in}\PYG{+w}{ }\PYG{n}{shipmentData}\PYG{p}{.}\PYG{n}{TrackingInformationResponse}\PYG{p}{.}\PYG{n}{Shipments}\PYG{p}{.}\PYG{n}{First}\PYG{p}{().}\PYG{n}{Items}\PYG{p}{.}\PYG{n}{First}\PYG{p}{().}\PYG{n}{Events}\PYG{p}{)}
+\PYG{+w}{                            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                                }\PYG{c+c1}{//tilføjer nyt shipmentevent til eventlisten}
+\PYG{+w}{                                }\PYG{n}{Events}\PYG{p}{.}\PYG{n}{Add}\PYG{p}{(}\PYG{k}{new}\PYG{+w}{ }\PYG{n}{ShipmentEvent}
+\PYG{+w}{                                }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                                    }\PYG{c+c1}{//tilføjer informationen omrking eventet}
+\PYG{+w}{                                    }\PYG{n}{dateTime}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{ev}\PYG{p}{.}\PYG{n}{EventTime}\PYG{p}{.}\PYG{n}{UtcDateTime}\PYG{p}{,}
+\PYG{+w}{                                    }\PYG{n}{description}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{ev}\PYG{p}{.}\PYG{n}{EventDescription}\PYG{p}{,}
+\PYG{+w}{                                    }\PYG{n}{location}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Address}
+\PYG{+w}{                                    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                                        }\PYG{n}{city}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{ev}\PYG{p}{.}\PYG{n}{Location}\PYG{p}{.}\PYG{n}{City}\PYG{p}{,}
+\PYG{+w}{                                        }\PYG{n}{country}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{ev}\PYG{p}{.}\PYG{n}{Location}\PYG{p}{.}\PYG{n}{Country}\PYG{p}{,}
+\PYG{+w}{                                        }\PYG{n}{zipCode}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{ev}\PYG{p}{.}\PYG{n}{Location}\PYG{p}{.}\PYG{n}{Postcode}\PYG{p}{,}
+\PYG{+w}{                                    }\PYG{p}{\PYGZcb{},}
+\PYG{+w}{                                    }\PYG{n}{status}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{ev}\PYG{p}{.}\PYG{n}{Status}\PYG{p}{,}
+\PYG{+w}{                                }\PYG{p}{\PYGZcb{});}
+\PYG{+w}{                            }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{                            }\PYG{c+c1}{//tjekker om vægten af smipmenttet er null}
+\PYG{+w}{                            }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{shipmentData}\PYG{p}{.}\PYG{n}{TrackingInformationResponse}\PYG{p}{.}\PYG{n}{Shipments}\PYG{p}{.}\PYG{n}{First}\PYG{p}{().}\PYG{n}{TotalWeight}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{k}{null}\PYG{p}{)}
+\PYG{+w}{                            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                                }\PYG{c+c1}{//tilføjer shipment til listen}
+\PYG{+w}{                                }\PYG{n}{shipmentsList}\PYG{p}{.}\PYG{n}{Add}\PYG{p}{(}\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Shipment}
+\PYG{+w}{                                }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                                    }\PYG{c+c1}{//tilføjer informationen til shipment}
+\PYG{+w}{                                    }\PYG{n}{currentStatus}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{shipmentData}\PYG{p}{.}\PYG{n}{TrackingInformationResponse}\PYG{p}{.}\PYG{n}{Shipments}\PYG{p}{.}\PYG{n}{First}\PYG{p}{().}\PYG{n}{Status}\PYG{p}{,}
+\PYG{+w}{                                    }\PYG{c+c1}{//events bliver tilføjet til shipment}
+\PYG{+w}{                                    }\PYG{n}{events}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{Events}\PYG{p}{,}
+\PYG{+w}{                                    }\PYG{c+c1}{//informationer vedrørende shipment bliver tilføjet}
+\PYG{+w}{                                    }\PYG{n}{info}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{ShipmentInfo}
+\PYG{+w}{                                    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                                        }\PYG{c+c1}{//weight sættes til strengen none da der ingen vægt er angivet}
+\PYG{+w}{                                        }\PYG{n}{weight}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}none\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{                                        }\PYG{c+c1}{//tracking nummer sættes}
+\PYG{+w}{                                        }\PYG{n}{trackingNumber}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{shipmentData}\PYG{p}{.}\PYG{n}{TrackingInformationResponse}\PYG{p}{.}\PYG{n}{Shipments}\PYG{p}{.}\PYG{n}{First}\PYG{p}{().}\PYG{n}{ShipmentId}\PYG{p}{,}
+\PYG{+w}{                                        }\PYG{c+c1}{//fragtfirma sættes}
+\PYG{+w}{                                        }\PYG{n}{courrier}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{postnordMailInfo}\PYG{p}{.}\PYG{n}{Courier}\PYG{p}{,}
+\PYG{+w}{                                        }\PYG{c+c1}{//servicen sættes}
+\PYG{+w}{                                        }\PYG{n}{service}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{shipmentData}\PYG{p}{.}\PYG{n}{TrackingInformationResponse}\PYG{p}{.}\PYG{n}{Shipments}\PYG{p}{.}\PYG{n}{First}\PYG{p}{().}\PYG{n}{Service}\PYG{p}{.}\PYG{n}{Name}\PYG{p}{,}
+\PYG{+w}{                                        }\PYG{c+c1}{//Afsender sættes}
+\PYG{+w}{                                        }\PYG{n}{consignor}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Person}
+\PYG{+w}{                                        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                                            }\PYG{n}{name}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{shipmentData}\PYG{p}{.}\PYG{n}{TrackingInformationResponse}\PYG{p}{.}\PYG{n}{Shipments}\PYG{p}{.}\PYG{n}{First}\PYG{p}{().}\PYG{n}{Consignor}\PYG{p}{.}\PYG{n}{Name}\PYG{p}{,}
+\PYG{+w}{                                            }\PYG{n}{address}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Address}
+\PYG{+w}{                                            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                                                }\PYG{n}{city}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{shipmentData}\PYG{p}{.}\PYG{n}{TrackingInformationResponse}\PYG{p}{.}\PYG{n}{Shipments}\PYG{p}{.}\PYG{n}{First}\PYG{p}{().}\PYG{n}{Consignor}\PYG{p}{.}\PYG{n}{Address}\PYG{p}{.}\PYG{n}{City}\PYG{p}{,}
+\PYG{+w}{                                                }\PYG{n}{country}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{shipmentData}\PYG{p}{.}\PYG{n}{TrackingInformationResponse}\PYG{p}{.}\PYG{n}{Shipments}\PYG{p}{.}\PYG{n}{First}\PYG{p}{().}\PYG{n}{Consignor}\PYG{p}{.}\PYG{n}{Address}\PYG{p}{.}\PYG{n}{Country}\PYG{p}{,}
+\PYG{+w}{                                                }\PYG{n}{zipCode}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{shipmentData}\PYG{p}{.}\PYG{n}{TrackingInformationResponse}\PYG{p}{.}\PYG{n}{Shipments}\PYG{p}{.}\PYG{n}{First}\PYG{p}{().}\PYG{n}{Consignor}\PYG{p}{.}\PYG{n}{Address}\PYG{p}{.}\PYG{n}{PostCode}\PYG{p}{.}\PYG{n}{ToString}\PYG{p}{(),}
+
+\PYG{+w}{                                            }\PYG{p}{\PYGZcb{},}
+\PYG{+w}{                                        }\PYG{p}{\PYGZcb{},}
+\PYG{+w}{                                        }\PYG{c+c1}{//modtager sættes}
+\PYG{+w}{                                        }\PYG{n}{consignee}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Person}
+\PYG{+w}{                                        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                                            }\PYG{n}{name}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}No name (You)\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{                                            }\PYG{n}{address}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Address}
+\PYG{+w}{                                            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                                                }\PYG{n}{city}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{shipmentData}\PYG{p}{.}\PYG{n}{TrackingInformationResponse}\PYG{p}{.}\PYG{n}{Shipments}\PYG{p}{.}\PYG{n}{First}\PYG{p}{().}\PYG{n}{Consignee}\PYG{p}{.}\PYG{n}{Address}\PYG{p}{.}\PYG{n}{City}\PYG{p}{,}
+\PYG{+w}{                                                }\PYG{n}{country}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{shipmentData}\PYG{p}{.}\PYG{n}{TrackingInformationResponse}\PYG{p}{.}\PYG{n}{Shipments}\PYG{p}{.}\PYG{n}{First}\PYG{p}{().}\PYG{n}{Consignee}\PYG{p}{.}\PYG{n}{Address}\PYG{p}{.}\PYG{n}{Country}\PYG{p}{,}
+\PYG{+w}{                                                }\PYG{n}{zipCode}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{shipmentData}\PYG{p}{.}\PYG{n}{TrackingInformationResponse}\PYG{p}{.}\PYG{n}{Shipments}\PYG{p}{.}\PYG{n}{First}\PYG{p}{().}\PYG{n}{Consignee}\PYG{p}{.}\PYG{n}{Address}\PYG{p}{.}\PYG{n}{PostCode}\PYG{p}{.}\PYG{n}{ToString}\PYG{p}{(),}
+
+\PYG{+w}{                                            }\PYG{p}{\PYGZcb{},}
+\PYG{+w}{                                        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{                                    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{                                }\PYG{p}{\PYGZcb{});}
+\PYG{+w}{                            }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{                            }\PYG{c+c1}{//Hvis vægt ikke er null}
+\PYG{+w}{                            }\PYG{k}{else}
+\PYG{+w}{                            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                                }\PYG{c+c1}{//tilføjer shipment til listen}
+\PYG{+w}{                                }\PYG{n}{shipmentsList}\PYG{p}{.}\PYG{n}{Add}\PYG{p}{(}\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Shipment}
+\PYG{+w}{                                }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                                    }\PYG{c+c1}{//tilføjer informationen til shipment}
+\PYG{+w}{                                    }\PYG{n}{currentStatus}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{shipmentData}\PYG{p}{.}\PYG{n}{TrackingInformationResponse}\PYG{p}{.}\PYG{n}{Shipments}\PYG{p}{.}\PYG{n}{First}\PYG{p}{().}\PYG{n}{Status}\PYG{p}{,}
+\PYG{+w}{                                    }\PYG{c+c1}{//events bliver tilføjet til shipment}
+\PYG{+w}{                                    }\PYG{n}{events}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{Events}\PYG{p}{,}
+\PYG{+w}{                                    }\PYG{c+c1}{//informationer vedrørende shipment bliver tilføjet}
+\PYG{+w}{                                    }\PYG{n}{info}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{ShipmentInfo}
+\PYG{+w}{                                    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                                        }\PYG{c+c1}{//weight sættes til strengen none da der ingen vægt er angivet}
+\PYG{+w}{                                        }\PYG{n}{weight}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{shipmentData}\PYG{p}{.}\PYG{n}{TrackingInformationResponse}\PYG{p}{.}\PYG{n}{Shipments}\PYG{p}{.}\PYG{n}{First}\PYG{p}{().}\PYG{n}{TotalWeight}\PYG{p}{.}\PYG{n}{Value}\PYG{p}{,}
+\PYG{+w}{                                        }\PYG{c+c1}{//tracking nummer sættes}
+\PYG{+w}{                                        }\PYG{n}{trackingNumber}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{shipmentData}\PYG{p}{.}\PYG{n}{TrackingInformationResponse}\PYG{p}{.}\PYG{n}{Shipments}\PYG{p}{.}\PYG{n}{First}\PYG{p}{().}\PYG{n}{ShipmentId}\PYG{p}{,}
+\PYG{+w}{                                        }\PYG{c+c1}{//fragtfirma sættes}
+\PYG{+w}{                                        }\PYG{n}{courrier}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{postnordMailInfo}\PYG{p}{.}\PYG{n}{Courier}\PYG{p}{,}
+\PYG{+w}{                                        }\PYG{c+c1}{//serice sættes}
+\PYG{+w}{                                        }\PYG{n}{service}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{shipmentData}\PYG{p}{.}\PYG{n}{TrackingInformationResponse}\PYG{p}{.}\PYG{n}{Shipments}\PYG{p}{.}\PYG{n}{First}\PYG{p}{().}\PYG{n}{Service}\PYG{p}{.}\PYG{n}{Name}\PYG{p}{,}
+\PYG{+w}{                                        }\PYG{c+c1}{//Afsender sættes}
+\PYG{+w}{                                        }\PYG{n}{consignor}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Person}
+\PYG{+w}{                                        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                                            }\PYG{n}{name}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{shipmentData}\PYG{p}{.}\PYG{n}{TrackingInformationResponse}\PYG{p}{.}\PYG{n}{Shipments}\PYG{p}{.}\PYG{n}{First}\PYG{p}{().}\PYG{n}{Consignor}\PYG{p}{.}\PYG{n}{Name}\PYG{p}{,}
+\PYG{+w}{                                            }\PYG{n}{address}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Address}
+\PYG{+w}{                                            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                                                }\PYG{n}{city}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{shipmentData}\PYG{p}{.}\PYG{n}{TrackingInformationResponse}\PYG{p}{.}\PYG{n}{Shipments}\PYG{p}{.}\PYG{n}{First}\PYG{p}{().}\PYG{n}{Consignor}\PYG{p}{.}\PYG{n}{Address}\PYG{p}{.}\PYG{n}{City}\PYG{p}{,}
+\PYG{+w}{                                                }\PYG{n}{country}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{shipmentData}\PYG{p}{.}\PYG{n}{TrackingInformationResponse}\PYG{p}{.}\PYG{n}{Shipments}\PYG{p}{.}\PYG{n}{First}\PYG{p}{().}\PYG{n}{Consignor}\PYG{p}{.}\PYG{n}{Address}\PYG{p}{.}\PYG{n}{Country}\PYG{p}{,}
+\PYG{+w}{                                                }\PYG{n}{zipCode}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{shipmentData}\PYG{p}{.}\PYG{n}{TrackingInformationResponse}\PYG{p}{.}\PYG{n}{Shipments}\PYG{p}{.}\PYG{n}{First}\PYG{p}{().}\PYG{n}{Consignor}\PYG{p}{.}\PYG{n}{Address}\PYG{p}{.}\PYG{n}{PostCode}\PYG{p}{.}\PYG{n}{ToString}\PYG{p}{(),}
+
+\PYG{+w}{                                            }\PYG{p}{\PYGZcb{},}
+\PYG{+w}{                                        }\PYG{p}{\PYGZcb{},}
+\PYG{+w}{                                        }\PYG{c+c1}{//Modtager sættes}
+\PYG{+w}{                                        }\PYG{n}{consignee}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Person}
+\PYG{+w}{                                        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                                            }\PYG{n}{name}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}No name (You)\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{                                            }\PYG{n}{address}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Address}
+\PYG{+w}{                                            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                                                }\PYG{n}{city}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{shipmentData}\PYG{p}{.}\PYG{n}{TrackingInformationResponse}\PYG{p}{.}\PYG{n}{Shipments}\PYG{p}{.}\PYG{n}{First}\PYG{p}{().}\PYG{n}{Consignee}\PYG{p}{.}\PYG{n}{Address}\PYG{p}{.}\PYG{n}{City}\PYG{p}{,}
+\PYG{+w}{                                                }\PYG{n}{country}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{shipmentData}\PYG{p}{.}\PYG{n}{TrackingInformationResponse}\PYG{p}{.}\PYG{n}{Shipments}\PYG{p}{.}\PYG{n}{First}\PYG{p}{().}\PYG{n}{Consignee}\PYG{p}{.}\PYG{n}{Address}\PYG{p}{.}\PYG{n}{Country}\PYG{p}{,}
+\PYG{+w}{                                                }\PYG{n}{zipCode}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{shipmentData}\PYG{p}{.}\PYG{n}{TrackingInformationResponse}\PYG{p}{.}\PYG{n}{Shipments}\PYG{p}{.}\PYG{n}{First}\PYG{p}{().}\PYG{n}{Consignee}\PYG{p}{.}\PYG{n}{Address}\PYG{p}{.}\PYG{n}{PostCode}\PYG{p}{.}\PYG{n}{ToString}\PYG{p}{(),}
+
+\PYG{+w}{                                            }\PYG{p}{\PYGZcb{},}
+\PYG{+w}{                                        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{                                    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{                                }\PYG{p}{\PYGZcb{});}
+\PYG{+w}{                            }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{                        }\PYG{p}{\PYGZcb{}}
+
+
+\PYG{+w}{                    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{                    }\PYG{c+c1}{//lopper igennem alle glsMailInfo i allMailInfos.GlsMailInfo}
+\PYG{+w}{                    }\PYG{k}{foreach}\PYG{p}{(}\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{glsMailInfo}\PYG{+w}{ }\PYG{k}{in}\PYG{+w}{ }\PYG{n}{allMailInfo}\PYG{p}{.}\PYG{n}{glsMailInfos}\PYG{p}{)}
+\PYG{+w}{                    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                        }\PYG{c+c1}{//opretter instans af Glsreturn til at indeholde data sendt fra api}
+\PYG{+w}{                        }\PYG{n}{GlsReturnContainer}\PYG{p}{.}\PYG{n}{GlsReturn}\PYG{+w}{ }\PYG{n}{shipmentData}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{GlsReturnContainer}\PYG{p}{.}\PYG{n}{GlsReturn}\PYG{p}{();}
+
+\PYG{+w}{                        }\PYG{c+c1}{// henter tracking information på nuværende iteration af loopet}
+\PYG{+w}{                        }\PYG{n}{shipmentData}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{getGlsTrackingInfo}\PYG{p}{(}\PYG{n}{glsMailInfo}\PYG{p}{.}\PYG{n}{trackingNumber}\PYG{p}{);}
+
+\PYG{+w}{                        }\PYG{c+c1}{//tjekker at status af shipment returneret af api ikke er \PYGZdq{}ERRORNOTFOUND404\PYGZdq{}}
+\PYG{+w}{                        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{shipmentData}\PYG{p}{.}\PYG{n}{TuStatus}\PYG{p}{.}\PYG{n}{FirstOrDefault}\PYG{p}{().}\PYG{n}{TuNo}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}ERRORNOTFOUND404\PYGZdq{}}\PYG{p}{)}
+\PYG{+w}{                        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                            }\PYG{c+c1}{//Intitalizere instans af ShipmentEvent}
+\PYG{+w}{                            }\PYG{n}{List}\PYG{o}{\PYGZlt{}}\PYG{n}{ShipmentEvent}\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{Events}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{List}\PYG{o}{\PYGZlt{}}\PYG{n}{ShipmentEvent}\PYG{o}{\PYGZgt{}}\PYG{p}{();}
+
+\PYG{+w}{                            }\PYG{c+c1}{//looper igennem events i shipmentData}
+\PYG{+w}{                            }\PYG{k}{foreach}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{ev}\PYG{+w}{ }\PYG{k}{in}\PYG{+w}{ }\PYG{n}{shipmentData}\PYG{p}{.}\PYG{n}{TuStatus}\PYG{p}{.}\PYG{n}{First}\PYG{p}{().}\PYG{n}{History}\PYG{p}{)}
+\PYG{+w}{                            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                                }\PYG{c+c1}{//tilføjer en shipmentevent til events listen}
+\PYG{+w}{                                }\PYG{n}{Events}\PYG{p}{.}\PYG{n}{Add}\PYG{p}{(}\PYG{k}{new}\PYG{+w}{ }\PYG{n}{ShipmentEvent}
+\PYG{+w}{                                }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                                    }\PYG{c+c1}{//data tildeles}
+\PYG{+w}{                                    }\PYG{n}{dateTime}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{ev}\PYG{p}{.}\PYG{n}{Date}\PYG{p}{.}\PYG{n}{UtcDateTime}\PYG{p}{,}
+\PYG{+w}{                                    }\PYG{n}{description}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{ev}\PYG{p}{.}\PYG{n}{EvtDscr}\PYG{p}{,}
+\PYG{+w}{                                    }\PYG{n}{location}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Address}
+\PYG{+w}{                                    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                                        }\PYG{n}{city}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{ev}\PYG{p}{.}\PYG{n}{Address}\PYG{p}{.}\PYG{n}{City}\PYG{p}{,}
+\PYG{+w}{                                        }\PYG{n}{country}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{ev}\PYG{p}{.}\PYG{n}{Address}\PYG{p}{.}\PYG{n}{CountryName}\PYG{p}{,}
+\PYG{+w}{                                        }\PYG{c+c1}{//de informationer som ikke findes i deres tracking info bliver tildelt som not provided}
+\PYG{+w}{                                        }\PYG{n}{zipCode}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}zip Not provided\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{                                    }\PYG{p}{\PYGZcb{},}
+\PYG{+w}{                                    }\PYG{n}{status}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}status Not Provided\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{                                }\PYG{p}{\PYGZcb{});}
+\PYG{+w}{                            }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{                            }\PYG{c+c1}{//tilføjer ny instans af Shipment til shipmentsList listen}
+\PYG{+w}{                            }\PYG{n}{shipmentsList}\PYG{p}{.}\PYG{n}{Add}\PYG{p}{(}\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Shipment}
+\PYG{+w}{                            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                                }\PYG{c+c1}{//data tildeles}
+\PYG{+w}{                                }\PYG{n}{currentStatus}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{shipmentData}\PYG{p}{.}\PYG{n}{TuStatus}\PYG{p}{.}\PYG{n}{First}\PYG{p}{().}\PYG{n}{ProgressBar}\PYG{p}{.}\PYG{n}{StatusInfo}\PYG{p}{,}
+\PYG{+w}{                                }\PYG{n}{events}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{Events}\PYG{p}{,}
+\PYG{+w}{                                }\PYG{n}{info}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{ShipmentInfo}
+\PYG{+w}{                                }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                                    }\PYG{n}{weight}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{shipmentData}\PYG{p}{.}\PYG{n}{TuStatus}\PYG{p}{.}\PYG{n}{First}\PYG{p}{().}\PYG{n}{Infos}\PYG{p}{.}\PYG{n}{Where}\PYG{p}{(}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{=\PYGZgt{}}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{.}\PYG{n}{Type}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}WEIGHT\PYGZdq{}}\PYG{p}{).}\PYG{n}{First}\PYG{p}{().}\PYG{n}{Value}\PYG{p}{,}
+\PYG{+w}{                                    }\PYG{n}{trackingNumber}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{shipmentData}\PYG{p}{.}\PYG{n}{TuStatus}\PYG{p}{.}\PYG{n}{First}\PYG{p}{().}\PYG{n}{TuNo}\PYG{p}{,}
+\PYG{+w}{                                    }\PYG{n}{courrier}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{glsMailInfo}\PYG{p}{.}\PYG{n}{Courier}\PYG{p}{,}
+\PYG{+w}{                                    }\PYG{n}{service}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{shipmentData}\PYG{p}{.}\PYG{n}{TuStatus}\PYG{p}{.}\PYG{n}{First}\PYG{p}{().}\PYG{n}{Infos}\PYG{p}{.}\PYG{n}{Where}\PYG{p}{(}\PYG{n}{x}\PYG{+w}{ }\PYG{o}{=\PYGZgt{}}\PYG{+w}{ }\PYG{n}{x}\PYG{p}{.}\PYG{n}{Type}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}SERVICES\PYGZdq{}}\PYG{p}{).}\PYG{n}{First}\PYG{p}{().}\PYG{n}{Value}\PYG{p}{,}
+\PYG{+w}{                                    }\PYG{n}{consignor}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Person}
+\PYG{+w}{                                    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                                        }\PYG{c+c1}{// data som ikke findes i fratfirmaets sporingdata tildeles strengen med not provided}
+\PYG{+w}{                                        }\PYG{n}{name}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Name Not provided\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{                                        }\PYG{n}{address}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Address}
+\PYG{+w}{                                        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                                            }\PYG{n}{city}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}City not provided\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{                                            }\PYG{n}{country}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Country not provided\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{                                            }\PYG{n}{zipCode}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Zipcode not provided\PYGZdq{}}\PYG{p}{,}
+
+\PYG{+w}{                                        }\PYG{p}{\PYGZcb{},}
+\PYG{+w}{                                    }\PYG{p}{\PYGZcb{},}
+\PYG{+w}{                                    }\PYG{n}{consignee}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Person}
+\PYG{+w}{                                    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                                        }\PYG{n}{name}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}No name (You)\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{                                        }\PYG{n}{address}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{Address}
+\PYG{+w}{                                        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                                            }\PYG{n}{city}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}City not provided\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{                                            }\PYG{n}{country}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Country not provided\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{                                            }\PYG{n}{zipCode}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Zipcode not provided\PYGZdq{}}\PYG{p}{,}
+
+\PYG{+w}{                                        }\PYG{p}{\PYGZcb{},}
+\PYG{+w}{                                    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{                                }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{                            }\PYG{p}{\PYGZcb{});}
+\PYG{+w}{                        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{                    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{                    }\PYG{c+c1}{//returnere shipmentsList}
+\PYG{+w}{                    }\PYG{k}{return}\PYG{+w}{ }\PYG{n}{shipmentsList}\PYG{p}{;}
+\PYG{+w}{                }\PYG{p}{\PYGZcb{}}
+
+
+\PYG{+w}{                }\PYG{k}{public}\PYG{+w}{ }\PYG{n}{PostnordReturnWrapper}\PYG{p}{.}\PYG{n}{PostNordReturn}\PYG{+w}{ }\PYG{n}{getPostnordTrackingInfo}\PYG{p}{(}\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{trackingNumber}\PYG{p}{)}
+\PYG{+w}{                }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                    }\PYG{c+c1}{//opretter options til https kald, med url som parameter}
+\PYG{+w}{                    }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{options}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{RestClientOptions}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}https://api2.postnord.com\PYGZdq{}}\PYG{p}{)}
+\PYG{+w}{                    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                        }\PYG{c+c1}{//sætter timeout til \PYGZhy{}1, så der ikke er nogen timeout}
+\PYG{+w}{                        }\PYG{n}{MaxTimeout}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{l+m}{1}\PYG{p}{,}
+\PYG{+w}{                    }\PYG{p}{\PYGZcb{};}
+\PYG{+w}{                    }\PYG{c+c1}{//opretter ny restclient med options som parameter}
+\PYG{+w}{                    }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{client}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{RestClient}\PYG{p}{(}\PYG{n}{options}\PYG{p}{);}
+\PYG{+w}{                    }\PYG{c+c1}{// initialisere ny instans ad restrequest og giver endpoint og get metode som parametre}
+\PYG{+w}{                    }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{request}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{RestRequest}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}/rest/shipment/v5/trackandtrace/findByIdentifier.json\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{Method}\PYG{p}{.}\PYG{n}{Get}\PYG{p}{);}
+
+\PYG{+w}{                    }\PYG{c+c1}{// tilføjer parametrer til https kald, heriblandt apikey, tracking id og locale}
+\PYG{+w}{                    }\PYG{n}{request}\PYG{p}{.}\PYG{n}{AddQueryParameter}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}apikey\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}aa5bab080e542f8f20d09e27a48321e0\PYGZdq{}}\PYG{p}{);}
+\PYG{+w}{                    }\PYG{n}{request}\PYG{p}{.}\PYG{n}{AddQueryParameter}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}id\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{trackingNumber}\PYG{p}{);}
+\PYG{+w}{                    }\PYG{n}{request}\PYG{p}{.}\PYG{n}{AddQueryParameter}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}locale\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}da\PYGZdq{}}\PYG{p}{);}
+
+\PYG{+w}{                    }\PYG{c+c1}{// initialisere ny instans af response og køre kaldet med client.Get(request)}
+\PYG{+w}{                    }\PYG{n}{RestResponse}\PYG{+w}{ }\PYG{n}{response}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{client}\PYG{p}{.}\PYG{n}{Get}\PYG{p}{(}\PYG{n}{request}\PYG{p}{);}
+
+\PYG{+w}{                    }\PYG{c+c1}{//initialisere ny instans af PostNordReturn til opbevaring af data fra api kald}
+\PYG{+w}{                    }\PYG{n}{PostnordReturnWrapper}\PYG{p}{.}\PYG{n}{PostNordReturn}\PYG{+w}{ }\PYG{n}{data}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{PostnordReturnWrapper}\PYG{p}{.}\PYG{n}{PostNordReturn}\PYG{p}{();}
+\PYG{+w}{                    }\PYG{c+c1}{//konvertere json svar fra api til PostNordReturn type og gemmer i data variablen.}
+\PYG{+w}{                    }\PYG{n}{data}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{JsonConvert}\PYG{p}{.}\PYG{n}{DeserializeObject}\PYG{o}{\PYGZlt{}}\PYG{n}{PostnordReturnWrapper}\PYG{p}{.}\PYG{n}{PostNordReturn}\PYG{o}{\PYGZgt{}}\PYG{p}{(}\PYG{n}{response}\PYG{p}{.}\PYG{n}{Content}\PYG{p}{);}
+
+\PYG{+w}{                    }\PYG{c+c1}{//returnere data}
+\PYG{+w}{                    }\PYG{k}{return}\PYG{+w}{ }\PYG{n}{data}\PYG{p}{;}
+\PYG{+w}{                }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{                }\PYG{k}{public}\PYG{+w}{ }\PYG{n}{GlsReturnContainer}\PYG{p}{.}\PYG{n}{GlsReturn}\PYG{+w}{ }\PYG{n}{getGlsTrackingInfo}\PYG{p}{(}\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{trackingNumber}\PYG{p}{)}
+\PYG{+w}{                }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                    }\PYG{c+c1}{//opretter options til https kald, med url som parameter}
+\PYG{+w}{                    }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{options}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{RestClientOptions}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}https://gls\PYGZhy{}group.com\PYGZdq{}}\PYG{p}{)}
+\PYG{+w}{                    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                        }\PYG{c+c1}{//sætter timeout til \PYGZhy{}1, så der ikke er nogen timeout}
+\PYG{+w}{                        }\PYG{n}{MaxTimeout}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{o}{\PYGZhy{}}\PYG{l+m}{1}\PYG{p}{,}
+\PYG{+w}{                    }\PYG{p}{\PYGZcb{};}
+
+\PYG{+w}{                    }\PYG{c+c1}{//opretter ny restclient med options som parameter}
+\PYG{+w}{                    }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{client}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{RestClient}\PYG{p}{(}\PYG{n}{options}\PYG{p}{);}
+\PYG{+w}{                    }\PYG{c+c1}{// initialisere ny instans ad restrequest og giver endpoint og get metode som parametre}
+\PYG{+w}{                    }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{request}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{RestRequest}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}/app/service/open/rest/DK/da/rstt001\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{Method}\PYG{p}{.}\PYG{n}{Get}\PYG{p}{);}
+
+\PYG{+w}{                    }\PYG{c+c1}{// tilføjer trackingnumber parameter til kald}
+\PYG{+w}{                    }\PYG{n}{request}\PYG{p}{.}\PYG{n}{AddQueryParameter}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}match\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{trackingNumber}\PYG{p}{);}
+
+\PYG{+w}{                    }\PYG{c+c1}{// initialisere ny instans af response og køre kaldet med client.Get(request)}
+\PYG{+w}{                    }\PYG{n}{RestResponse}\PYG{+w}{ }\PYG{n}{response}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{client}\PYG{p}{.}\PYG{n}{Get}\PYG{p}{(}\PYG{n}{request}\PYG{p}{);}
+
+\PYG{+w}{                    }\PYG{c+c1}{//initialisere ny instans af GlsReturn til opbevaring af data fra api kald}
+\PYG{+w}{                    }\PYG{n}{GlsReturnContainer}\PYG{p}{.}\PYG{n}{GlsReturn}\PYG{+w}{ }\PYG{n}{data}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{GlsReturnContainer}\PYG{p}{.}\PYG{n}{GlsReturn}\PYG{p}{();}
+
+\PYG{+w}{                    }\PYG{c+c1}{//konvertere json svar fra api til GlsReturn type og gemmer i data variablen.}
+\PYG{+w}{                    }\PYG{n}{data}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{JsonConvert}\PYG{p}{.}\PYG{n}{DeserializeObject}\PYG{o}{\PYGZlt{}}\PYG{n}{GlsReturnContainer}\PYG{p}{.}\PYG{n}{GlsReturn}\PYG{o}{\PYGZgt{}}\PYG{p}{(}\PYG{n}{response}\PYG{p}{.}\PYG{n}{Content}\PYG{p}{);}
+
+\PYG{+w}{                    }\PYG{c+c1}{//tjekker om http kaldet returnere med statuskode 404 not found}
+\PYG{+w}{                    }\PYG{k}{if}\PYG{p}{(}\PYG{n}{response}\PYG{p}{.}\PYG{n}{StatusCode}\PYG{+w}{ }\PYG{o}{==}\PYG{+w}{ }\PYG{n}{System}\PYG{p}{.}\PYG{n}{Net}\PYG{p}{.}\PYG{n}{HttpStatusCode}\PYG{p}{.}\PYG{n}{NotFound}\PYG{p}{)}
+\PYG{+w}{                    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                        }\PYG{c+c1}{//opretter ny instans af TuStatus arrayet}
+\PYG{+w}{                        }\PYG{n}{GlsReturnContainer}\PYG{p}{.}\PYG{n}{TuStatus}\PYG{p}{[]}\PYG{+w}{ }\PYG{n}{notFoundCatch}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{GlsReturnContainer}\PYG{p}{.}\PYG{n}{TuStatus}\PYG{p}{[}\PYG{l+m}{1}\PYG{p}{];}
+\PYG{+w}{                        }\PYG{c+c1}{//giver plads 0 i arrayet ny instans af TuStaus}
+\PYG{+w}{                        }\PYG{n}{notFoundCatch}\PYG{p}{[}\PYG{l+m}{0}\PYG{p}{]}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{GlsReturnContainer}\PYG{p}{.}\PYG{n}{TuStatus}
+\PYG{+w}{                        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                            }\PYG{c+c1}{// sætter TuNo lig med \PYGZdq{}ERRONOTFOUND404\PYGZdq{}}
+\PYG{+w}{                            }\PYG{n}{TuNo}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}ERRORNOTFOUND404\PYGZdq{}}
+\PYG{+w}{                        }\PYG{p}{\PYGZcb{};}
+\PYG{+w}{                        }\PYG{c+c1}{//returnere GlsReturn med tustaus lig notFoundCatch}
+\PYG{+w}{                        }\PYG{k}{return}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{GlsReturnContainer}\PYG{p}{.}\PYG{n}{GlsReturn}
+\PYG{+w}{                        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                            }\PYG{n}{TuStatus}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{notFoundCatch}\PYG{p}{,}
+\PYG{+w}{                        }\PYG{p}{\PYGZcb{};}
+\PYG{+w}{                    }\PYG{p}{\PYGZcb{}}\PYG{+w}{ }\PYG{k}{else}
+\PYG{+w}{                    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                        }\PYG{c+c1}{//Returnere data}
+\PYG{+w}{                        }\PYG{k}{return}\PYG{+w}{ }\PYG{n}{data}\PYG{p}{;}
+\PYG{+w}{                    }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{                }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

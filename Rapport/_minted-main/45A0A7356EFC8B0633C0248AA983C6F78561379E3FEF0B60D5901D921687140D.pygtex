@@ -1,0 +1,133 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{Microsoft.EntityFrameworkCore}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{Microsoft.AspNetCore.Identity}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{Microsoft.AspNetCore.Identity.UI.Services}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{Microsoft.AspNetCore.Authentication.Cookies}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{Microsoft.AspNetCore.Authentication}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{System.Threading.Tasks}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{System.Security.Claims}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{Microsoft.AspNetCore.Authentication.Google}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{Microsoft.AspNetCore.Authentication.OAuth}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{Microsoft.AspNetCore.HttpOverrides}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{Google.Apis.Auth.OAuth2}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{Google.Apis.Gmail.v1}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{Google.Apis.Gmail.v1.Data}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{Google.Apis.Services}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{Google.Apis}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{PackageTrackingApp.Services}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{PackageTrackingApp.Data}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{System.Net.Http}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{Google.Apis.Auth.OAuth2.Requests}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{NuGet.Protocol.Plugins}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{Microsoft.Identity.Client.Platforms.Features.DesktopOs.Kerberos}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{static}\PYG{+w}{ }\PYG{n}{Google}\PYG{p}{.}\PYG{n}{Apis}\PYG{p}{.}\PYG{n}{Gmail}\PYG{p}{.}\PYG{n}{v1}\PYG{p}{.}\PYG{n}{GmailService}\PYG{p}{;}
+
+\PYG{+w}{        }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{builder}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{WebApplication}\PYG{p}{.}\PYG{n}{CreateBuilder}\PYG{p}{(}\PYG{n}{args}\PYG{p}{);}
+\PYG{+w}{        }\PYG{c+c1}{// Add services to the container.}
+\PYG{+w}{        }\PYG{n}{builder}\PYG{p}{.}\PYG{n}{Services}\PYG{p}{.}\PYG{n}{AddControllersWithViews}\PYG{p}{();}
+
+\PYG{+w}{        }\PYG{c+c1}{//GmailApiReader.UserAuthorization();}
+\PYG{+w}{        }\PYG{c+c1}{//Console.WriteLine(GmailApiReader.ListMessages);}
+\PYG{+w}{        }\PYG{c+c1}{// Add Database}
+\PYG{+w}{        }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{connectionString}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{builder}\PYG{p}{.}\PYG{n}{Configuration}\PYG{p}{.}\PYG{n}{GetConnectionString}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}DefaultConnection\PYGZdq{}}\PYG{p}{);}
+
+\PYG{+w}{        }\PYG{n}{builder}\PYG{p}{.}\PYG{n}{Services}\PYG{p}{.}\PYG{n}{AddDbContext}\PYG{o}{\PYGZlt{}}\PYG{n}{ApplicationDbContext}\PYG{o}{\PYGZgt{}}\PYG{p}{(}\PYG{n}{options}\PYG{+w}{ }\PYG{o}{=\PYGZgt{}}
+\PYG{+w}{            }\PYG{n}{options}\PYG{p}{.}\PYG{n}{UseSqlServer}\PYG{p}{(}\PYG{n}{connectionString}\PYG{p}{));}
+
+\PYG{+w}{        }\PYG{n}{builder}\PYG{p}{.}\PYG{n}{Services}\PYG{p}{.}\PYG{n}{AddDbContext}\PYG{o}{\PYGZlt{}}\PYG{n}{PackageTrackingAppIdentityDbContext}\PYG{o}{\PYGZgt{}}\PYG{p}{(}\PYG{n}{options}\PYG{+w}{ }\PYG{o}{=\PYGZgt{}}
+\PYG{+w}{            }\PYG{n}{options}\PYG{p}{.}\PYG{n}{UseSqlServer}\PYG{p}{(}\PYG{n}{connectionString}\PYG{p}{));}
+
+
+\PYG{+w}{        }\PYG{n}{builder}\PYG{p}{.}\PYG{n}{Services}\PYG{p}{.}\PYG{n}{AddDefaultIdentity}\PYG{o}{\PYGZlt{}}\PYG{n}{IdentityUser}\PYG{o}{\PYGZgt{}}\PYG{p}{(}\PYG{n}{options}\PYG{+w}{ }\PYG{o}{=\PYGZgt{}}\PYG{+w}{ }\PYG{n}{options}\PYG{p}{.}\PYG{n}{SignIn}\PYG{p}{.}\PYG{n}{RequireConfirmedAccount}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{true}\PYG{p}{).}\PYG{n}{AddEntityFrameworkStores}\PYG{o}{\PYGZlt{}}\PYG{n}{PackageTrackingAppIdentityDbContext}\PYG{o}{\PYGZgt{}}\PYG{p}{();}
+
+\PYG{+w}{        }\PYG{n}{builder}\PYG{p}{.}\PYG{n}{Services}\PYG{p}{.}\PYG{n}{AddRazorPages}\PYG{p}{();}
+
+\PYG{+w}{        }\PYG{c+c1}{//builder.Services.AddHttpsRedirection(options =\PYGZgt{} \PYGZob{}options.HttpsPort = 7084;\PYGZcb{});}
+
+\PYG{+w}{        }\PYG{n}{builder}\PYG{p}{.}\PYG{n}{Services}\PYG{p}{.}\PYG{n}{Configure}\PYG{o}{\PYGZlt{}}\PYG{n}{IdentityOptions}\PYG{o}{\PYGZgt{}}\PYG{p}{(}\PYG{n}{options}\PYG{+w}{ }\PYG{o}{=\PYGZgt{}}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{c+c1}{// Password settings.}
+\PYG{+w}{            }\PYG{n}{options}\PYG{p}{.}\PYG{n}{Password}\PYG{p}{.}\PYG{n}{RequireDigit}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{true}\PYG{p}{;}
+\PYG{+w}{            }\PYG{n}{options}\PYG{p}{.}\PYG{n}{Password}\PYG{p}{.}\PYG{n}{RequireLowercase}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{true}\PYG{p}{;}
+\PYG{+w}{            }\PYG{n}{options}\PYG{p}{.}\PYG{n}{Password}\PYG{p}{.}\PYG{n}{RequireNonAlphanumeric}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{true}\PYG{p}{;}
+\PYG{+w}{            }\PYG{n}{options}\PYG{p}{.}\PYG{n}{Password}\PYG{p}{.}\PYG{n}{RequireUppercase}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{true}\PYG{p}{;}
+\PYG{+w}{            }\PYG{n}{options}\PYG{p}{.}\PYG{n}{Password}\PYG{p}{.}\PYG{n}{RequiredLength}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{6}\PYG{p}{;}
+\PYG{+w}{            }\PYG{n}{options}\PYG{p}{.}\PYG{n}{Password}\PYG{p}{.}\PYG{n}{RequiredUniqueChars}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{1}\PYG{p}{;}
+
+\PYG{+w}{            }\PYG{c+c1}{// Lockout settings.}
+\PYG{+w}{            }\PYG{n}{options}\PYG{p}{.}\PYG{n}{Lockout}\PYG{p}{.}\PYG{n}{DefaultLockoutTimeSpan}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{TimeSpan}\PYG{p}{.}\PYG{n}{FromMinutes}\PYG{p}{(}\PYG{l+m}{5}\PYG{p}{);}
+\PYG{+w}{            }\PYG{n}{options}\PYG{p}{.}\PYG{n}{Lockout}\PYG{p}{.}\PYG{n}{MaxFailedAccessAttempts}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+m}{5}\PYG{p}{;}
+\PYG{+w}{            }\PYG{n}{options}\PYG{p}{.}\PYG{n}{Lockout}\PYG{p}{.}\PYG{n}{AllowedForNewUsers}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{true}\PYG{p}{;}
+
+\PYG{+w}{            }\PYG{c+c1}{// User settings.}
+\PYG{+w}{            }\PYG{n}{options}\PYG{p}{.}\PYG{n}{User}\PYG{p}{.}\PYG{n}{AllowedUserNameCharacters}\PYG{+w}{ }\PYG{o}{=}
+\PYG{+w}{            }\PYG{l+s}{\PYGZdq{}abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789\PYGZhy{}.\PYGZus{}@+\PYGZdq{}}\PYG{p}{;}
+\PYG{+w}{            }\PYG{n}{options}\PYG{p}{.}\PYG{n}{User}\PYG{p}{.}\PYG{n}{RequireUniqueEmail}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{true}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{});}
+
+\PYG{+w}{        }\PYG{n}{builder}\PYG{p}{.}\PYG{n}{Services}\PYG{p}{.}\PYG{n}{AddAuthentication}\PYG{p}{()}
+\PYG{+w}{        }\PYG{p}{.}\PYG{n}{AddCookie}\PYG{p}{()}
+\PYG{+w}{        }\PYG{p}{.}\PYG{n}{AddGoogle}\PYG{p}{(}\PYG{n}{googleOptions}\PYG{+w}{ }\PYG{o}{=\PYGZgt{}}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{googleOptions}\PYG{p}{.}\PYG{n}{ClientId}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}395816641246\PYGZhy{}60e0nalb4ruip3ptrvp1a34dg87v9q2a.apps.googleusercontent.com\PYGZdq{}}\PYG{p}{;}
+\PYG{+w}{            }\PYG{n}{googleOptions}\PYG{p}{.}\PYG{n}{ClientSecret}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}GOCSPX\PYGZhy{}nkw6xwXV96nMk8M7RgxavJ7Y9gfw\PYGZdq{}}\PYG{p}{;}
+\PYG{+w}{            }\PYG{n}{googleOptions}\PYG{p}{.}\PYG{n}{CallbackPath}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{PathString}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}/signin\PYGZhy{}google\PYGZdq{}}\PYG{p}{);}
+\PYG{+w}{            }\PYG{n}{googleOptions}\PYG{p}{.}\PYG{n}{Scope}\PYG{p}{.}\PYG{n}{Add}\PYG{p}{(}\PYG{n}{GmailService}\PYG{p}{.}\PYG{n}{Scope}\PYG{p}{.}\PYG{n}{GmailReadonly}\PYG{p}{);}
+\PYG{+w}{            }\PYG{n}{googleOptions}\PYG{p}{.}\PYG{n}{SignInScheme}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{IdentityConstants}\PYG{p}{.}\PYG{n}{ExternalScheme}\PYG{p}{;}
+\PYG{+w}{            }\PYG{n}{googleOptions}\PYG{p}{.}\PYG{n}{SaveTokens}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{true}\PYG{p}{;}
+\PYG{+w}{            }\PYG{n}{googleOptions}\PYG{p}{.}\PYG{n}{AccessType}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}offline\PYGZdq{}}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{});}
+
+
+\PYG{+w}{            }\PYG{c+c1}{//.HttpContext.GetTokenAsync(\PYGZdq{}access\PYGZus{}token\PYGZdq{});}
+
+\PYG{+w}{        }\PYG{n}{builder}\PYG{p}{.}\PYG{n}{Services}\PYG{p}{.}\PYG{n}{ConfigureApplicationCookie}\PYG{p}{(}\PYG{n}{options}\PYG{+w}{ }\PYG{o}{=\PYGZgt{}}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{c+c1}{// Cookie settings}
+\PYG{+w}{            }\PYG{n}{options}\PYG{p}{.}\PYG{n}{Cookie}\PYG{p}{.}\PYG{n}{SameSite}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{SameSiteMode}\PYG{p}{.}\PYG{n}{Strict}\PYG{p}{;}
+\PYG{+w}{            }\PYG{n}{options}\PYG{p}{.}\PYG{n}{Cookie}\PYG{p}{.}\PYG{n}{SecurePolicy}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{CookieSecurePolicy}\PYG{p}{.}\PYG{n}{Always}\PYG{p}{;}
+\PYG{+w}{            }\PYG{n}{options}\PYG{p}{.}\PYG{n}{Cookie}\PYG{p}{.}\PYG{n}{HttpOnly}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{true}\PYG{p}{;}
+\PYG{+w}{            }\PYG{n}{options}\PYG{p}{.}\PYG{n}{ExpireTimeSpan}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{TimeSpan}\PYG{p}{.}\PYG{n}{FromMinutes}\PYG{p}{(}\PYG{l+m}{5}\PYG{p}{);}
+
+\PYG{+w}{            }\PYG{n}{options}\PYG{p}{.}\PYG{n}{LoginPath}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}/Identity/Account/Login\PYGZdq{}}\PYG{p}{;}
+\PYG{+w}{            }\PYG{n}{options}\PYG{p}{.}\PYG{n}{AccessDeniedPath}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}/Identity/Account/AccessDenied\PYGZdq{}}\PYG{p}{;}
+\PYG{+w}{            }\PYG{n}{options}\PYG{p}{.}\PYG{n}{SlidingExpiration}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{true}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{});}
+
+\PYG{+w}{        }\PYG{n}{builder}\PYG{p}{.}\PYG{n}{Services}\PYG{p}{.}\PYG{n}{AddTransient}\PYG{o}{\PYGZlt{}}\PYG{n}{IEmailSender}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{EmailSender}\PYG{o}{\PYGZgt{}}\PYG{p}{();}
+\PYG{+w}{        }\PYG{n}{builder}\PYG{p}{.}\PYG{n}{Services}\PYG{p}{.}\PYG{n}{Configure}\PYG{o}{\PYGZlt{}}\PYG{n}{AuthMessageSenderOptions}\PYG{o}{\PYGZgt{}}\PYG{p}{(}\PYG{n}{builder}\PYG{p}{.}\PYG{n}{Configuration}\PYG{p}{);}
+\PYG{+w}{        }\PYG{n}{builder}\PYG{p}{.}\PYG{n}{Services}\PYG{p}{.}\PYG{n}{AddHttpContextAccessor}\PYG{p}{();}
+\PYG{+w}{        }\PYG{n}{builder}\PYG{p}{.}\PYG{n}{Services}\PYG{p}{.}\PYG{n}{AddScoped}\PYG{o}{\PYGZlt{}}\PYG{n}{IGmailService}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{GmailApiReader}\PYG{o}{\PYGZgt{}}\PYG{p}{();}
+\PYG{+w}{        }\PYG{n}{builder}\PYG{p}{.}\PYG{n}{Services}\PYG{p}{.}\PYG{n}{AddScoped}\PYG{o}{\PYGZlt{}}\PYG{n}{IMailHandler}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{MailHandler}\PYG{o}{\PYGZgt{}}\PYG{p}{();}
+\PYG{+w}{        }\PYG{n}{builder}\PYG{p}{.}\PYG{n}{Services}\PYG{p}{.}\PYG{n}{AddScoped}\PYG{o}{\PYGZlt{}}\PYG{n}{ITrackingInfo}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{TrackingInfo}\PYG{o}{\PYGZgt{}}\PYG{p}{();}
+
+
+
+\PYG{+w}{        }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{app}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{builder}\PYG{p}{.}\PYG{n}{Build}\PYG{p}{();}
+
+\PYG{+w}{        }\PYG{c+c1}{// Configure the HTTP request pipeline.}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{o}{!}\PYG{n}{app}\PYG{p}{.}\PYG{n}{Environment}\PYG{p}{.}\PYG{n}{IsDevelopment}\PYG{p}{())}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{app}\PYG{p}{.}\PYG{n}{UseExceptionHandler}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}/Home/Error\PYGZdq{}}\PYG{p}{);}
+\PYG{+w}{            }\PYG{c+c1}{// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore\PYGZhy{}hsts.}
+\PYG{+w}{            }\PYG{n}{app}\PYG{p}{.}\PYG{n}{UseHsts}\PYG{p}{();}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{n}{app}\PYG{p}{.}\PYG{n}{UseHttpsRedirection}\PYG{p}{();}
+
+\PYG{+w}{        }\PYG{n}{app}\PYG{p}{.}\PYG{n}{UseStaticFiles}\PYG{p}{();}
+
+\PYG{+w}{        }\PYG{n}{app}\PYG{p}{.}\PYG{n}{UseRouting}\PYG{p}{();}
+
+\PYG{+w}{        }\PYG{n}{app}\PYG{p}{.}\PYG{n}{UseAuthentication}\PYG{p}{();}
+\PYG{+w}{        }\PYG{n}{app}\PYG{p}{.}\PYG{n}{UseAuthorization}\PYG{p}{();}
+
+\PYG{+w}{        }\PYG{n}{app}\PYG{p}{.}\PYG{n}{MapControllerRoute}\PYG{p}{(}
+\PYG{+w}{            }\PYG{n}{name}\PYG{p}{:}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}default\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{            }\PYG{n}{pattern}\PYG{p}{:}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}\PYGZob{}controller=Home\PYGZcb{}/\PYGZob{}action=Index\PYGZcb{}/\PYGZob{}id?\PYGZcb{}\PYGZdq{}}\PYG{p}{);}
+
+\PYG{+w}{        }\PYG{n}{app}\PYG{p}{.}\PYG{n}{MapRazorPages}\PYG{p}{();}
+
+\PYG{+w}{        }\PYG{n}{app}\PYG{p}{.}\PYG{n}{Run}\PYG{p}{();}
+
+\end{Verbatim}

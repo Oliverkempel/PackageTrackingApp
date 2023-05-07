@@ -1,0 +1,18 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{public}\PYG{+w}{ }\PYG{k}{async}\PYG{+w}{ }\PYG{n}{Task}\PYG{o}{\PYGZlt{}}\PYG{n}{IActionResult}\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{OnPostAsync}\PYG{p}{(}\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{returnUrl}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{null}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{c+c1}{// her sættes hvilke url der skal bruges når registeringen er færdig}
+\PYG{+w}{    }\PYG{n}{returnUrl}\PYG{+w}{ }\PYG{o}{??=}\PYG{+w}{ }\PYG{n}{Url}\PYG{p}{.}\PYG{n}{Content}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}\PYGZti{}/\PYGZdq{}}\PYG{p}{);}
+\PYG{+w}{    }\PYG{c+c1}{// her henter den en liste af andre logins}
+\PYG{+w}{    }\PYG{n}{ExternalLogins}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{p}{(}\PYG{k}{await}\PYG{+w}{ }\PYG{n}{\PYGZus{}signInManager}\PYG{p}{.}\PYG{n}{GetExternalAuthenticationSchemesAsync}\PYG{p}{()).}\PYG{n}{ToList}\PYG{p}{();}
+\PYG{+w}{    }\PYG{c+c1}{// hvis dette er okay går den videre}
+\PYG{+w}{    }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{ModelState}\PYG{p}{.}\PYG{n}{IsValid}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{c+c1}{// bruger metoden RegisterModel.CreateUser til at lave en model for registeringen}
+\PYG{+w}{        }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{user}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{CreateUser}\PYG{p}{();}
+\PYG{+w}{        }\PYG{c+c1}{// her gemmer vi data brugeren har sat i felterne i databasen}
+\PYG{+w}{        }\PYG{k}{await}\PYG{+w}{ }\PYG{n}{\PYGZus{}userStore}\PYG{p}{.}\PYG{n}{SetUserNameAsync}\PYG{p}{(}\PYG{n}{user}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{Input}\PYG{p}{.}\PYG{n}{Email}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{CancellationToken}\PYG{p}{.}\PYG{n}{None}\PYG{p}{);}
+\PYG{+w}{        }\PYG{k}{await}\PYG{+w}{ }\PYG{n}{\PYGZus{}emailStore}\PYG{p}{.}\PYG{n}{SetEmailAsync}\PYG{p}{(}\PYG{n}{user}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{Input}\PYG{p}{.}\PYG{n}{Email}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{CancellationToken}\PYG{p}{.}\PYG{n}{None}\PYG{p}{);}
+
+\PYG{+w}{        }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{result}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{await}\PYG{+w}{ }\PYG{n}{\PYGZus{}userManager}\PYG{p}{.}\PYG{n}{CreateAsync}\PYG{p}{(}\PYG{n}{user}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{Input}\PYG{p}{.}\PYG{n}{Password}\PYG{p}{);}
+\end{Verbatim}

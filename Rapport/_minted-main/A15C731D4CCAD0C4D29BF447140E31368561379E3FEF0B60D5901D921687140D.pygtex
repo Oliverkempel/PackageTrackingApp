@@ -1,0 +1,75 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{Google.Apis.Auth.OAuth2}\PYG{p}{;}
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{Google.Apis.Gmail.v1}\PYG{p}{;}
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{Google.Apis.Gmail.v1.Data}\PYG{p}{;}
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{Google.Apis.Services}\PYG{p}{;}
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{Microsoft.AspNetCore.Authentication}\PYG{p}{;}
+
+\PYG{k}{namespace}\PYG{+w}{ }\PYG{n+nn}{PackageTrackingApp.Services}\PYG{p}{;}
+
+\PYG{k}{public}\PYG{+w}{ }\PYG{k}{interface}\PYG{+w}{ }\PYG{n}{IGmailService}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{n}{Task}\PYG{o}{\PYGZlt{}}\PYG{n}{List}\PYG{o}{\PYGZlt{}}\PYG{n}{Message}\PYG{o}{\PYGZgt{}\PYGZgt{}}\PYG{+w}{ }\PYG{n}{GetAllMails}\PYG{p}{(}\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{fromEmail}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{k}{public}\PYG{+w}{ }\PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{GmailApiReader}\PYG{+w}{ }\PYG{p}{:}\PYG{+w}{ }\PYG{n}{IGmailService}
+\PYG{p}{\PYGZob{}}
+
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{readonly}\PYG{+w}{ }\PYG{n}{IHttpContextAccessor}\PYG{+w}{ }\PYG{n}{\PYGZus{}httpContextAccessor}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{n+nf}{GmailApiReader}\PYG{p}{(}\PYG{n}{IHttpContextAccessor}\PYG{+w}{ }\PYG{n}{httpContextAccessor}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n}{\PYGZus{}httpContextAccessor}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{httpContextAccessor}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k}{async}\PYG{+w}{ }\PYG{n}{Task}\PYG{o}{\PYGZlt{}}\PYG{n}{List}\PYG{o}{\PYGZlt{}}\PYG{n}{Message}\PYG{o}{\PYGZgt{}\PYGZgt{}}\PYG{+w}{ }\PYG{n}{GetAllMails}\PYG{p}{(}\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{fromEmail}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{c+c1}{// henter Auth propertires indeholdenede accesstoken asynkront og gemmer det i authProps}
+\PYG{+w}{        }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{authProps}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{await}\PYG{+w}{ }\PYG{n}{\PYGZus{}httpContextAccessor}\PYG{p}{.}\PYG{n}{HttpContext}\PYG{p}{.}\PYG{n}{AuthenticateAsync}\PYG{p}{();}
+
+\PYG{+w}{        }\PYG{c+c1}{// gemmer accessToken i variabel fra authprops}
+\PYG{+w}{        }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{accessToken}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{authProps}\PYG{p}{.}\PYG{n}{Properties}\PYG{p}{.}\PYG{n}{GetTokenValue}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}access\PYGZus{}token\PYGZdq{}}\PYG{p}{);}
+
+\PYG{+w}{        }\PYG{c+c1}{//omdanner accesstoken til google credential}
+\PYG{+w}{        }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{credential}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{GoogleCredential}\PYG{p}{.}\PYG{n}{FromAccessToken}\PYG{p}{(}\PYG{n}{accessToken}\PYG{p}{);}
+
+\PYG{+w}{        }\PYG{c+c1}{//opretter ny instans af Gmailservice}
+\PYG{+w}{        }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{service}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{GmailService}\PYG{p}{(}\PYG{k}{new}\PYG{+w}{ }\PYG{n}{BaseClientService}\PYG{p}{.}\PYG{n}{Initializer}\PYG{p}{()}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{HttpClientInitializer}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{credential}\PYG{p}{,}
+\PYG{+w}{            }\PYG{n}{ApplicationName}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Gmail API Sample\PYGZdq{}}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{});}
+
+\PYG{+w}{        }\PYG{c+c1}{//opretter en request til at hente mails fra brugeren}
+\PYG{+w}{        }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{emailListRequest}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{service}\PYG{p}{.}\PYG{n}{Users}\PYG{p}{.}\PYG{n}{Messages}\PYG{p}{.}\PYG{n}{List}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}me\PYGZdq{}}\PYG{p}{);}
+\PYG{+w}{        }\PYG{c+c1}{//tilf�jer et search query som s�ger efter mails fra mail \PYGZdq{}fromEmail\PYGZdq{} som inds�ttes fra funktions parameter}
+\PYG{+w}{        }\PYG{n}{emailListRequest}\PYG{p}{.}\PYG{n}{Q}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdl{}\PYGZdq{}from:\PYGZob{}fromEmail\PYGZcb{}\PYGZdq{}}\PYG{p}{;}
+\PYG{+w}{        }\PYG{c+c1}{//email requestet sendes og resultatet gemmes i emailListRespinse variablen}
+\PYG{+w}{        }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{emailListResponse}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{await}\PYG{+w}{ }\PYG{n}{emailListRequest}\PYG{p}{.}\PYG{n}{ExecuteAsync}\PYG{p}{();}
+\PYG{+w}{        }\PYG{c+c1}{//kontrolstruktur der tjekker om svaret er null eller om der er nogle beskeder i emailListResponse}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{emailListResponse}\PYG{o}{?.}\PYG{n}{Messages}\PYG{+w}{ }\PYG{o}{!=}\PYG{+w}{ }\PYG{k}{null}\PYG{+w}{ }\PYG{o}{\PYGZam{}\PYGZam{}}\PYG{+w}{ }\PYG{n}{emailListResponse}\PYG{p}{.}\PYG{n}{Messages}\PYG{p}{.}\PYG{n}{Any}\PYG{p}{())}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{c+c1}{//hvis der er instanseres en ny liste af Message}
+\PYG{+w}{            }\PYG{n}{List}\PYG{o}{\PYGZlt{}}\PYG{n}{Message}\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{messagesWithData}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{List}\PYG{o}{\PYGZlt{}}\PYG{n}{Message}\PYG{o}{\PYGZgt{}}\PYG{p}{();}
+
+\PYG{+w}{            }\PYG{c+c1}{//l�kke der gennemg�r hver message i emailListResponse}
+\PYG{+w}{            }\PYG{k}{foreach}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{message}\PYG{+w}{ }\PYG{k}{in}\PYG{+w}{ }\PYG{n}{emailListResponse}\PYG{p}{.}\PYG{n}{Messages}\PYG{p}{)}\PYG{+w}{ }\PYG{p}{\PYGZob{}}
+
+\PYG{+w}{                }\PYG{c+c1}{// opbygger request til at hente selve beskeden med idet der tilh�rende nuv�rende iteration i loopets id}
+\PYG{+w}{                }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{emailInfoRequest}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{service}\PYG{p}{.}\PYG{n}{Users}\PYG{p}{.}\PYG{n}{Messages}\PYG{p}{.}\PYG{n}{Get}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}me\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{message}\PYG{p}{.}\PYG{n}{Id}\PYG{p}{);}
+\PYG{+w}{                }\PYG{c+c1}{//requestet sendes og svaret gemmes i variablen emailInfoResponse}
+\PYG{+w}{                }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{emailInfoResponse}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{await}\PYG{+w}{ }\PYG{n}{emailInfoRequest}\PYG{p}{.}\PYG{n}{ExecuteAsync}\PYG{p}{();}
+\PYG{+w}{                }\PYG{c+c1}{// Dette tilf�jes derefter til listen af messages}
+\PYG{+w}{                }\PYG{n}{messagesWithData}\PYG{p}{.}\PYG{n}{Add}\PYG{p}{(}\PYG{n}{emailInfoResponse}\PYG{p}{);}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{            }\PYG{c+c1}{//efter alle messages er tilf�jet til listen messagesWithData returneres denne}
+\PYG{+w}{            }\PYG{k}{return}\PYG{+w}{ }\PYG{n}{messagesWithData}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{k}{else}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{c+c1}{//hvis der ingen messages er i resultatet returneres null}
+\PYG{+w}{            }\PYG{k}{return}\PYG{+w}{ }\PYG{k}{null}\PYG{p}{;}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

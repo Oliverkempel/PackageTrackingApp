@@ -1,0 +1,39 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{+w}{        }\PYG{c+c1}{// hvis bruger kunne laves kører koden videre}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{result}\PYG{p}{.}\PYG{n}{Succeeded}\PYG{p}{)}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{c+c1}{// dette er til at debug problemer i koden}
+\PYG{+w}{            }\PYG{n}{\PYGZus{}logger}\PYG{p}{.}\PYG{n}{LogInformation}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}User created a new account with password.\PYGZdq{}}\PYG{p}{);}
+\PYG{+w}{            }\PYG{c+c1}{// her laver vi en variabel med bruges id som vi lavet før.}
+\PYG{+w}{            }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{userId}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{await}\PYG{+w}{ }\PYG{n}{\PYGZus{}userManager}\PYG{p}{.}\PYG{n}{GetUserIdAsync}\PYG{p}{(}\PYG{n}{user}\PYG{p}{);}
+\PYG{+w}{            }\PYG{c+c1}{// her generere vi en token som bruges når brugeren skal konfimere sin email}
+\PYG{+w}{            }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{code}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{await}\PYG{+w}{ }\PYG{n}{\PYGZus{}userManager}\PYG{p}{.}\PYG{n}{GenerateEmailConfirmationTokenAsync}\PYG{p}{(}\PYG{n}{user}\PYG{p}{);}
+\PYG{+w}{            }\PYG{c+c1}{// vi kryptere så denne token med Base64 encoding.}
+\PYG{+w}{            }\PYG{n}{code}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{WebEncoders}\PYG{p}{.}\PYG{n}{Base64UrlEncode}\PYG{p}{(}\PYG{n}{Encoding}\PYG{p}{.}\PYG{n}{UTF8}\PYG{p}{.}\PYG{n}{GetBytes}\PYG{p}{(}\PYG{n}{code}\PYG{p}{));}
+\PYG{+w}{            }\PYG{c+c1}{// her efter laves en ny midlertidig side hvor konfimationen af emailen ventes på}
+\PYG{+w}{            }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{callbackUrl}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{Url}\PYG{p}{.}\PYG{n}{Page}\PYG{p}{(}
+\PYG{+w}{                }\PYG{l+s}{\PYGZdq{}/Account/ConfirmEmail\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{                }\PYG{n}{pageHandler}\PYG{p}{:}\PYG{+w}{ }\PYG{k}{null}\PYG{p}{,}
+\PYG{+w}{                }\PYG{n}{values}\PYG{p}{:}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{+w}{ }\PYG{n}{area}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Identity\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{userId}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{userId}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{code}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{code}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{returnUrl}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{returnUrl}\PYG{+w}{ }\PYG{p}{\PYGZcb{},}
+\PYG{+w}{                }\PYG{n}{protocol}\PYG{p}{:}\PYG{+w}{ }\PYG{n}{Request}\PYG{p}{.}\PYG{n}{Scheme}\PYG{p}{);}
+\PYG{+w}{            }\PYG{c+c1}{// her bliver emailen sendt med linkent til den nye midlertidig side.}
+\PYG{+w}{            }\PYG{k}{await}\PYG{+w}{ }\PYG{n}{\PYGZus{}emailSender}\PYG{p}{.}\PYG{n}{SendEmailAsync}\PYG{p}{(}\PYG{n}{Input}\PYG{p}{.}\PYG{n}{Email}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Confirm your email\PYGZdq{}}\PYG{p}{,}
+\PYG{+w}{                }\PYG{l+s}{\PYGZdl{}\PYGZdq{}Please confirm your account by \PYGZlt{}a href=\PYGZsq{}\PYGZob{}HtmlEncoder.Default.Encode(callbackUrl)\PYGZcb{}\PYGZsq{}\PYGZgt{}clicking here\PYGZlt{}/a\PYGZgt{}.\PYGZdq{}}\PYG{p}{);}
+\PYG{+w}{            }\PYG{c+c1}{// her tjekkes om brugeren har accepteret sin email.}
+\PYG{+w}{            }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n}{\PYGZus{}userManager}\PYG{p}{.}\PYG{n}{Options}\PYG{p}{.}\PYG{n}{SignIn}\PYG{p}{.}\PYG{n}{RequireConfirmedAccount}\PYG{p}{)}
+\PYG{+w}{            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{c+c1}{// her bliver brugeren diageret til forsiden}
+\PYG{+w}{                }\PYG{k}{return}\PYG{+w}{ }\PYG{n+nf}{RedirectToPage}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}RegisterConfirmation\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{+w}{ }\PYG{n}{email}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{Input}\PYG{p}{.}\PYG{n}{Email}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{returnUrl}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{returnUrl}\PYG{+w}{ }\PYG{p}{\PYGZcb{});}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{            }\PYG{k}{else}
+\PYG{+w}{            }\PYG{p}{\PYGZob{}}
+\PYG{+w}{                }\PYG{c+c1}{// hvis ikke emailen bliver konfirmation vil den ikke virke}
+\PYG{+w}{                }\PYG{k}{await}\PYG{+w}{ }\PYG{n}{\PYGZus{}signInManager}\PYG{p}{.}\PYG{n}{SignInAsync}\PYG{p}{(}\PYG{n}{user}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{isPersistent}\PYG{p}{:}\PYG{+w}{ }\PYG{k}{false}\PYG{p}{);}
+\PYG{+w}{                }\PYG{c+c1}{// her bliver brugeren diageret til forsiden}
+\PYG{+w}{                }\PYG{k}{return}\PYG{+w}{ }\PYG{n+nf}{LocalRedirect}\PYG{p}{(}\PYG{n}{returnUrl}\PYG{p}{);}
+\PYG{+w}{            }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{c+c1}{// Hvis koden når her til er noget fejlet under registering af bruger.}
+\PYG{+w}{        }\PYG{k}{return}\PYG{+w}{ }\PYG{n+nf}{Page}\PYG{p}{();}
+\end{Verbatim}

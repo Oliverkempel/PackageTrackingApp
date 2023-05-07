@@ -1,0 +1,57 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{+w}{        }\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{Microsoft.AspNetCore.Identity.UI.Services}\PYG{p}{;}
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{Microsoft.Extensions.Options}\PYG{p}{;}
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{System}\PYG{p}{;}
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{System.Threading.Tasks}\PYG{p}{;}
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{SendGrid}\PYG{p}{;}
+\PYG{k}{using}\PYG{+w}{ }\PYG{n+nn}{SendGrid.Helpers.Mail}\PYG{p}{;}
+
+\PYG{k}{namespace}\PYG{+w}{ }\PYG{n+nn}{PackageTrackingApp.Services}\PYG{p}{;}
+
+\PYG{k}{public}\PYG{+w}{ }\PYG{k}{class}\PYG{+w}{ }\PYG{n+nc}{EmailSender}\PYG{+w}{ }\PYG{p}{:}\PYG{+w}{ }\PYG{n}{IEmailSender}
+\PYG{p}{\PYGZob{}}
+\PYG{+w}{    }\PYG{k}{private}\PYG{+w}{ }\PYG{k}{readonly}\PYG{+w}{ }\PYG{n}{ILogger}\PYG{+w}{ }\PYG{n}{\PYGZus{}logger}\PYG{p}{;}
+
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{n+nf}{EmailSender}\PYG{p}{(}\PYG{n}{IOptions}\PYG{o}{\PYGZlt{}}\PYG{n}{AuthMessageSenderOptions}\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{optionsAccessor}\PYG{p}{,}
+\PYG{+w}{                       }\PYG{n}{ILogger}\PYG{o}{\PYGZlt{}}\PYG{n}{EmailSender}\PYG{o}{\PYGZgt{}}\PYG{+w}{ }\PYG{n}{logger}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n}{Options}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{optionsAccessor}\PYG{p}{.}\PYG{n}{Value}\PYG{p}{;}
+\PYG{+w}{        }\PYG{n}{\PYGZus{}logger}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{logger}\PYG{p}{;}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{n}{AuthMessageSenderOptions}\PYG{+w}{ }\PYG{n}{Options}\PYG{+w}{ }\PYG{p}{\PYGZob{}}\PYG{+w}{ }\PYG{k}{get}\PYG{p}{;}\PYG{+w}{ }\PYG{p}{\PYGZcb{}}\PYG{+w}{ }\PYG{c+c1}{//Set with Secret Manager.}
+
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k}{async}\PYG{+w}{ }\PYG{n}{Task}\PYG{+w}{ }\PYG{n+nf}{SendEmailAsync}\PYG{p}{(}\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{toEmail}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{subject}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{message}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{apiKey}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}SG.HP4E40BKQMeSuJbTia4u6g.2d2akUb9CbgF\PYGZus{}cXbv5lp\PYGZhy{}J2wcL9yVe\PYGZus{}xpEMGigYIam0\PYGZdq{}}\PYG{p}{;}
+\PYG{+w}{        }\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{k+kt}{string}\PYG{p}{.}\PYG{n}{IsNullOrEmpty}\PYG{p}{(}\PYG{n}{apiKey}\PYG{p}{))}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{k}{throw}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n+nf}{Exception}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}Null SendGridKey\PYGZdq{}}\PYG{p}{);}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{}}
+\PYG{+w}{        }\PYG{k}{await}\PYG{+w}{ }\PYG{n+nf}{Execute}\PYG{p}{(}\PYG{n}{apiKey}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{subject}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{message}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{toEmail}\PYG{p}{);}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+
+\PYG{+w}{    }\PYG{k}{public}\PYG{+w}{ }\PYG{k}{async}\PYG{+w}{ }\PYG{n}{Task}\PYG{+w}{ }\PYG{n+nf}{Execute}\PYG{p}{(}\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{apiKey}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{subject}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{message}\PYG{p}{,}\PYG{+w}{ }\PYG{k+kt}{string}\PYG{+w}{ }\PYG{n}{toEmail}\PYG{p}{)}
+\PYG{+w}{    }\PYG{p}{\PYGZob{}}
+\PYG{+w}{        }\PYG{n}{\PYGZus{}logger}\PYG{p}{.}\PYG{n}{LogInformation}\PYG{p}{(}\PYG{n}{apiKey}\PYG{p}{);}
+\PYG{+w}{        }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{client}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{SendGridClient}\PYG{p}{(}\PYG{n}{apiKey}\PYG{p}{);}
+\PYG{+w}{        }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{msg}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{SendGridMessage}\PYG{p}{()}
+\PYG{+w}{        }\PYG{p}{\PYGZob{}}
+\PYG{+w}{            }\PYG{n}{From}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{new}\PYG{+w}{ }\PYG{n}{EmailAddress}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}mads.gjellerod@gmail.com\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s}{\PYGZdq{}Password Recovery\PYGZdq{}}\PYG{p}{),}
+\PYG{+w}{            }\PYG{n}{Subject}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{subject}\PYG{p}{,}
+\PYG{+w}{            }\PYG{n}{PlainTextContent}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{message}\PYG{p}{,}
+\PYG{+w}{            }\PYG{n}{HtmlContent}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{n}{message}
+\PYG{+w}{        }\PYG{p}{\PYGZcb{};}
+\PYG{+w}{        }\PYG{n}{msg}\PYG{p}{.}\PYG{n}{AddTo}\PYG{p}{(}\PYG{k}{new}\PYG{+w}{ }\PYG{n}{EmailAddress}\PYG{p}{(}\PYG{n}{toEmail}\PYG{p}{));}
+
+\PYG{+w}{        }\PYG{c+c1}{// Disable click tracking.}
+\PYG{+w}{        }\PYG{c+c1}{// See https://sendgrid.com/docs/User\PYGZus{}Guide/Settings/tracking.html}
+\PYG{+w}{        }\PYG{n}{msg}\PYG{p}{.}\PYG{n}{SetClickTracking}\PYG{p}{(}\PYG{k}{false}\PYG{p}{,}\PYG{+w}{ }\PYG{k}{false}\PYG{p}{);}
+\PYG{+w}{        }\PYG{k+kt}{var}\PYG{+w}{ }\PYG{n}{response}\PYG{+w}{ }\PYG{o}{=}\PYG{+w}{ }\PYG{k}{await}\PYG{+w}{ }\PYG{n}{client}\PYG{p}{.}\PYG{n}{SendEmailAsync}\PYG{p}{(}\PYG{n}{msg}\PYG{p}{);}
+\PYG{+w}{        }\PYG{c+c1}{// sends response to debug console}
+\PYG{+w}{        }\PYG{n}{\PYGZus{}logger}\PYG{p}{.}\PYG{n}{LogInformation}\PYG{p}{(}\PYG{n}{response}\PYG{p}{.}\PYG{n}{IsSuccessStatusCode}
+\PYG{+w}{                               }\PYG{o}{?}\PYG{+w}{ }\PYG{l+s}{\PYGZdl{}\PYGZdq{}Email to \PYGZob{}toEmail\PYGZcb{} queued successfully!\PYGZdq{}}
+\PYG{+w}{                               }\PYG{p}{:}\PYG{+w}{ }\PYG{l+s}{\PYGZdl{}\PYGZdq{}Failure Email to \PYGZob{}toEmail\PYGZcb{}\PYGZdq{}}\PYG{p}{);}
+\PYG{+w}{    }\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

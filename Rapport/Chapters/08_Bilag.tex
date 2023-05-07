@@ -1,0 +1,866 @@
+\chapter{Bilag}
+\section{Kode}
+\subsection{Github}
+Link til Github repo:
+https://github.com/Oliverkempel/PackageTrackingApp.git
+\subsection{Program.cs}
+
+\begin{minted}[frame=lines,framesep=2mm,baselinestretch=1.2,linenos]{cs}
+        using Microsoft.EntityFrameworkCore;
+        using Microsoft.AspNetCore.Identity;
+        using Microsoft.AspNetCore.Identity.UI.Services;
+        using Microsoft.AspNetCore.Authentication.Cookies;
+        using Microsoft.AspNetCore.Authentication;
+        using System.Threading.Tasks;
+        using System.Security.Claims;
+        using Microsoft.AspNetCore.Authentication.Google;
+        using Microsoft.AspNetCore.Authentication.OAuth;
+        using Microsoft.AspNetCore.HttpOverrides;
+        using Google.Apis.Auth.OAuth2;
+        using Google.Apis.Gmail.v1;
+        using Google.Apis.Gmail.v1.Data;
+        using Google.Apis.Services;
+        using Google.Apis;
+        using PackageTrackingApp.Services;
+        using PackageTrackingApp.Data;
+        using System.Net.Http;
+        using Google.Apis.Auth.OAuth2.Requests;
+        using NuGet.Protocol.Plugins;
+        using Microsoft.Identity.Client.Platforms.Features.DesktopOs.Kerberos;
+        using static Google.Apis.Gmail.v1.GmailService;
+        
+        var builder = WebApplication.CreateBuilder(args);
+        // Add services to the container.
+        builder.Services.AddControllersWithViews();
+        
+        //GmailApiReader.UserAuthorization();
+        //Console.WriteLine(GmailApiReader.ListMessages);
+        // Add Database 
+        var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+        
+        builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseSqlServer(connectionString));
+        
+        builder.Services.AddDbContext<PackageTrackingAppIdentityDbContext>(options =>
+            options.UseSqlServer(connectionString));
+        
+        
+        builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<PackageTrackingAppIdentityDbContext>();
+        
+        builder.Services.AddRazorPages();
+        
+        //builder.Services.AddHttpsRedirection(options => {options.HttpsPort = 7084;});
+        
+        builder.Services.Configure<IdentityOptions>(options =>
+        {
+            // Password settings.
+            options.Password.RequireDigit = true;
+            options.Password.RequireLowercase = true;
+            options.Password.RequireNonAlphanumeric = true;
+            options.Password.RequireUppercase = true;
+            options.Password.RequiredLength = 6;
+            options.Password.RequiredUniqueChars = 1;
+        
+            // Lockout settings.
+            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+            options.Lockout.MaxFailedAccessAttempts = 5;
+            options.Lockout.AllowedForNewUsers = true;
+        
+            // User settings.
+            options.User.AllowedUserNameCharacters =
+            "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+            options.User.RequireUniqueEmail = true;
+        });
+        
+        builder.Services.AddAuthentication()
+        .AddCookie()
+        .AddGoogle(googleOptions =>
+        {
+            googleOptions.ClientId = "395816641246-60e0nalb4ruip3ptrvp1a34dg87v9q2a.apps.googleusercontent.com";
+            googleOptions.ClientSecret = "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";
+            googleOptions.CallbackPath = new PathString("/signin-google");
+            googleOptions.Scope.Add(GmailService.Scope.GmailReadonly);
+            googleOptions.SignInScheme = IdentityConstants.ExternalScheme;
+            googleOptions.SaveTokens = true;
+            googleOptions.AccessType = "offline";
+        });
+        
+        
+            //.HttpContext.GetTokenAsync("access_token");
+        
+        builder.Services.ConfigureApplicationCookie(options =>
+        {
+            // Cookie settings
+            options.Cookie.SameSite = SameSiteMode.Strict;
+            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            options.Cookie.HttpOnly = true;
+            options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+        
+            options.LoginPath = "/Identity/Account/Login";
+            options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+            options.SlidingExpiration = true;
+        });
+        
+        builder.Services.AddTransient<IEmailSender, EmailSender>();
+        builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
+        builder.Services.AddHttpContextAccessor();
+        builder.Services.AddScoped<IGmailService, GmailApiReader>();
+        builder.Services.AddScoped<IMailHandler, MailHandler>();
+        builder.Services.AddScoped<ITrackingInfo, TrackingInfo>();
+        
+        
+        
+        var app = builder.Build();
+        
+        // Configure the HTTP request pipeline.
+        if (!app.Environment.IsDevelopment())
+        {
+            app.UseExceptionHandler("/Home/Error");
+            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+            app.UseHsts();
+        }
+        
+        app.UseHttpsRedirection();
+        
+        app.UseStaticFiles();
+        
+        app.UseRouting();
+        
+        app.UseAuthentication();
+        app.UseAuthorization();
+        
+        app.MapControllerRoute(
+            name: "default",
+            pattern: "{controller=Home}/{action=Index}/{id?}");
+        
+        app.MapRazorPages();
+        
+        app.Run();
+        
+\end{minted}
+
+\subsection{HomeController.cs}
+
+\begin{minted}[frame=lines,framesep=2mm,baselinestretch=1.2,linenos]{cs}
+        using Microsoft.AspNetCore.Authorization;
+        using Microsoft.AspNetCore.Mvc;
+        using PackageTrackingApp.Models;
+        using PackageTrackingApp.Services;
+        using System.Diagnostics;
+        using Google.Apis.Auth.OAuth2;
+        using Google.Apis.Gmail.v1;
+        using Google.Apis.Gmail.v1.Data;
+        using Google.Apis.Services;
+        using Microsoft.AspNetCore.Authentication;
+        using Microsoft.AspNetCore.Http;
+        using Microsoft.Extensions.Configuration;
+        using System.Linq;
+        using System.Threading.Tasks;
+        using PackageTrackingApp.Services;
+        using PackageTrackingApp.Viewmodels;
+        
+        namespace PackageTrackingApp.Controllers
+        {
+            public class HomeController : Controller
+            {
+                private readonly IGmailService _gmailService;
+                private readonly ILogger<HomeController> _logger;
+                private readonly IMailHandler _mailHandler;
+                private readonly ITrackingInfo _trackingInfo;
+        
+                // Konstruktor som gør tilgang til services muligt
+                public HomeController(IGmailService gmailService, ILogger<HomeController> logger, IMailHandler mailHandler, ITrackingInfo trackingInfo)
+                {
+                    _gmailService = gmailService;
+                    _logger = logger;
+                    _mailHandler = mailHandler;
+                    _trackingInfo = trackingInfo;
+                }
+        
+                //Returnere forsiden (Index siden)
+                public IActionResult Index()
+                {
+                    return View();
+                }
+        
+                //Returnere Privacy siden
+                public IActionResult Privacy()
+                {
+                    return View();
+                }
+        
+                //returnere viewet myPage hvis bruger er authurized (logget ind)
+                [HttpGet]
+                [Authorize]
+                [Route("token")]
+                public async Task<IActionResult> myPage()
+                {
+                    //opretter en instans af klassen mailInfos og venter svar fra mailHandler services metoden getAllTrackingNumbers() og sætter det derefter til instansen
+                    AllMailInfo mailInfos = await _mailHandler.getAllTrackingNumbers();
+        
+                    //Initializere en liste af Shipments og tildeler den det der returneres fra metoden getTrackingInfoAllCourriers, med parametren mailInfos.
+                    List<Shipment> allShipmentsFromUserInbox = _trackingInfo.getTrackingInfoAllCourriers(mailInfos);
+        
+                    //En ny viewmodel initializeres, denne viewmodel er forventet af myPage viewet
+                    MyPageVM vm = new MyPageVM();
+        
+                    //Shipments i viewmodel bliver derefter sat til de hentede shipment information hentet fra trackingInfo servicet.
+                    vm.shipments = allShipmentsFromUserInbox;
+        
+                    //Der returneres til myPage viewet med viewdataen sendt med.
+                    return View(vm);
+        
+                }
+        
+                [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+                public IActionResult Error()
+                {
+                    return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+                }
+            }
+        }
+        
+\end{minted}
+
+\subsection{TrackingInfo.cs}
+
+\begin{minted}[frame=lines,framesep=2mm,baselinestretch=1.2,linenos]{cs}
+        using PackageTrackingApp.Models;
+        using Newtonsoft.Json;
+        using RestSharp;
+        using PackageTrackingApp.Models.ApiReturnModels;
+        using PackageTrackingApp.Models.ShipmentSubModels;
+        
+        namespace PackageTrackingApp.Services
+        {
+            //interface til alle metoderne i klassen.
+            public interface ITrackingInfo
+            {
+                List<Shipment> getTrackingInfoAllCourriers(AllMailInfo allMailInfo);
+                PostnordReturnWrapper.PostNordReturn getPostnordTrackingInfo(string trackingNumber);
+                GlsReturnContainer.GlsReturn getGlsTrackingInfo(string trackingNumber);
+            }
+        
+            public class TrackingInfo : ITrackingInfo
+            {
+                public List<Shipment> getTrackingInfoAllCourriers(AllMailInfo allMailInfo)
+                {
+                    //initialisere liste af Shipments
+                    List<Shipment> shipmentsList = new List<Shipment>();
+        
+                    //looper igennem alle postnordMailInfos i allMailinfos fra parametrerne i metoden
+                    foreach(var postnordMailInfo in allMailInfo.postNordMailInfos)
+                    {
+                        //initialisere ny postnordreturn til opbevaring af datga fra api kald.
+                        PostnordReturnWrapper.PostNordReturn shipmentData = new PostnordReturnWrapper.PostNordReturn();
+        
+                        // henter postnord tracking info via metoden med den nuværende iteration i loopets trackingnummer
+                        shipmentData = getPostnordTrackingInfo(postnordMailInfo.trackingNumber);
+        
+                        // tjekker om lengden ad shipments er større end eller lig en
+                        if(shipmentData.TrackingInformationResponse.Shipments.Length >= 1)
+                        {
+                            // initialisere ny liste af SmipmentEvents
+                            List<ShipmentEvent> Events = new List<ShipmentEvent>();
+        
+                            // Looper igennem events i sporingsinformationerne
+                            foreach (var ev in shipmentData.TrackingInformationResponse.Shipments.First().Items.First().Events)
+                            {
+                                //tilføjer nyt shipmentevent til eventlisten
+                                Events.Add(new ShipmentEvent
+                                {
+                                    //tilføjer informationen omrking eventet
+                                    dateTime = ev.EventTime.UtcDateTime,
+                                    description = ev.EventDescription,
+                                    location = new Address
+                                    {
+                                        city = ev.Location.City,
+                                        country = ev.Location.Country,
+                                        zipCode = ev.Location.Postcode,
+                                    },
+                                    status = ev.Status,
+                                });
+                            }
+        
+                            //tjekker om vægten af smipmenttet er null
+                            if (shipmentData.TrackingInformationResponse.Shipments.First().TotalWeight == null)
+                            {
+                                //tilføjer shipment til listen
+                                shipmentsList.Add(new Shipment
+                                {
+                                    //tilføjer informationen til shipment
+                                    currentStatus = shipmentData.TrackingInformationResponse.Shipments.First().Status,
+                                    //events bliver tilføjet til shipment
+                                    events = Events,
+                                    //informationer vedrørende shipment bliver tilføjet
+                                    info = new ShipmentInfo
+                                    {
+                                        //weight sættes til strengen none da der ingen vægt er angivet
+                                        weight = "none",
+                                        //tracking nummer sættes
+                                        trackingNumber = shipmentData.TrackingInformationResponse.Shipments.First().ShipmentId,
+                                        //fragtfirma sættes
+                                        courrier = postnordMailInfo.Courier,
+                                        //servicen sættes
+                                        service = shipmentData.TrackingInformationResponse.Shipments.First().Service.Name,
+                                        //Afsender sættes
+                                        consignor = new Person
+                                        {
+                                            name = shipmentData.TrackingInformationResponse.Shipments.First().Consignor.Name,
+                                            address = new Address
+                                            {
+                                                city = shipmentData.TrackingInformationResponse.Shipments.First().Consignor.Address.City,
+                                                country = shipmentData.TrackingInformationResponse.Shipments.First().Consignor.Address.Country,
+                                                zipCode = shipmentData.TrackingInformationResponse.Shipments.First().Consignor.Address.PostCode.ToString(),
+        
+                                            },
+                                        },
+                                        //modtager sættes
+                                        consignee = new Person
+                                        {
+                                            name = "No name (You)",
+                                            address = new Address
+                                            {
+                                                city = shipmentData.TrackingInformationResponse.Shipments.First().Consignee.Address.City,
+                                                country = shipmentData.TrackingInformationResponse.Shipments.First().Consignee.Address.Country,
+                                                zipCode = shipmentData.TrackingInformationResponse.Shipments.First().Consignee.Address.PostCode.ToString(),
+        
+                                            },
+                                        }
+        
+                                    }
+        
+                                });
+                            }
+                            //Hvis vægt ikke er null
+                            else
+                            {
+                                //tilføjer shipment til listen
+                                shipmentsList.Add(new Shipment
+                                {
+                                    //tilføjer informationen til shipment
+                                    currentStatus = shipmentData.TrackingInformationResponse.Shipments.First().Status,
+                                    //events bliver tilføjet til shipment
+                                    events = Events,
+                                    //informationer vedrørende shipment bliver tilføjet
+                                    info = new ShipmentInfo
+                                    {
+                                        //weight sættes til strengen none da der ingen vægt er angivet
+                                        weight = shipmentData.TrackingInformationResponse.Shipments.First().TotalWeight.Value,
+                                        //tracking nummer sættes
+                                        trackingNumber = shipmentData.TrackingInformationResponse.Shipments.First().ShipmentId,
+                                        //fragtfirma sættes
+                                        courrier = postnordMailInfo.Courier,
+                                        //serice sættes
+                                        service = shipmentData.TrackingInformationResponse.Shipments.First().Service.Name,
+                                        //Afsender sættes
+                                        consignor = new Person
+                                        {
+                                            name = shipmentData.TrackingInformationResponse.Shipments.First().Consignor.Name,
+                                            address = new Address
+                                            {
+                                                city = shipmentData.TrackingInformationResponse.Shipments.First().Consignor.Address.City,
+                                                country = shipmentData.TrackingInformationResponse.Shipments.First().Consignor.Address.Country,
+                                                zipCode = shipmentData.TrackingInformationResponse.Shipments.First().Consignor.Address.PostCode.ToString(),
+        
+                                            },
+                                        },
+                                        //Modtager sættes
+                                        consignee = new Person
+                                        {
+                                            name = "No name (You)",
+                                            address = new Address
+                                            {
+                                                city = shipmentData.TrackingInformationResponse.Shipments.First().Consignee.Address.City,
+                                                country = shipmentData.TrackingInformationResponse.Shipments.First().Consignee.Address.Country,
+                                                zipCode = shipmentData.TrackingInformationResponse.Shipments.First().Consignee.Address.PostCode.ToString(),
+        
+                                            },
+                                        }
+        
+                                    }
+        
+                                });
+                            }
+                        }
+        
+                        
+                    }
+        
+                    //lopper igennem alle glsMailInfo i allMailInfos.GlsMailInfo
+                    foreach(var glsMailInfo in allMailInfo.glsMailInfos)
+                    {
+                        //opretter instans af Glsreturn til at indeholde data sendt fra api
+                        GlsReturnContainer.GlsReturn shipmentData = new GlsReturnContainer.GlsReturn();
+        
+                        // henter tracking information på nuværende iteration af loopet
+                        shipmentData = getGlsTrackingInfo(glsMailInfo.trackingNumber);
+        
+                        //tjekker at status af shipment returneret af api ikke er "ERRORNOTFOUND404"
+                        if (shipmentData.TuStatus.FirstOrDefault().TuNo != "ERRORNOTFOUND404")
+                        {
+                            //Intitalizere instans af ShipmentEvent
+                            List<ShipmentEvent> Events = new List<ShipmentEvent>();
+        
+                            //looper igennem events i shipmentData
+                            foreach (var ev in shipmentData.TuStatus.First().History)
+                            {
+                                //tilføjer en shipmentevent til events listen
+                                Events.Add(new ShipmentEvent
+                                {
+                                    //data tildeles
+                                    dateTime = ev.Date.UtcDateTime,
+                                    description = ev.EvtDscr,
+                                    location = new Address
+                                    {
+                                        city = ev.Address.City,
+                                        country = ev.Address.CountryName,
+                                        //de informationer som ikke findes i deres tracking info bliver tildelt som not provided
+                                        zipCode = "zip Not provided",
+                                    },
+                                    status = "status Not Provided",
+                                });
+                            }
+        
+                            //tilføjer ny instans af Shipment til shipmentsList listen
+                            shipmentsList.Add(new Shipment
+                            {
+                                //data tildeles
+                                currentStatus = shipmentData.TuStatus.First().ProgressBar.StatusInfo,
+                                events = Events,
+                                info = new ShipmentInfo
+                                {
+                                    weight = shipmentData.TuStatus.First().Infos.Where(x => x.Type == "WEIGHT").First().Value,
+                                    trackingNumber = shipmentData.TuStatus.First().TuNo,
+                                    courrier = glsMailInfo.Courier,
+                                    service = shipmentData.TuStatus.First().Infos.Where(x => x.Type == "SERVICES").First().Value,
+                                    consignor = new Person
+                                    {
+                                        // data som ikke findes i fratfirmaets sporingdata tildeles strengen med not provided
+                                        name = "Name Not provided",
+                                        address = new Address
+                                        {
+                                            city = "City not provided",
+                                            country = "Country not provided",
+                                            zipCode = "Zipcode not provided",
+        
+                                        },
+                                    },
+                                    consignee = new Person
+                                    {
+                                        name = "No name (You)",
+                                        address = new Address
+                                        {
+                                            city = "City not provided",
+                                            country = "Country not provided",
+                                            zipCode = "Zipcode not provided",
+        
+                                        },
+                                    }
+        
+                                }
+        
+                            });
+                        } 
+        
+                    }
+        
+                    //returnere shipmentsList
+                    return shipmentsList;
+                }
+        
+        
+                public PostnordReturnWrapper.PostNordReturn getPostnordTrackingInfo(string trackingNumber)
+                {
+                    //opretter options til https kald, med url som parameter
+                    var options = new RestClientOptions("https://api2.postnord.com")
+                    {
+                        //sætter timeout til -1, så der ikke er nogen timeout
+                        MaxTimeout = -1,
+                    };
+                    //opretter ny restclient med options som parameter
+                    var client = new RestClient(options);
+                    // initialisere ny instans ad restrequest og giver endpoint og get metode som parametre
+                    var request = new RestRequest("/rest/shipment/v5/trackandtrace/findByIdentifier.json", Method.Get);
+        
+                    // tilføjer parametrer til https kald, heriblandt apikey, tracking id og locale
+                    request.AddQueryParameter("apikey", "aa5bab080e542f8f20d09e27a48321e0");
+                    request.AddQueryParameter("id", trackingNumber);
+                    request.AddQueryParameter("locale", "da");
+        
+                    // initialisere ny instans af response og køre kaldet med client.Get(request)
+                    RestResponse response = client.Get(request);
+        
+                    //initialisere ny instans af PostNordReturn til opbevaring af data fra api kald
+                    PostnordReturnWrapper.PostNordReturn data = new PostnordReturnWrapper.PostNordReturn();
+                    //konvertere json svar fra api til PostNordReturn type og gemmer i data variablen.
+                    data = JsonConvert.DeserializeObject<PostnordReturnWrapper.PostNordReturn>(response.Content);
+        
+                    //returnere data
+                    return data;
+                }
+        
+                public GlsReturnContainer.GlsReturn getGlsTrackingInfo(string trackingNumber)
+                {
+                    //opretter options til https kald, med url som parameter
+                    var options = new RestClientOptions("https://gls-group.com")
+                    {
+                        //sætter timeout til -1, så der ikke er nogen timeout
+                        MaxTimeout = -1,
+                    };
+        
+                    //opretter ny restclient med options som parameter
+                    var client = new RestClient(options);
+                    // initialisere ny instans ad restrequest og giver endpoint og get metode som parametre
+                    var request = new RestRequest("/app/service/open/rest/DK/da/rstt001", Method.Get);
+        
+                    // tilføjer trackingnumber parameter til kald
+                    request.AddQueryParameter("match", trackingNumber);
+        
+                    // initialisere ny instans af response og køre kaldet med client.Get(request)
+                    RestResponse response = client.Get(request);
+        
+                    //initialisere ny instans af GlsReturn til opbevaring af data fra api kald
+                    GlsReturnContainer.GlsReturn data = new GlsReturnContainer.GlsReturn();
+        
+                    //konvertere json svar fra api til GlsReturn type og gemmer i data variablen.
+                    data = JsonConvert.DeserializeObject<GlsReturnContainer.GlsReturn>(response.Content);
+        
+                    //tjekker om http kaldet returnere med statuskode 404 not found
+                    if(response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                    {
+                        //opretter ny instans af TuStatus arrayet
+                        GlsReturnContainer.TuStatus[] notFoundCatch = new GlsReturnContainer.TuStatus[1];
+                        //giver plads 0 i arrayet ny instans af TuStaus 
+                        notFoundCatch[0] = new GlsReturnContainer.TuStatus 
+                        { 
+                            // sætter TuNo lig med "ERRONOTFOUND404"
+                            TuNo = "ERRORNOTFOUND404"
+                        };
+                        //returnere GlsReturn med tustaus lig notFoundCatch
+                        return new GlsReturnContainer.GlsReturn
+                        {
+                            TuStatus = notFoundCatch,
+                        };
+                    } else
+                    {
+                        //Returnere data
+                        return data;
+                    }
+                }
+        
+            }
+        }
+\end{minted}
+
+\subsection{EmailSender.cs}
+
+\begin{minted}[frame=lines,framesep=2mm,baselinestretch=1.2,linenos]{cs}
+        using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.Extensions.Options;
+using System;
+using System.Threading.Tasks;
+using SendGrid;
+using SendGrid.Helpers.Mail;
+
+namespace PackageTrackingApp.Services;
+
+public class EmailSender : IEmailSender
+{
+    private readonly ILogger _logger;
+
+    public EmailSender(IOptions<AuthMessageSenderOptions> optionsAccessor,
+                       ILogger<EmailSender> logger)
+    {
+        Options = optionsAccessor.Value;
+        _logger = logger;
+    }
+
+    public AuthMessageSenderOptions Options { get; } //Set with Secret Manager.
+    
+    public async Task SendEmailAsync(string toEmail, string subject, string message)
+    {
+        var apiKey = "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";
+        if (string.IsNullOrEmpty(apiKey))
+        {
+            throw new Exception("Null SendGridKey");
+        }
+        await Execute(apiKey, subject, message, toEmail);
+    }
+
+    public async Task Execute(string apiKey, string subject, string message, string toEmail)
+    {
+        _logger.LogInformation(apiKey);
+        var client = new SendGridClient(apiKey);
+        var msg = new SendGridMessage()
+        {
+            From = new EmailAddress("mads.gjellerod@gmail.com", "Password Recovery"),
+            Subject = subject,
+            PlainTextContent = message,
+            HtmlContent = message
+        };
+        msg.AddTo(new EmailAddress(toEmail));
+
+        // Disable click tracking.
+        // See https://sendgrid.com/docs/User_Guide/Settings/tracking.html
+        msg.SetClickTracking(false, false);
+        var response = await client.SendEmailAsync(msg);
+        // sends response to debug console
+        _logger.LogInformation(response.IsSuccessStatusCode
+                               ? $"Email to {toEmail} queued successfully!"
+                               : $"Failure Email to {toEmail}");
+    }
+}
+\end{minted}
+
+
+\subsection{myPage.cs}
+
+\begin{minted}[frame=lines,framesep=2mm,baselinestretch=1.2,linenos]{cs}
+        @model PackageTrackingApp.Viewmodels.MyPageVM;
+@{
+    ViewData["Title"] = "Test page";
+}
+
+<section class="bg-primaryGray p-6 rounded-xl text-center">
+    <h1 class="text-lg text-gray-500 font-thin">Velkommen tilbage</h1>
+    <h1 class="text-2xl text-gray-900 font-semibold">@User.Identity.Name</h1>
+</section>
+
+<section class="mt-6">
+    <h1 class="text-lg text-primaryBlue font-semibold text-center md:text-left">Dine leveringer</h1>
+    <div class="bg-primaryGray rounded-xl flex flex-col p-6 space-y-4">
+
+        @{
+            int iteration = 0;
+
+            foreach(var package in Model.shipments) {
+
+                iteration++;
+
+                string boksId = $"box{iteration}";
+
+        <div class="bg-white rounded-lg flex flex-row" style="visibility: flex;" id="@boksId">
+            <div class="bg-primaryBlue rounded-l-lg h-auto p-4 flex flex-col md:flex-row items-center mx-auto">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 pr-4 mx-auto" viewBox="0 0 43.636 48.39">
+                    <g id="Icon_feather-package" data-name="Icon feather-package" transform="translate(-3 -1.44)">
+                        <path id="Path_87" data-name="Path 87" d="M31.568,18.032,11.25,6.315" transform="translate(3.409 1.673)" fill="none" stroke="#eee" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" />
+                        <path id="Path_88" data-name="Path 88" d="M45.136,34.6V16.544a4.515,4.515,0,0,0-2.258-3.906l-15.8-9.03a4.515,4.515,0,0,0-4.515,0l-15.8,9.03A4.515,4.515,0,0,0,4.5,16.544V34.6A4.515,4.515,0,0,0,6.758,38.51l15.8,9.03a4.515,4.515,0,0,0,4.515,0l15.8-9.03A4.515,4.515,0,0,0,45.136,34.6Z" fill="none" stroke="#eee" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" />
+                        <path id="Path_89" data-name="Path 89" d="M4.905,10.44l19.708,11.4,19.708-11.4" transform="translate(0.205 3.756)" fill="none" stroke="#eee" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" />
+                        <path id="Path_90" data-name="Path 90" d="M18,40.756V18" transform="translate(6.818 7.574)" fill="none" stroke="#eee" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" />
+                    </g>
+                </svg>
+                <h1 class="text-sm md:text-lg text-white">@package.info.courrier</h1>
+            </div>
+            <div class="w-full p-4 rounded-r-lg flex flex-row space-x-4">
+                <div class="flex flex-col my-auto">
+                    <h1 class="text-xl font-semibold">@package.currentStatus</h1>
+                            @{
+                                string currntEventLocationtxt = package.events.Last().location.city + ", " + @package.events.Last().location.zipCode + " - " + @package.events.Last().location.country;
+                            }
+                            <h1 class="text-sm">@currntEventLocationtxt</h1>
+                </div>
+                <div class="h-full bg-none md:bg-primaryBlue rounded-full w-1 flex-grow md:flex-initial"></div>
+                <div class="flex-grow hidden md:block">
+                    <table class="table-auto border-separate border-spacing-x-4 text-sm text-gray-900">
+                        <tr class="mx-4">
+                            <td class="font-semibold">Afsender:</td>
+                            <td>@package.info.consignor.name</td>
+                        </tr>
+                        <tr>
+                            <td class="font-semibold">Service:</td>
+                            <td>@package.info.service</td>
+                        </tr>
+                        <tr class="">
+                            <td class="font-semibold">V�gt:</td>
+                                    @{
+                                        string weight = package.info.weight + "kg";
+                                    }
+                            <td>@weight</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="my-auto items-center float-right" >
+                            <a class="btn-primary" onclick="moreInfo(@iteration)">
+                            @* onclick="moreInfo(@package.info.trackingNumber)*@
+                        <p>Mere info</p>
+                        <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-1" viewBox="0 0 24 24">
+                            <path d="M5 12h14M12 5l7 7-7 7"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+                string bigboksId = $"boxbig{iteration}";
+        
+        <div class="bg-white rounded-lg" style="display: none;" id="@bigboksId">
+            <div class=" bg-primaryBlue rounded-t-lg p-4 flex flex-row">
+                <div class="text-center flex-1 items-center">
+                    <h1 class="text-2xl text-white text-center">Postnord</h1>
+                </div>
+
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2">
+                <div class="border-none lg:border-2 lg:border-r-primaryBlue flex flex-col p-6 space-y-6">
+
+                            @{
+                                foreach(var evt in package.events) {
+
+                                <div class="flex flex-row items-center">
+                                    <div class="h-12 w-12 rounded-full bg-primaryBlue mr-4"></div>
+                                    <div class="flex-1">
+
+                                            @{
+                                                string eventLocationtxt = evt.location.city + " " + @evt.location.zipCode + " " + @evt.location.country;
+                                            }
+                                            <h1 class="text-lg font-semibold">@eventLocationtxt</h1>
+                                        <p class="text-base font-light">@evt.description</p>
+                                    </div>
+                                    <p class="">@evt.dateTime</p>
+                                </div>
+                                }
+                            }
+
+
+                </div>
+                <div class="border-none lg:border-2 lg:border-l-primaryBlue p-6">
+                    <table class="table-auto border-separate border-spacing-x-5 border-spacing-y-6 text-base text-gray-900">
+                        <tr class="mx-4">
+                            <td class="font-semibold">Afsender:</td>
+                                    <td>@package.info.consignor.name</td>
+                        </tr>
+                        <tr class="mx-4">
+                            <td class="font-semibold">Afsender Adresse:</td>
+                                    @{
+                                        string consingorAdressTxt = package.info.consignor.address.city + " " + @package.info.consignor.address.zipCode + " " + @package.info.consignor.address.country;
+                                    }
+                                    <td>@consingorAdressTxt</td>
+                        </tr>
+                        <tr>
+                            <td class="font-semibold">Service:</td>
+                                    <td>@package.info.service</td>
+                        </tr>
+                        <tr class="">
+                            <td class="font-semibold">V�gt:</td>
+                            @{
+                                string packageWeightTxt = package.info.weight + " kg";
+                            }
+                                    <td>@package.info.weight + " kg"</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <div class=" w-full">
+                <a class="btn-secondary float-right m-4" onclick="lessInfo(@iteration);">
+                    <p>Vis Mindre</p>
+                </a>
+            </div>
+
+        </div>
+        }
+        }
+
+        @section scripts {
+
+            <script type="text/javascript">
+                function moreInfo(elementIndex) {
+                    var element = document.getElementById("boxbig" + elementIndex);
+                    var element1 = document.getElementById("box" + elementIndex);
+                    if(elementIndex == 1) {
+                        element.style.marginTop = 0;
+                    }
+                    element1.style.display = "none";
+                    element.style.display = "block";
+
+                }
+                function lessInfo(elementIndex) {
+                    var element = document.getElementById("boxbig" + elementIndex);
+                    var element1 = document.getElementById("box" + elementIndex);
+                    element1.style.display = "flex";
+                    element.style.display = "none";
+                }
+            </script>
+
+        }
+        
+\end{minted}
+
+
+\subsection{GmailApiReader.cs}
+\begin{minted}[frame=lines,framesep=2mm,baselinestretch=1.2,linenos]{cs}
+        using Google.Apis.Auth.OAuth2;
+using Google.Apis.Gmail.v1;
+using Google.Apis.Gmail.v1.Data;
+using Google.Apis.Services;
+using Microsoft.AspNetCore.Authentication;
+
+namespace PackageTrackingApp.Services;
+
+public interface IGmailService
+{
+    Task<List<Message>> GetAllMails(string fromEmail);
+}
+
+public class GmailApiReader : IGmailService
+{
+
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    public GmailApiReader(IHttpContextAccessor httpContextAccessor)
+    {
+        _httpContextAccessor = httpContextAccessor;
+    }
+    public async Task<List<Message>> GetAllMails(string fromEmail)
+    {
+        // henter Auth propertires indeholdenede accesstoken asynkront og gemmer det i authProps
+        var authProps = await _httpContextAccessor.HttpContext.AuthenticateAsync();
+
+        // gemmer accessToken i variabel fra authprops
+        var accessToken = authProps.Properties.GetTokenValue("access_token");
+
+        //omdanner accesstoken til google credential
+        var credential = GoogleCredential.FromAccessToken(accessToken);
+        
+        //opretter ny instans af Gmailservice
+        var service = new GmailService(new BaseClientService.Initializer()
+        {
+            HttpClientInitializer = credential,
+            ApplicationName = "Gmail API Sample"
+        });
+
+        //opretter en request til at hente mails fra brugeren
+        var emailListRequest = service.Users.Messages.List("me");
+        //tilf�jer et search query som s�ger efter mails fra mail "fromEmail" som inds�ttes fra funktions parameter
+        emailListRequest.Q = $"from:{fromEmail}";
+        //email requestet sendes og resultatet gemmes i emailListRespinse variablen
+        var emailListResponse = await emailListRequest.ExecuteAsync();
+        //kontrolstruktur der tjekker om svaret er null eller om der er nogle beskeder i emailListResponse
+        if (emailListResponse?.Messages != null && emailListResponse.Messages.Any())
+        {
+            //hvis der er instanseres en ny liste af Message
+            List<Message> messagesWithData = new List<Message>();
+
+            //l�kke der gennemg�r hver message i emailListResponse
+            foreach (var message in emailListResponse.Messages) { 
+
+                // opbygger request til at hente selve beskeden med idet der tilh�rende nuv�rende iteration i loopets id
+                var emailInfoRequest = service.Users.Messages.Get("me", message.Id);
+                //requestet sendes og svaret gemmes i variablen emailInfoResponse
+                var emailInfoResponse = await emailInfoRequest.ExecuteAsync();
+                // Dette tilf�jes derefter til listen af messages
+                messagesWithData.Add(emailInfoResponse);
+            }
+
+            //efter alle messages er tilf�jet til listen messagesWithData returneres denne
+            return messagesWithData;
+        }
+        else
+        {
+            //hvis der ingen messages er i resultatet returneres null
+            return null;
+        }
+    }
+}
+\end{minted}
