@@ -50,7 +50,7 @@ namespace PackageTrackingApp.Services
             //initialisere ny liste af Message til opbevaring af postnord mails
             List<Message> postnordMessages = new List<Message>();
             //Henter postnord messages via GmailApiReader servicen
-            postnordMessages = await _gmailService.getAllEmails("noreply@postnord.dk");
+            postnordMessages = await _gmailService.GetAllMails("noreply@postnord.dk");
 
             
             if (postnordMessages != null)
@@ -77,7 +77,7 @@ namespace PackageTrackingApp.Services
             //Initialisere ny af Message til opbevaring af gls messages fra gmailServicen
             List<Message> glsMessages = new List<Message>();
             // tildeles mails hentet fra GetLatestEmailAsync funktionen fra gmailsericen, med email parametren noreply@glsdanmark.dk, som sørger for det kun er mails med afsender der mather dette der hentes
-            glsMessages = await _gmailService.getAllEmails("noreply@glsdanmark.dk");
+            glsMessages = await _gmailService.GetAllMails("noreply@glsdanmark.dk");
 
             //tjekker at glsMessages ikke er null
             if(glsMessages != null)

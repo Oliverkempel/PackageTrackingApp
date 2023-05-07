@@ -3,19 +3,12 @@ using Google.Apis.Gmail.v1;
 using Google.Apis.Gmail.v1.Data;
 using Google.Apis.Services;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using System.Linq;
-using System.Threading.Tasks;
-
-
-using PackageTrackingApp.Models;
 
 namespace PackageTrackingApp.Services;
 
 public interface IGmailService
 {
-    Task<List<Message>> getAllEmails(string fromEmail);
+    Task<List<Message>> GetAllMails(string fromEmail);
 }
 
 public class GmailApiReader : IGmailService
@@ -27,7 +20,7 @@ public class GmailApiReader : IGmailService
     {
         _httpContextAccessor = httpContextAccessor;
     }
-    public async Task<List<Message>> getAllEmails(string fromEmail)
+    public async Task<List<Message>> GetAllMails(string fromEmail)
     {
         // henter Auth propertires indeholdenede accesstoken asynkront og gemmer det i authProps
         var authProps = await _httpContextAccessor.HttpContext.AuthenticateAsync();

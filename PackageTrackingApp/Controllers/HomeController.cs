@@ -51,10 +51,10 @@ namespace PackageTrackingApp.Controllers
         [Route("token")]
         public async Task<IActionResult> myPage()
         {
-            //opretter en instans af klassen mailInfos og venter svar fra mailHandler services funktionen getAllTrackingNumbers() og sætter det derefter til instansen
+            //opretter en instans af klassen mailInfos og venter svar fra mailHandler services metoden getAllTrackingNumbers() og sætter det derefter til instansen
             AllMailInfo mailInfos = await _mailHandler.getAllTrackingNumbers();
 
-            //Initializere en liste af Shipments og tildeler den det der returneres fra funktionen getTrackingInfoAllCourriers, med parametren mailInfos.
+            //Initializere en liste af Shipments og tildeler den det der returneres fra metoden getTrackingInfoAllCourriers, med parametren mailInfos.
             List<Shipment> allShipmentsFromUserInbox = _trackingInfo.getTrackingInfoAllCourriers(mailInfos);
 
             //En ny viewmodel initializeres, denne viewmodel er forventet af myPage viewet
