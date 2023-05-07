@@ -119,15 +119,79 @@ konfirmitere ens email. når man vil sende en email i programmet kalder man meto
 Denne metode har signature af at være public hvilket betyder at andre metoder kan kalde den. Så har
 den også signaturene "async Task" som gør at metoden gøre parrelet med andre opgaver så når man venter på
 en Api response så stopper programmet ikke. Denne metode tager tre paramatere som er strege af tekst.
-Det første der sker i metoden er at vi laver en variabel der indeholder vores Sendgrid api key.
+Det første der sker i metoden er at vi laver en variabel der indeholder vores "Sendgrid" api key.
 herefter laves der et kaldt til metoden Execute som bliver kaldt asynkront ved hjælp af "await" operatøren.
 
 I Execute metoden bliver der først oprettet et instans af SendGridClient som indeholder api nøglen.
 Derefter bliver der lavet et instans af Klassen SendGridMessage som kaldes msg som bruges til at opbygge. 
-Beskenden som skal sendes. Her bliver der sat nogle variabler som hvem den er fra og beksendens indhold. 
+Beskenden som skal sendes. Her bliver der sat nogle variabler som hvem den er fra og beskendens indhold. 
 den næste er at metoden AddTo bliver brugt til at sætte emailen som beskenden skal sendes til. Herefter bruges metoden 
 SetClickTracking som der gives to false værdier til at deaktivere Click tracking. først defineres der en implicit variabel 
 som kaldes "response" som vil være den type som der returneres fra SendEmailAsync metoden. Der bruges "await" operatøren som venter
-på at metoden fuldfører udførelsen, før koden fortsætter med at køre. client er et obejkt af typen SendGridClient som har metoden
+på at metoden fuldfører udførelsen, før koden fortsætter med at køre. client er et objekt af typen SendGridClient som har metoden
 SendEmailAsync som er en asynkron metode.
 
+\begin{figure}[!h]
+    \begin{minted}[frame=lines,framesep=1.8mm,baselinestretch=1,linenos]{cs}
+public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+{
+    // her sættes hvilke url der skal bruges når registeringen er færdig
+    returnUrl ??= Url.Content("~/");
+    // her henter den en liste af andre logins
+    ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+    // hvis dette er okay går den videre
+    if (ModelState.IsValid)
+    {
+        // bruger metoden RegisterModel.CreateUser til at lave en model for registeringen
+        var user = CreateUser();
+        // her gemmer vi data brugeren har sat i felterne i databasen
+        await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
+        await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+        
+        var result = await _userManager.CreateAsync(user, Input.Password);
+\end{minted}
+\caption{Register.cshtml.cs}\label{code:Register.cshtml.cs}
+\end{figure}
+
+\begin{figure}[!h]
+    \begin{minted}[frame=lines,framesep=1.8mm,baselinestretch=1,linenos]{cs}
+        // hvis bruger kunne laves kører koden videre 
+        if (result.Succeeded)
+        {
+            // dette er til at debug problemer i koden
+            _logger.LogInformation("User created a new account with password.");
+            // her laver vi en variabel med bruges id som vi lavet før.
+            var userId = await _userManager.GetUserIdAsync(user);
+            // her generere vi en token som bruges når brugeren skal konfimere sin email
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            // vi kryptere så denne token med Base64 encoding.
+            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+            // her efter laves en ny midlertidig side hvor konfimationen af emailen ventes på
+            var callbackUrl = Url.Page(
+                "/Account/ConfirmEmail",
+                pageHandler: null,
+                values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
+                protocol: Request.Scheme);
+            // her bliver emailen sendt med linkent til den nye midlertidig side.
+            await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+            // her tjekkes om brugeren har accepteret sin email.
+            if (_userManager.Options.SignIn.RequireConfirmedAccount)
+            {
+                // her bliver brugeren diageret til forsiden
+                return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
+            }
+            else
+            {
+                // hvis ikke emailen bliver konfirmation vil den ikke virke
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                // her bliver brugeren diageret til forsiden
+                return LocalRedirect(returnUrl);
+            }
+
+        }
+        // If we got this far, something failed, redisplay form
+        return Page();
+\end{minted}
+\caption{Register.cshtml.cs}\label{code:Register.cshtml.cs}
+\end{figure}

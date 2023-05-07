@@ -33,7 +33,7 @@ Der er her opstillet en række hårde og bløde krav som det udviklede web app s
 \end{itemize}
 \section{Tech-stack}
 Webapplikationens tech stack består af Html hvor vi bruger razorpages og til styling bruges css her bruger vi Tailwind som er et
-css framework. Der bruges også javascript og her bruger vi også javascript bibliotekket jQuery som har til formål
+css framework. Der bruges også javascript og her bruger vi også javascript biblotekket jQuery som har til formål
 at programmere webapplikationer. Til backend bruges Csharp og som database bruges mssql.
 \section{Database}
 Til Databasen bruges MS SQL som er en relations database(RDBMS) udviklet af Microsoft. Hvilket
@@ -41,11 +41,11 @@ giver mest mening når man laver Asp.net core mvc webapps da mange dele af dette
 MS SQL. Til kommunikation mellem MS SQL og Asp.net core 7 mvc projektet.    
 
 Til at lave migrations til databasen bruges Entity Framework Core .NET Command-line tools. 
-Hvorman så kan skrive Models i projektet og putte dem ind i vore Application database 
+Hvor man så kan skrive Models i projektet og putte dem ind i vore Application database 
 context. Her brugesto kommando'er første kommando laver en migration fra ApplicationDbContext.cs 
 som er den databasecontext til vores database hvor der opbevares data om brugeren der skal gemmes. 
 Den næste kommando opdateres så databasen med migration som vi lavede før. Af sikkerheds grunde er der 
-valgt at databasen er delt i to en hvor alt login data blivver gemt og en hvor data om bruger bliver gemt.
+valgt at databasen er delt i to en hvor alt login data bliver gemt og en hvor data om bruger bliver gemt.
 Det gør at hvis der bliver udført et sql angreb er det kun den en af databaserne der bliver ramt.
 
 \begin{figure}[!h]
@@ -56,6 +56,11 @@ Det gør at hvis der bliver udført et sql angreb er det kun den en af databaser
         > dotnet database update --context IdentityDbContext
     \end{lstlisting}
 \end{figure}
+
+fem forskellige tabeller: AspNetRoles, AspNetUsers, AspNetRoleClaims og AspNetUserClaims. 
+Disse tabeller er til at opbevare data relateret til brugerautorisation i vores webapplikation, Dette kan ses på figur 4.2. På denne figur 
+kan vi se at AspNetUsers har en til en relation med tabellerne AspNetUserLogins og AspNetUserClaims. 
+
 
 \begin{wrapfigure}{r}{0.5\textwidth} 
     \includegraphics[width=0.4\textwidth]{./Pictures/database-diagram.png}
