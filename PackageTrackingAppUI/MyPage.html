@@ -1,0 +1,197 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/src/style.css" rel="stylesheet">
+    
+    <title>@viewData["Title"] - Pakke Portalen</title>
+</head>
+
+<body>
+<header class="text-black">
+    <div class="container mx-auto flex flex-wrap p-3 flex-col md:flex-row items-center ">
+      <a class="flex title-font font-medium items-center mb-4 md:mb-0">
+        <div>
+          <img src ="Img/logo.png" class="h-8 w-8">
+        </div>
+          <span class="ml-3 text-xl ">Pakke Portalen</span>
+        </a>
+        <nav class="md:mr-auto md:ml-10 flex flex-wrap items-center text-base justify-center">
+              <a class="mr-5 bg-transparent hover:text-gray-400 transition duration-200 ease-in-out hover:-translate-y-1 hover:scale-105 " href="#">Forsiden</a>
+              <a class="mr-5 hover:text-gray-400 transition duration-200 ease-in-out hover:-translate-y-1 hover:scale-105 " href="#">Om os</a>
+              <a class="mr-5 hover:text-gray-400 transition duration-200 ease-in-out hover:-translate-y-1 hover:scale-105 " href="#">Min Side</a>
+        </nav>
+        <a class=" btn-primary mt-4 md:mt-0">
+          <p>Log Ind</p>
+          <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-1" viewBox="0 0 24 24">
+              <path d="M5 12h14M12 5l7 7-7 7"></path>
+          </svg>
+        </a>
+    </div>
+  </header>
+
+
+<div class="container mx-auto">
+
+
+
+
+
+    <section class="bg-primaryGray p-6 rounded-xl text-center">
+        <h1 class="text-lg text-gray-500 font-thin">Velkommen tilbage</h1>
+        <h1 class="text-2xl text-gray-900 font-semibold">Mads!</h1>
+    </section>
+
+    <section class="mt-6">
+        <h1 class="text-lg text-primaryBlue font-semibold text-center md:text-left">Dine leveringer</h1>
+        <div class="bg-primaryGray rounded-xl flex flex-col p-6 space-y-4">
+
+            
+            <div class="bg-white rounded-lg flex flex-row" style="visibility: block;" id="box1">
+                <div class="bg-primaryBlue rounded-l-lg h-auto p-4 flex flex-col md:flex-row items-center mx-auto">    
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 pr-4 mx-auto" viewBox="0 0 43.636 48.39">
+                            <g id="Icon_feather-package" data-name="Icon feather-package" transform="translate(-3 -1.44)">
+                              <path id="Path_87" data-name="Path 87" d="M31.568,18.032,11.25,6.315" transform="translate(3.409 1.673)" fill="none" stroke="#eee" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+                              <path id="Path_88" data-name="Path 88" d="M45.136,34.6V16.544a4.515,4.515,0,0,0-2.258-3.906l-15.8-9.03a4.515,4.515,0,0,0-4.515,0l-15.8,9.03A4.515,4.515,0,0,0,4.5,16.544V34.6A4.515,4.515,0,0,0,6.758,38.51l15.8,9.03a4.515,4.515,0,0,0,4.515,0l15.8-9.03A4.515,4.515,0,0,0,45.136,34.6Z" fill="none" stroke="#eee" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+                              <path id="Path_89" data-name="Path 89" d="M4.905,10.44l19.708,11.4,19.708-11.4" transform="translate(0.205 3.756)" fill="none" stroke="#eee" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+                              <path id="Path_90" data-name="Path 90" d="M18,40.756V18" transform="translate(6.818 7.574)" fill="none" stroke="#eee" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+                            </g>
+                          </svg>
+                    <h1 class="text-sm md:text-lg text-white">Postnord</h1>
+                </div>
+                <div class="w-full p-4 rounded-r-lg flex flex-row space-x-4">
+                    <div class="flex flex-col my-auto">
+                        <h1 class="text-xl font-semibold">DELIVERED</h1>
+                        <h1 class="text-sm">TAR: Terminal Østjylland</h1>
+                    </div>
+                    <div class="h-full bg-none md:bg-primaryBlue rounded-full w-1 flex-grow md:flex-initial"></div>
+                    <div class="flex-grow hidden md:block">
+                        <table class="table-auto border-separate border-spacing-x-4 text-sm text-gray-900">
+                            <tr class="mx-4">
+                                <td class="font-semibold">Afsender:</td>
+                                <td>Nike HUSSAN ApS</td>
+                            </tr>
+                            <tr>
+                                <td class="font-semibold">Service:</td>
+                                <td>Postnord MyPack</td>
+                            </tr>
+                            <tr class="">
+                                <td class="font-semibold">Vægt:</td>
+                                <td>1.4 kg</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="my-auto items-center float-right">
+                        <a class="btn-primary" onclick="moreInfo(1)">
+                            <p>Mere info</p>
+                            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-1" viewBox="0 0 24 24">
+                                <path d="M5 12h14M12 5l7 7-7 7"></path>
+                            </svg>
+                          </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg" style="display: none;" id="boxbig1">
+                <div class=" bg-primaryBlue rounded-t-lg p-4 flex flex-row">
+                    <div class="text-center flex-1 items-center">
+                        <h1 class="text-2xl text-white text-center">Postnord</h1>
+                    </div>
+
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2">
+                    <div class="border-none lg:border-2 lg:border-r-primaryBlue flex flex-col p-6 space-y-6">
+                        <div class="flex flex-row items-center">
+                            <div class="h-12 w-12 rounded-full bg-primaryBlue mr-4"></div>
+                            <div class="flex-1">
+                                <h1 class="text-lg font-semibold">Opdatering1</h1>
+                                <p class="text-base font-light">Hehehehe prut prut</p>
+                            </div>
+                            <p class="">27/2/2023</p>
+                        </div>
+
+                        <div class="flex flex-row items-center">
+                            <div class="h-12 w-12 rounded-full bg-primaryBlue mr-4"></div>
+                            <div class="flex-1">
+                                <h1 class="text-lg font-semibold">Opdatering1</h1>
+                                <p class="text-base font-light">Hehehehe prut prut</p>
+                            </div>
+                            <p class="">27/2/2023</p>
+                        </div>
+
+                        <div class="flex flex-row items-center">
+                            <div class="h-12 w-12 rounded-full bg-primaryBlue mr-4"></div>
+                            <div class="flex-1">
+                                <h1 class="text-lg font-semibold">Opdatering1</h1>
+                                <p class="text-base font-light">Hehehehe prut prut</p>
+                            </div>
+                            <p class="">27/2/2023</p>
+                        </div>
+                    </div>
+                    <div class="border-none lg:border-2 lg:border-l-primaryBlue p-6">
+                        <table class="table-auto border-separate border-spacing-x-5 border-spacing-y-6 text-base text-gray-900">
+                            <tr class="mx-4">
+                                <td class="font-semibold">Afsender:</td>
+                                <td>Nike HUSSAN ApS</td>
+                            </tr>
+                            <tr class="mx-4">
+                                <td class="font-semibold">Afsender Adresse:</td>
+                                <td>Nosseklunkevej 12</td>
+                            </tr>
+                            <tr>
+                                <td class="font-semibold">Service:</td>
+                                <td>Postnord MyPack</td>
+                            </tr>
+                            <tr class="">
+                                <td class="font-semibold">Vægt:</td>
+                                <td>1.4 kg</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class=" w-full">
+                    <a class="btn-secondary float-right m-4" onclick="lessInfo(1);">
+                        <p>Vis Mindre</p>
+                    </a>
+                </div>
+
+            </div>
+
+            
+
+
+
+
+
+            
+        </div>
+    </section>
+
+
+
+
+
+</div>
+
+
+</body>
+
+</html>
+
+<script type="text/javascript">
+    function moreInfo(elementIndex) {
+        var element = document.getElementById("boxbig" + elementIndex);
+        var element1 = document.getElementById("box" + elementIndex);
+        element.style.marginTop = 0;
+        element1.style.display = "none";
+        element.style.display = "block";
+    }
+    function lessInfo(elementIndex) {
+        var element = document.getElementById("boxbig" + elementIndex);
+        var element1 = document.getElementById("box" + elementIndex);
+        element1.style.display = "flex";
+        element.style.display = "none";
+    }
+</script>

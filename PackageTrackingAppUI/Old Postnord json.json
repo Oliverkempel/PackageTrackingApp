@@ -1,0 +1,233 @@
+{
+    "TrackingInformationResponse": {
+        "shipments": [
+            {
+                "shipmentId": "00357128520145402311",
+                "assessedNumberOfItems": 1,
+                "deliveryDate": "2023-01-27T13:51:14",
+                "flexChangePossible": false,
+                "service": {
+                    "code": "19",
+                    "name": "PostNord MyPack Collect"
+                },
+                "consignor": {
+                    "name": "Batteri Energi ApS",
+                    "address": {
+                        "countryCode": "DNK",
+                        "country": "Denmark",
+                        "postCode": "8240"
+                    }
+                },
+                "consignee": {
+                    "address": {
+                        "city": "Galten",
+                        "countryCode": "DNK",
+                        "country": "Denmark",
+                        "postCode": "8464"
+                    }
+                },
+                "statusText": {
+                    "header": "The shipment has been delivered to the recipient",
+                    "body": "The shipment was delivered on 1/27/2023 at 12:51 PM"
+                },
+                "status": "DELIVERED",
+                "totalWeight": {
+                    "value": "0.010",
+                    "unit": "kg"
+                },
+                "items": [
+                    {
+                        "itemId": "00357128520145402311",
+                        "dropOffDate": "2023-01-26T16:45:10",
+                        "deliveryDate": "2023-01-27T13:51:14",
+                        "returnDate": "2023-02-03T00:00:00",
+                        "status": "DELIVERED",
+                        "statusText": {
+                            "header": "The shipment item has been delivered to the recipient",
+                            "body": "The shipment item was delivered on 1/27/2023 at 12:51 PM"
+                        },
+                        "statedMeasurement": {
+                            "weight": {
+                                "value": "0.010",
+                                "unit": "kg"
+                            },
+                            "length": {
+                                "value": "0.00",
+                                "unit": "m"
+                            },
+                            "height": {
+                                "value": "0.00",
+                                "unit": "m"
+                            },
+                            "width": {
+                                "value": "0.00",
+                                "unit": "m"
+                            }
+                        },
+                        "events": [
+                            {
+                                "eventTime": "2023-01-25T14:36:00",
+                                "eventCode": "68",
+                                "status": "INFORMED",
+                                "eventDescription": "We have received a notification from your shipper that they are preparing an item for you. The tracking information will be updated when the parcel is handed over to PostNord.",
+                                "location": {
+                                    "displayName": "PostNord",
+                                    "name": "PostNord"
+                                }
+                            },
+                            {
+                                "eventTime": "2023-01-26T16:45:10",
+                                "eventCode": "355",
+                                "status": "EN_ROUTE",
+                                "eventDescription": "The shipment item is under transportation.",
+                                "location": {
+                                    "locationId": "0708",
+                                    "displayName": "Terminal Østjylland - TAR",
+                                    "name": "Terminal Østjylland - TAR",
+                                    "countryCode": "DNK",
+                                    "country": "Denmark",
+                                    "postcode": "8240",
+                                    "city": "Risskov",
+                                    "locationType": "HUB"
+                                }
+                            },
+                            {
+                                "eventTime": "2023-01-26T16:48:36",
+                                "eventCode": "z08",
+                                "status": "OTHER",
+                                "eventDescription": "E-mail notification has been sent to the recipient.",
+                                "location": {
+                                    "locationId": "9999",
+                                    "displayName": "PostNord Danmark",
+                                    "name": "PostNord Danmark",
+                                    "countryCode": "DNK",
+                                    "country": "Denmark",
+                                    "postcode": "0000",
+                                    "city": "Danmark",
+                                    "locationType": "SERVICE_POINT"
+                                }
+                            },
+                            {
+                                "eventTime": "2023-01-27T08:38:23",
+                                "eventCode": "113",
+                                "status": "EN_ROUTE",
+                                "eventDescription": "The delivery of the shipment item is in progress.",
+                                "location": {
+                                    "locationId": "8240",
+                                    "displayName": "Aarhus",
+                                    "name": "Aarhus",
+                                    "countryCode": "DNK",
+                                    "country": "Denmark",
+                                    "postcode": "8240",
+                                    "city": "Risskov",
+                                    "locationType": "DEPOT"
+                                }
+                            },
+                            {
+                                "eventTime": "2023-01-27T09:45:57",
+                                "eventCode": "1",
+                                "status": "AVAILABLE_FOR_DELIVERY",
+                                "eventDescription": "The shipment item has been delivered to a service point.",
+                                "location": {
+                                    "locationId": "106326",
+                                    "displayName": "NÆRBOKS GALTEN VALGMENIGHED - KRÆVER POSTNORD APP",
+                                    "name": "NÆRBOKS GALTEN VALGMENIGHED - KRÆVER POSTNORD APP",
+                                    "countryCode": "DNK",
+                                    "country": "Denmark",
+                                    "postcode": "8464",
+                                    "city": "Galten",
+                                    "locationType": "SERVICE_POINT"
+                                }
+                            },
+                            {
+                                "eventTime": "2023-01-27T09:52:38",
+                                "eventCode": "z82",
+                                "status": "OTHER",
+                                "eventDescription": "A text message notification has been sent to the recipient.",
+                                "location": {
+                                    "locationId": "9999",
+                                    "displayName": "PostNord Danmark",
+                                    "name": "PostNord Danmark",
+                                    "countryCode": "DNK",
+                                    "country": "Denmark",
+                                    "postcode": "0000",
+                                    "city": "Danmark",
+                                    "locationType": "SERVICE_POINT"
+                                }
+                            },
+                            {
+                                "eventTime": "2023-01-27T09:54:21",
+                                "eventCode": "z08",
+                                "status": "OTHER",
+                                "eventDescription": "E-mail notification has been sent to the recipient.",
+                                "location": {
+                                    "locationId": "9999",
+                                    "displayName": "PostNord Danmark",
+                                    "name": "PostNord Danmark",
+                                    "countryCode": "DNK",
+                                    "country": "Denmark",
+                                    "postcode": "0000",
+                                    "city": "Danmark",
+                                    "locationType": "SERVICE_POINT"
+                                }
+                            },
+                            {
+                                "eventTime": "2023-01-27T13:51:14",
+                                "eventCode": "21",
+                                "status": "DELIVERED",
+                                "eventDescription": "The shipment item has been delivered.",
+                                "location": {
+                                    "locationId": "106326",
+                                    "displayName": "NÆRBOKS GALTEN VALGMENIGHED - KRÆVER POSTNORD APP",
+                                    "name": "NÆRBOKS GALTEN VALGMENIGHED - KRÆVER POSTNORD APP",
+                                    "countryCode": "DNK",
+                                    "country": "Denmark",
+                                    "postcode": "8464",
+                                    "city": "Galten",
+                                    "locationType": "SERVICE_POINT"
+                                }
+                            }
+                        ],
+                        "references": [
+                            {
+                                "value": "16947",
+                                "type": "ACD",
+                                "name": "Sender's shipment item reference"
+                            }
+                        ]
+                    }
+                ],
+                "additionalServices": [
+                    {
+                        "code": "48",
+                        "groupCode": "DK",
+                        "name": "Notification by SMS"
+                    },
+                    {
+                        "code": "77",
+                        "groupCode": "DK",
+                        "name": "Optional Service Point"
+                    },
+                    {
+                        "code": "80",
+                        "groupCode": "DK",
+                        "name": "Sender SMS"
+                    },
+                    {
+                        "code": "81",
+                        "groupCode": "DK",
+                        "name": "Notification by E-mail"
+                    }
+                ],
+                "splitStatuses": [],
+                "shipmentReferences": [
+                    {
+                        "value": "16947",
+                        "type": "ACD",
+                        "name": "Sender's shipment item reference"
+                    }
+                ]
+            }
+        ]
+    }
+}

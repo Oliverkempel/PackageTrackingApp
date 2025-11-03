@@ -1,0 +1,71 @@
+<!-- @page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Log in";
+}
+
+<h1>@ViewData["Title"]</h1> -->
+
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/src/style.css" rel="stylesheet">
+    
+    <title>@viewData["Title"] - Pakke Portalen</title>
+</head>
+
+<body>
+    <div class="container mx-auto">
+
+
+        <div class="bg-primaryGray  rounded-xl lg:w-3/6 p-10 mx-auto text-center">
+            <h1 class="text-gray-600 text-4xl">Log Ind</h1>
+            <p class="">Brug din lokale konto her</p>
+
+            <form class="flex flex-col text-left px-24 my-8 space-y-6">
+                <div asp-validation-summary="ModelOnly" class="w-full text-center text-white bg-red-500 p-2 rounded-xl" role="alert">
+                    Test123
+                </div>
+
+                <div class="flex flex-col">
+                    <label class="form-label">Mail Adresse:</label>
+                    <input class="form-input" type="text">
+                </div>
+                <div class="flex flex-col">
+                    <label class="form-label">Kodeord:</label>
+                    <input class="form-input" type="text">
+                </div>
+                <div>
+                    <input type="checkbox">
+                    <label class="form-label">Husk mig?</label>
+                </div>
+                <a class="btn-primary"><p class="text-center mx-auto">Log ind</p></a>
+                <div class="flex flex-row">
+                    <a class="btn-link flex-grow">Nulstil Adgangkode</a>
+                    <p class="p-2">Eller</p>
+                    <a class="btn-link flex-grow">Opret ny bruger</a>
+                </div>
+            </form>
+            <div class="bg-gray-300  h-1 rounded-lg mx-12"></div>
+            <div class="flex flex-row space-x-12 items-center mx-44 my-8">
+                <button class="btn-secondary bg-white flex-grow text-center"><p class="text-center mx-auto">Log ind med Google</p></button>
+                
+
+            </div>
+
+        </div>
+
+
+    </div>
+</body>
+
+
+</html>
+
+
+<!-- @section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+} -->

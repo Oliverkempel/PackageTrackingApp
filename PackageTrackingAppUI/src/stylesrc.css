@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .btn-primary {
+        @apply py-1 px-3 text-white bg-primaryBlue transition 
+        duration-200 ease-in-out hover:-translate-y-1 
+        hover:scale-105 hover:shadow-lg hover:shadow-primaryBlue
+        rounded text-base hover:bg-secondaryBlue items-center inline-flex hover:cursor-pointer
+    }
+
+    .btn-secondary {
+        @apply py-1 px-3 text-gray-500 bg-primaryGray transition duration-200 ease-in-out hover:-translate-y-1 hover:scale-105 hover:shadow-lg hover:shadow-primaryGray rounded text-base hover:bg-gray-300 items-center inline-flex hover:cursor-pointer
+    }
+
+    .btn-link {
+        @apply py-1 text-gray-500 transition duration-200 ease-in-out hover:-translate-y-1 hover:scale-105 hover:shadow-lg hover:shadow-primaryGray rounded text-base font-light hover:underline text-center hover:cursor-pointer
+    }
+
+    .form-input {
+        @apply border-2 border-gray-200 text-sm rounded-lg focus:border-primaryBlue p-2 bg-gray-100 text-gray-800 outline-none shadow-lg focus:shadow-primaryBlue/10
+    }
+
+    .form-label {
+        @apply text-gray-800 font-semibold text-base
+    }
+}

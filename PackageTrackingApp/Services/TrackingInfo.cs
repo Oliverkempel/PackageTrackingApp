@@ -24,7 +24,7 @@ namespace PackageTrackingApp.Services
             //looper igennem alle postnordMailInfos i allMailinfos fra parametrerne i metoden
             foreach(var postnordMailInfo in allMailInfo.postNordMailInfos)
             {
-                //initialisere ny postnordreturn til opbevaring af datga fra api kald.
+                //initialisere ny postnordreturn til opbevaring af data fra api kald.
                 PostnordReturnWrapper.PostNordReturn shipmentData = new PostnordReturnWrapper.PostNordReturn();
 
                 // henter postnord tracking info via metoden med den nuværende iteration i loopets trackingnummer
@@ -160,83 +160,83 @@ namespace PackageTrackingApp.Services
                 
             }
 
-            //lopper igennem alle glsMailInfo i allMailInfos.GlsMailInfo
-            foreach(var glsMailInfo in allMailInfo.glsMailInfos)
-            {
-                //opretter instans af Glsreturn til at indeholde data sendt fra api
-                GlsReturnContainer.GlsReturn shipmentData = new GlsReturnContainer.GlsReturn();
+            ////lopper igennem alle glsMailInfo i allMailInfos.GlsMailInfo
+            //foreach(var glsMailInfo in allMailInfo.glsMailInfos)
+            //{
+            //    //opretter instans af Glsreturn til at indeholde data sendt fra api
+            //    GlsReturnContainer.GlsReturn shipmentData = new GlsReturnContainer.GlsReturn();
 
-                // henter tracking information på nuværende iteration af loopet
-                shipmentData = getGlsTrackingInfo(glsMailInfo.trackingNumber);
+            //    // henter tracking information på nuværende iteration af loopet
+            //    shipmentData = getGlsTrackingInfo(glsMailInfo.trackingNumber);
 
-                //tjekker at status af shipment returneret af api ikke er "ERRORNOTFOUND404"
-                if (shipmentData.TuStatus.FirstOrDefault().TuNo != "ERRORNOTFOUND404")
-                {
-                    //Intitalizere instans af ShipmentEvent
-                    List<ShipmentEvent> Events = new List<ShipmentEvent>();
+            //    //tjekker at status af shipment returneret af api ikke er "ERRORNOTFOUND404"
+            //    if (shipmentData.TuStatus.FirstOrDefault().TuNo != "ERRORNOTFOUND404")
+            //    {
+            //        //Intitalizere instans af ShipmentEvent
+            //        List<ShipmentEvent> Events = new List<ShipmentEvent>();
 
-                    //looper igennem events i shipmentData
-                    foreach (var ev in shipmentData.TuStatus.First().History)
-                    {
-                        //tilføjer en shipmentevent til events listen
-                        Events.Add(new ShipmentEvent
-                        {
-                            //data tildeles
-                            dateTime = ev.Date.UtcDateTime,
-                            description = ev.EvtDscr,
-                            location = new Address
-                            {
-                                city = ev.Address.City,
-                                country = ev.Address.CountryName,
-                                //de informationer som ikke findes i deres tracking info bliver tildelt som not provided
-                                zipCode = "zip Not provided",
-                            },
-                            status = "status Not Provided",
-                        });
-                    }
+            //        //looper igennem events i shipmentData
+            //        foreach (var ev in shipmentData.TuStatus.First().History)
+            //        {
+            //            //tilføjer en shipmentevent til events listen
+            //            Events.Add(new ShipmentEvent
+            //            {
+            //                //data tildeles
+            //                dateTime = ev.Date.UtcDateTime,
+            //                description = ev.EvtDscr,
+            //                location = new Address
+            //                {
+            //                    city = ev.Address.City,
+            //                    country = ev.Address.CountryName,
+            //                    //de informationer som ikke findes i deres tracking info bliver tildelt som not provided
+            //                    zipCode = "zip Not provided",
+            //                },
+            //                status = "status Not Provided",
+            //            });
+            //        }
 
-                    //tilføjer ny instans af Shipment til shipmentsList listen
-                    shipmentsList.Add(new Shipment
-                    {
-                        //data tildeles
-                        currentStatus = shipmentData.TuStatus.First().ProgressBar.StatusInfo,
-                        events = Events,
-                        info = new ShipmentInfo
-                        {
-                            weight = shipmentData.TuStatus.First().Infos.Where(x => x.Type == "WEIGHT").First().Value,
-                            trackingNumber = shipmentData.TuStatus.First().TuNo,
-                            courrier = glsMailInfo.Courier,
-                            service = shipmentData.TuStatus.First().Infos.Where(x => x.Type == "SERVICES").First().Value,
-                            consignor = new Person
-                            {
-                                // data som ikke findes i fratfirmaets sporingdata tildeles strengen med not provided
-                                name = "Name Not provided",
-                                address = new Address
-                                {
-                                    city = "City not provided",
-                                    country = "Country not provided",
-                                    zipCode = "Zipcode not provided",
+            //        //tilføjer ny instans af Shipment til shipmentsList listen
+            //        shipmentsList.Add(new Shipment
+            //        {
+            //            //data tildeles
+            //            currentStatus = shipmentData.TuStatus.First().ProgressBar.StatusInfo,
+            //            events = Events,
+            //            info = new ShipmentInfo
+            //            {
+            //                weight = shipmentData.TuStatus.First().Infos.Where(x => x.Type == "WEIGHT").First().Value,
+            //                trackingNumber = shipmentData.TuStatus.First().TuNo,
+            //                courrier = glsMailInfo.Courier,
+            //                service = shipmentData.TuStatus.First().Infos.Where(x => x.Type == "SERVICES").First().Value,
+            //                consignor = new Person
+            //                {
+            //                    // data som ikke findes i fratfirmaets sporingdata tildeles strengen med not provided
+            //                    name = "Name Not provided",
+            //                    address = new Address
+            //                    {
+            //                        city = "City not provided",
+            //                        country = "Country not provided",
+            //                        zipCode = "Zipcode not provided",
 
-                                },
-                            },
-                            consignee = new Person
-                            {
-                                name = "No name (You)",
-                                address = new Address
-                                {
-                                    city = "City not provided",
-                                    country = "Country not provided",
-                                    zipCode = "Zipcode not provided",
+            //                    },
+            //                },
+            //                consignee = new Person
+            //                {
+            //                    name = "No name (You)",
+            //                    address = new Address
+            //                    {
+            //                        city = "City not provided",
+            //                        country = "Country not provided",
+            //                        zipCode = "Zipcode not provided",
 
-                                },
-                            }
+            //                    },
+            //                }
 
-                        }
+            //            }
 
-                    });
-                } 
+            //        });
+            //    } 
 
-            }
+            //}
 
             //returnere shipmentsList
             return shipmentsList;
@@ -246,18 +246,18 @@ namespace PackageTrackingApp.Services
         public PostnordReturnWrapper.PostNordReturn getPostnordTrackingInfo(string trackingNumber)
         {
             //opretter options til https kald, med url som parameter
-            var options = new RestClientOptions("https://api2.postnord.com")
+            RestClientOptions options = new RestClientOptions("https://api2.postnord.com")
             {
                 //sætter timeout til -1, så der ikke er nogen timeout
                 MaxTimeout = -1,
             };
             //opretter ny restclient med options som parameter
-            var client = new RestClient(options);
+            RestClient client = new RestClient(options);
             // initialisere ny instans ad restrequest og giver endpoint og get metode som parametre
-            var request = new RestRequest("/rest/shipment/v5/trackandtrace/findByIdentifier.json", Method.Get);
+            RestRequest request = new RestRequest("/rest/shipment/v5/trackandtrace/findByIdentifier.json", Method.Get);
 
             // tilføjer parametrer til https kald, heriblandt apikey, tracking id og locale
-            request.AddQueryParameter("apikey", "aa5bab080e542f8f20d09e27a48321e0");
+            request.AddQueryParameter("apikey", "bfe34e5cb08e6c7de83a82ef1c2e29aa");
             request.AddQueryParameter("id", trackingNumber);
             request.AddQueryParameter("locale", "da");
 

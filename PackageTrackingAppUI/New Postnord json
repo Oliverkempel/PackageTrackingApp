@@ -1,0 +1,196 @@
+{
+    "TrackingInformationResponse": {
+        "shipments": [
+            {
+                "shipmentId": "LS497449056NL",
+                "assessedNumberOfItems": 1,
+                "deliveryDate": "2023-03-08T10:38:33",
+                "flexChangePossible": false,
+                "service": {
+                    "code": "L",
+                    "name": "T&T brev fra udlandet"
+                },
+                "consignor": {
+                    "name": "En forsendelse fra Holland",
+                    "address": {
+                        "countryCode": "NLD",
+                        "country": "Netherlands",
+                        "postCode": "0000"
+                    }
+                },
+                "consignee": {
+                    "address": {
+                        "city": "Ry",
+                        "countryCode": "DNK",
+                        "country": "Denmark",
+                        "postCode": "8680"
+                    }
+                },
+                "statusText": {
+                    "header": "The shipment has been delivered to the recipient",
+                    "body": "The shipment was delivered on 3/8/2023 at 9:38 AM"
+                },
+                "status": "DELIVERED",
+                "items": [
+                    {
+                        "itemId": "LS497449056NL",
+                        "dropOffDate": "2023-03-04T09:47:00",
+                        "deliveryDate": "2023-03-08T10:38:33",
+                        "status": "DELIVERED",
+                        "statusText": {
+                            "header": "The shipment item has been delivered to the recipient",
+                            "body": "The shipment item was delivered on 3/8/2023 at 9:38 AM"
+                        },
+                        "events": [
+                            {
+                                "eventTime": "2023-03-04T09:47:00",
+                                "eventCode": "35",
+                                "status": "EN_ROUTE",
+                                "eventDescription": "The shipment item has left the country of the sender.",
+                                "location": {
+                                    "locationId": "0963",
+                                    "countryCode": "999",
+                                    "locationType": "HUB"
+                                }
+                            },
+                            {
+                                "eventTime": "2023-03-04T13:36:00",
+                                "eventCode": "35",
+                                "status": "EN_ROUTE",
+                                "eventDescription": "The shipment item has left the country of the sender.",
+                                "location": {
+                                    "locationId": "0963",
+                                    "countryCode": "999",
+                                    "locationType": "HUB"
+                                }
+                            },
+                            {
+                                "eventTime": "2023-03-07T15:00:17",
+                                "eventCode": "z95",
+                                "status": "EN_ROUTE",
+                                "eventDescription": "The shipment item has arrived at the country of destination.",
+                                "location": {
+                                    "locationId": "960",
+                                    "displayName": "Internationalt Postcenter",
+                                    "name": "Internationalt Postcenter",
+                                    "postcode": "2770",
+                                    "city": "Kastrup",
+                                    "locationType": "SERVICE_POINT"
+                                }
+                            },
+                            {
+                                "eventTime": "2023-03-07T15:10:17",
+                                "eventCode": "12",
+                                "status": "EN_ROUTE",
+                                "eventDescription": "The shipment item has been cleared by customs.",
+                                "location": {
+                                    "locationId": "960",
+                                    "displayName": "Internationalt Postcenter",
+                                    "name": "Internationalt Postcenter",
+                                    "postcode": "2770",
+                                    "city": "Kastrup",
+                                    "locationType": "SERVICE_POINT"
+                                }
+                            },
+                            {
+                                "eventTime": "2023-03-08T04:29:47",
+                                "eventCode": "31",
+                                "status": "EN_ROUTE",
+                                "eventDescription": "The shipment item is under transportation.",
+                                "location": {
+                                    "locationId": "9999",
+                                    "displayName": "PostNord Danmark",
+                                    "name": "PostNord Danmark",
+                                    "countryCode": "DNK",
+                                    "country": "Denmark",
+                                    "postcode": "0000",
+                                    "city": "Danmark",
+                                    "locationType": "SERVICE_POINT"
+                                }
+                            },
+                            {
+                                "eventTime": "2023-03-08T07:49:31",
+                                "eventCode": "113",
+                                "status": "EN_ROUTE",
+                                "eventDescription": "The delivery of the shipment item is in progress.",
+                                "location": {
+                                    "locationId": "7400",
+                                    "displayName": "Herning",
+                                    "name": "Herning",
+                                    "countryCode": "DNK",
+                                    "country": "Denmark",
+                                    "postcode": "7400",
+                                    "city": "Herning",
+                                    "locationType": "DEPOT"
+                                }
+                            },
+                            {
+                                "eventTime": "2023-03-08T07:54:46",
+                                "eventCode": "z08",
+                                "status": "OTHER",
+                                "eventDescription": "E-mail notification has been sent to the recipient.",
+                                "location": {
+                                    "locationId": "9999",
+                                    "displayName": "PostNord Danmark",
+                                    "name": "PostNord Danmark",
+                                    "countryCode": "DNK",
+                                    "country": "Denmark",
+                                    "postcode": "0000",
+                                    "city": "Danmark",
+                                    "locationType": "SERVICE_POINT"
+                                }
+                            },
+                            {
+                                "eventTime": "2023-03-08T10:38:33",
+                                "eventCode": "z96",
+                                "status": "DELIVERED",
+                                "eventDescription": "The shipment item has been delivered to the recipient's mailbox.",
+                                "location": {
+                                    "locationId": "7400",
+                                    "displayName": "Herning",
+                                    "name": "Herning",
+                                    "countryCode": "DNK",
+                                    "country": "Denmark",
+                                    "postcode": "7400",
+                                    "city": "Herning",
+                                    "locationType": "DEPOT"
+                                }
+                            },
+                            {
+                                "eventTime": "2023-03-08T10:41:34",
+                                "eventCode": "z08",
+                                "status": "OTHER",
+                                "eventDescription": "E-mail notification has been sent to the recipient.",
+                                "location": {
+                                    "locationId": "9999",
+                                    "displayName": "PostNord Danmark",
+                                    "name": "PostNord Danmark",
+                                    "countryCode": "DNK",
+                                    "country": "Denmark",
+                                    "postcode": "0000",
+                                    "city": "Danmark",
+                                    "locationType": "SERVICE_POINT"
+                                }
+                            }
+                        ],
+                        "references": []
+                    }
+                ],
+                "additionalServices": [
+                    {
+                        "code": "48",
+                        "groupCode": "DK",
+                        "name": "Notification by SMS"
+                    },
+                    {
+                        "code": "81",
+                        "groupCode": "DK",
+                        "name": "Notification by E-mail"
+                    }
+                ],
+                "splitStatuses": [],
+                "shipmentReferences": []
+            }
+        ]
+    }
+}
